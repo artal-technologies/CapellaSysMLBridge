@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Sysml2capella
+Bundle-SymbolicName: com.artal.capella.mapping.sysml2capella;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.polarsys.capella.core.data.gen,
+ org.polarsys.capella.core.data.helpers,
+ org.eclipse.ui,
+ org.polarsys.capella.core.model.helpers,
+ org.eclipse.emf.diffmerge.bridge.mapping,
+ org.eclipse.emf.diffmerge.bridge.interactive,
+ org.eclipse.emf.diffmerge.bridge.capella.integration,
+ org.polarsys.capella.core.model.handler,
+ org.eclipse.uml2.uml,
+ com.artal.capella.mapping

@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>CapellaMapping_VP_1_2_1</artifactId>
+	<version>1.0.0</version>
+	<packaging>eclipse-repository</packaging>
+	<parent>
+		<groupId>CapellaMapping</groupId>
+		<artifactId>com.artal.capella.mapping.parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../com.artal.capella.mapping.parent</relativePath>
+	</parent>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<configuration>
+							<target unless="maven.test.skip">
+								<echo message="Create Dropin from CapellaMapping dropin" />
+
+								<zip destfile="${basedir}/target/CapellaMapping_VP_1_2_1-${project.version}-dropin.zip">
+									<zipfileset dir="target/repository/features/"
+										prefix="CapellaMapping_VP_1_2_1-${project.version}/features/" />
+									<zipfileset dir="target/repository/plugins/"
+										prefix="CapellaMapping_VP_1_2_1-${project.version}/plugins/" />
+								</zip>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

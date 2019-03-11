@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.artal.capella.mapping.sysml2capella.actions.ImportSysmlModel"
+            commandId="com.artal.capella.mapping.sysml2capella.commandImport">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="com.artal.capella.mapping.sysml2capella.commandImport"
+            name="Import Sysml">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="com.artal.capella.mapping.sysml2capella.commandImport"
+               label="Import Sysml"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     operator="or">
+                  <instanceof
+                        value="org.polarsys.capella.core.data.la.LogicalArchitecture">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+
+</plugin>

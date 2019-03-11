@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>com.artal.capella.mapping</artifactId>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<packaging>eclipse-plugin</packaging>
+	<parent>
+		<groupId>CapellaMapping</groupId>
+		<artifactId>com.artal.capella.mapping.parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../com.artal.capella.mapping.parent</relativePath>
+	</parent>
+	<dependencies>
+		<dependency>
+			<groupId>Cameo2Capella</groupId>
+			<artifactId>
+				org.eclipse.emf.diffmerge.bridge.capella.integration
+			</artifactId>
+			<version>0.8.0-SNAPSHOT</version>
+			<type>eclipse-plugin</type>
+		</dependency>
+	</dependencies>
+</project>
