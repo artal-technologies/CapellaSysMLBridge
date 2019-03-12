@@ -11,6 +11,11 @@ package com.artal.capella.mapping.cheat;
 
 import org.eclipse.emf.ecore.EObject;
 
+/**
+ * @author YBI
+ *
+ * @param <T>
+ */
 public class TraceCheat<T extends EObject> {
 	private String _causeValue;
 	private T _target;

@@ -33,14 +33,21 @@ import org.polarsys.capella.core.data.capellamodeller.Project;
 import com.artal.capella.mapping.cheat.TraceCheat;
 
 /**
- * @author binot
+ * 
+ * A bridge job pre-configured for Capella models as targets.
+ *
+ * @author YBI
+ * 
+ * @param <SD>
+ *            the source data set
+ * 
  *
  */
 public class CapellaExtensionBridgeJob<SD> extends CapellaBridgeJob<SD> {
 
-	CapellaBridgeAlgo _algo;
+	CapellaBridgeAlgo<SD> _algo;
 
-	public CapellaExtensionBridgeJob(SD context_p, URI targetURI_p, CapellaBridgeAlgo algo) {
+	public CapellaExtensionBridgeJob(SD context_p, URI targetURI_p, CapellaBridgeAlgo<SD> algo) {
 		super(context_p, targetURI_p);
 		setProperty(IProgressConstants.PROPERTY_IN_DIALOG, true);
 		_algo = algo;
@@ -129,62 +136,6 @@ public class CapellaExtensionBridgeJob<SD> extends CapellaBridgeJob<SD> {
 	protected URI getTraceURI() {
 		return super.getTraceURI()/* buildTraceURI(_sourceDataSet, context) */;
 	}
-
-	// public URI buildTraceURI(SD source, Project context) {
-	// String key = null;
-	// if (source instanceof CapellaElement) {
-	// CapellaElement capellaEltSource = (CapellaElement) source;
-	// // Associate a global id to the source item if needed
-	// if (capellaEltSource.getId() == null) {
-	// // CitrusPersistence TODO in capella context
-	// // .execute(new EmfCitrusAction<Object>("Set the Global ID",
-	// // capellaEltSource)
-	// // {
-	// // @Override
-	// // public Object run()
-	// // {
-	// capellaEltSource.setId((UUID.randomUUID().toString()));
-	// // return null;
-	// // }
-	// // });
-	// }
-	// key = capellaEltSource.getId().toString();
-	// } else if (source instanceof EObject) {
-	// EObject eObjectSource = (EObject) source;
-	// Resource eObjectSourceRes = eObjectSource.eResource();
-	// if (eObjectSourceRes != null) {
-	// key = eObjectSourceRes.getURIFragment(eObjectSource);
-	// }
-	// } else if (source instanceof File) {
-	// key = ((File) source).getName();
-	// }
-	//
-	// if (key == null) {
-	// key = source.toString();
-	// }
-	//
-	// // Build the URI used by the bridge job (uri of the TRACE file)
-	// String uriPath = context.getName() + "/" + TRACE_FOLDER
-	// + "/"/* + getId() */ + "_ON_" + key;
-	//
-	// URI uri = URI.createPlatformResourceURI(uriPath, true);
-	//
-	// return uri.appendFileExtension(BridgetracesPackage.eNAME);
-	// }
-
-	// @Override
-	// protected Resource getCreateTargetResource(URI uri_p) {
-	// // TODO Auto-generated method stub
-	// return super.getCreateTargetResource(uri_p);
-	// }
-	//
-	// @Override
-	// protected Resource getCreateTraceResource(URI traceURI_p) {
-	//
-	// Resource traceResource = new XMIResourceImpl(traceURI_p);
-	//
-	// return super.getCreateTraceResource(traceURI_p);
-	// }
 
 	protected CapellaBridgeAlgo<SD> getAlgo() {
 		return _algo;

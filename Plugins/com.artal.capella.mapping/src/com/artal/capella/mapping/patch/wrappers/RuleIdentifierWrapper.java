@@ -12,6 +12,12 @@ package com.artal.capella.mapping.patch.wrappers;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IQueryIdentifier;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.RuleIdentifier;
 
+/**
+ * @author YBI
+ *
+ * @param <S>
+ * @param <T>
+ */
 public class RuleIdentifierWrapper<S, T> extends RuleIdentifier<S, T> implements IQueryIdentifier<S>
 {
 	private IQueryIdentifier<S> _queryID_p;

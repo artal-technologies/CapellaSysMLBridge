@@ -21,13 +21,16 @@ import org.eclipse.uml2.uml.Model;
 import com.artal.capella.mapping.CapellaExtensionBridgeJob;
 
 /**
- * @author binot
+ * {@link Sysml2CapellaBridgeJob} is an implementation of
+ * {@link CapellaExtensionBridgeJob}. This implementation allows to configure
+ * the Sysml to Capella mapping.
+ * 
+ * @author YBI
  *
  */
 public class Sysml2CapellaBridgeJob extends CapellaExtensionBridgeJob<Model> {
 
 	public Sysml2CapellaBridgeJob(String jobName_p, Model sourceDataSet_p, URI targetURI_p) {
-		// super(jobName_p, sourceDataSet_p, targetURI_p);
 		super(sourceDataSet_p, targetURI_p, new Sysml2CapellaAlgo());
 	}
 
@@ -38,7 +41,6 @@ public class Sysml2CapellaBridgeJob extends CapellaExtensionBridgeJob<Model> {
 
 	@Override
 	protected void setupLogger() {
-		// TODO Auto-generated method stub
 	}
 
 }

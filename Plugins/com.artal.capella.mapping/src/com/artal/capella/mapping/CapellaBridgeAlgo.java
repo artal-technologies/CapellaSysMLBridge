@@ -18,8 +18,9 @@ import org.eclipse.emf.ecore.EObject;
 import com.artal.capella.mapping.cheat.TraceCheat;
 
 /**
+ * Abstract class to implement to manage the specific mapping.
  * 
- * @author JLA
+ * @author YBI
  * 
  *         DO NOT FORGET TO CALL ADD/ATTACH METHOD on created objects
  */
@@ -45,7 +46,7 @@ public abstract class CapellaBridgeAlgo<SD> {
 	 * @param item
 	 *            the created EObject
 	 */
-	protected void add(String guid, EObject item) {
+	public void add(String guid, EObject item) {
 		_allItems.add(new TraceCheat<EObject>(guid, item));
 	}
 
@@ -58,7 +59,7 @@ public abstract class CapellaBridgeAlgo<SD> {
 	 * @param item
 	 *            the created EObject
 	 */
-	protected void attach(String guid, EObject item) {
+	public void attach(String guid, EObject item) {
 		add(guid, item);
 		_transientItems.add(item);
 	}

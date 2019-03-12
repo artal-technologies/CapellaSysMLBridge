@@ -9,4 +9,5 @@ Require-Bundle: org.eclipse.emf.diffmerge.bridge.interactive;bundle-version="0.9
  org.eclipse.core.runtime,
  org.polarsys.capella.core.data.gen,
  org.eclipse.emf.diffmerge.bridge.capella.integration
-Export-Package: com.artal.capella.mapping
+Export-Package: com.artal.capella.mapping,
+ com.artal.capella.mapping.rules

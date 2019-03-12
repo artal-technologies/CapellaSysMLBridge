@@ -44,16 +44,16 @@ import com.artal.capella.mapping.patch.CapellaMappingExecution;
 public class CapellaBridge<SD, CD>
 		extends EMFMappingBridge<SD, org.eclipse.emf.diffmerge.api.scopes.IEditableModelScope> {
 
-	private CapellaBridgeAlgo _algo;
+	private CapellaBridgeAlgo<SD> _algo;
 	private CapellaMappingExecution _capellaMappingExecution;
 
-	public CapellaBridge(CapellaBridgeAlgo algo) {
+	public CapellaBridge(CapellaBridgeAlgo<SD> algo) {
 		_algo = algo;
 	}
 
 	@Override
 	public MappingExecution createExecution(Editable trace_p) {
-		 _capellaMappingExecution = new CapellaMappingExecution(trace_p);
+		_capellaMappingExecution = new CapellaMappingExecution(trace_p);
 		return _capellaMappingExecution;
 	}
 
@@ -80,7 +80,7 @@ public class CapellaBridge<SD, CD>
 
 		@Override
 		public TupleN<TraceCheat<?>> createTarget(SD source_p, IQueryExecution queryExecution_p) {
-			_algo.launch(source_p,_capellaMappingExecution);
+			_algo.launch(source_p, _capellaMappingExecution);
 			List<TraceCheat<? extends EObject>> allItems = _algo.getAllItems();
 			return new TupleN<TraceCheat<?>>(allItems.toArray(new TraceCheat<?>[allItems.size()]));
 		}

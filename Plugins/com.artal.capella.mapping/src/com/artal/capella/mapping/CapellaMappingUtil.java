@@ -27,7 +27,7 @@ import com.artal.capella.mapping.patch.CapellaQueryExecution;
 /**
  * Utils dedicated to MAPPING algo
  * 
- * @author JLA
+ * @author YBI
  */
 public final class CapellaMappingUtil {
 

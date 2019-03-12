@@ -21,7 +21,7 @@ import com.artal.capella.mapping.patch.wrappers.RuleIdentifierWrapper;
  * Patch of MappingExecution creator to bypass restriction (make it really
  * tolerant to several access to the same target (tolerantToDuplicates))
  * 
- * @author JLA
+ * @author YBI
  */
 public class CapellaMappingExecution extends MappingExecution {
 	public CapellaMappingExecution(org.eclipse.emf.diffmerge.bridge.api.IBridgeTrace.Editable trace_p) {
