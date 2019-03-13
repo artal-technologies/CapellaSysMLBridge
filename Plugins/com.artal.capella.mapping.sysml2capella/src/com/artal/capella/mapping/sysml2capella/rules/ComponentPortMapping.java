@@ -85,8 +85,7 @@ public class ComponentPortMapping extends AbstractMapping {
 
 			Sysml2CapellaUtils.trace(this, eResource, port, cport, "Port_");
 
-			MappingRulesManager managerRules = getAlgo().getManagerRules();
-			AbstractMapping rule = managerRules.getRule(ComponentMapping.class.getName());
+			AbstractMapping rule = MappingRulesManager.getRule(ComponentMapping.class.getName());
 			LogicalComponent lComponent = (LogicalComponent) rule.getMapSourceToTarget().get(_source);
 			lComponent.getOwnedFeatures().add(cport);
 

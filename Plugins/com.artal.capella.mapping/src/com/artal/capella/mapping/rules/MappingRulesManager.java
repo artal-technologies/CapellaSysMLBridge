@@ -36,7 +36,7 @@ public class MappingRulesManager {
 	 *            the {@link String} rule id
 	 * @return {@link AbstractMapping} rule
 	 */
-	public AbstractMapping getRule(String id) {
+	static public AbstractMapping getRule(String id) {
 		return _rules.get(id);
 	}
 

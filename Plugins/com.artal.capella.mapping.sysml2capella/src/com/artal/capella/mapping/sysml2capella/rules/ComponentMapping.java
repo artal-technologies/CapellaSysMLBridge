@@ -70,14 +70,15 @@ public class ComponentMapping extends AbstractMapping {
 
 		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, "03 Structure/Parts");
 		Resource eResource = _source.eResource();
-
+		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
+		LogicalComponent rootPhysicalSystem = CapellaUtil.getLogicalSystemRoot(targetScope.getProject());
+		
 		for (Class class1 : classes) {
 			LogicalComponent lComponent = LaFactory.eINSTANCE.createLogicalComponent();
 			lComponent.setName(class1.getName());
 			String date = new Date().toString();
 			lComponent.setDescription(date);
-			CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
-			LogicalComponent rootPhysicalSystem = CapellaUtil.getLogicalSystemRoot(targetScope.getProject());
+			
 			rootPhysicalSystem.getOwnedLogicalComponents().add(lComponent);
 
 			Sysml2CapellaUtils.trace(this, eResource, class1, lComponent, "LogicalComponent_");

@@ -17,9 +17,12 @@ import org.eclipse.uml2.uml.Model;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.rules.MappingRulesManager;
+import com.artal.capella.mapping.sysml2capella.rules.ActorMapping;
+import com.artal.capella.mapping.sysml2capella.rules.AssociationActorUseCaseMapping;
 import com.artal.capella.mapping.sysml2capella.rules.ComponentMapping;
 import com.artal.capella.mapping.sysml2capella.rules.ConnectorMapping;
 import com.artal.capella.mapping.sysml2capella.rules.PartMapping;
+import com.artal.capella.mapping.sysml2capella.rules.UseCaseMapping;
 
 /**
  * 
@@ -50,6 +53,16 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 
 		ConnectorMapping connectorMapping = new ConnectorMapping(this, source, mappingExecution_p);
 		_managerRules.add(connectorMapping.getClass().getName(), connectorMapping);
+
+		ActorMapping actorMapping = new ActorMapping(this, source, mappingExecution_p);
+		_managerRules.add(actorMapping.getClass().getName(), actorMapping);
+
+		UseCaseMapping useCaseMapping = new UseCaseMapping(this, source, mappingExecution_p);
+		_managerRules.add(useCaseMapping.getClass().getName(), useCaseMapping);
+
+		AssociationActorUseCaseMapping associationActorUseCaseMapping = new AssociationActorUseCaseMapping(this, source,
+				mappingExecution_p);
+		_managerRules.add(associationActorUseCaseMapping.getClass().getName(), associationActorUseCaseMapping);
 		// execute rules
 		_managerRules.executeRules();
 
