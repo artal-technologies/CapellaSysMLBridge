@@ -61,7 +61,7 @@ public class LogicalFunctionPortMapping extends AbstractMapping {
 	@Override
 	public void computeMapping() {
 		Resource eResource = _source.eResource();
-		AbstractMapping rule = MappingRulesManager.getRule(LogicalFunctionMapping.class.getName());
+		AbstractMapping rule = MappingRulesManager.getRule(FunctionalArchitectureMapping.class.getName());
 		LogicalFunction lf = (LogicalFunction) rule.getMapSourceToTarget().get(_source);
 		EList<InputPin> arguments = _source.getArguments();
 		for (InputPin inputPin : arguments) {

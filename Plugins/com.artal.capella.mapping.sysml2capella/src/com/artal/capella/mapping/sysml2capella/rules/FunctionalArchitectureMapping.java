@@ -57,7 +57,7 @@ import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
  * @author YBI
  *
  */
-public class LogicalFunctionMapping extends AbstractMapping {
+public class FunctionalArchitectureMapping extends AbstractMapping {
 
 	/**
 	 * The sysml root {@link Model}.
@@ -88,7 +88,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 * @param mappingExecution
 	 *            the {@link IMappingExecution} allows to get the mapping data.
 	 */
-	public LogicalFunctionMapping(Sysml2CapellaAlgo algo, Model source, IMappingExecution mappingExecution) {
+	public FunctionalArchitectureMapping(Sysml2CapellaAlgo algo, Model source, IMappingExecution mappingExecution) {
 		super(algo);
 		_source = source;
 		_mappingExecution = mappingExecution;
@@ -211,7 +211,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 
 			}
 		}
-		AbstractMapping rule = MappingRulesManager.getRule(LogicalFunctionMapping.class.getName());
+		AbstractMapping rule = MappingRulesManager.getRule(FunctionalArchitectureMapping.class.getName());
 		for (ActivityNode node : nodes) {
 			if (node instanceof CallBehaviorAction) {
 				Behavior behavior = ((CallBehaviorAction) node).getBehavior();
@@ -332,7 +332,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 			EObject sourcePortParent = source.eContainer();
 			if (sourcePortParent instanceof Activity
 					&& ((Activity) sourcePortParent).getName().equals("02 Functional Architecture")) {
-				AbstractMapping rule = MappingRulesManager.getRule(LogicalFunctionMapping.class.getName());
+				AbstractMapping rule = MappingRulesManager.getRule(FunctionalArchitectureMapping.class.getName());
 				return (FunctionPort) rule.getMapSourceToTarget().get(source);
 			}
 			if (transformParam) {
