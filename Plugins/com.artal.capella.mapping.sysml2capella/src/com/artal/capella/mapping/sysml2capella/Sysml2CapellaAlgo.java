@@ -21,6 +21,7 @@ import com.artal.capella.mapping.sysml2capella.rules.ActorMapping;
 import com.artal.capella.mapping.sysml2capella.rules.AssociationActorUseCaseMapping;
 import com.artal.capella.mapping.sysml2capella.rules.ComponentMapping;
 import com.artal.capella.mapping.sysml2capella.rules.ConnectorMapping;
+import com.artal.capella.mapping.sysml2capella.rules.LogicalFunctionMapping;
 import com.artal.capella.mapping.sysml2capella.rules.PartMapping;
 import com.artal.capella.mapping.sysml2capella.rules.UseCaseMapping;
 
@@ -63,6 +64,10 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 		AssociationActorUseCaseMapping associationActorUseCaseMapping = new AssociationActorUseCaseMapping(this, source,
 				mappingExecution_p);
 		_managerRules.add(associationActorUseCaseMapping.getClass().getName(), associationActorUseCaseMapping);
+
+		LogicalFunctionMapping functionMapping = new LogicalFunctionMapping(this, source, mappingExecution_p);
+		_managerRules.add(functionMapping.getClass().getName(), functionMapping);
+
 		// execute rules
 		_managerRules.executeRules();
 

@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.Actor;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Class;
@@ -28,7 +29,6 @@ import org.polarsys.capella.core.data.capellacommon.AbstractCapabilityPkg;
 import org.polarsys.capella.core.data.capellamodeller.ModelRoot;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.capellamodeller.SystemEngineering;
-import org.polarsys.capella.core.data.la.CapabilityRealizationPkg;
 import org.polarsys.capella.core.data.la.LogicalActorPkg;
 import org.polarsys.capella.core.data.la.LogicalArchitecture;
 import org.polarsys.capella.core.data.la.LogicalContext;
@@ -150,6 +150,43 @@ public class Sysml2CapellaUtils {
 				}
 			} else if (structurePkg instanceof UseCase && structurePkg.getName().equals(packageName)) {
 				results.add((UseCase) structurePkg);
+			}
+		}
+		return results;
+	}
+
+	/**
+	 * Get the Activity from target uml package
+	 * 
+	 * @param source
+	 *            the container package
+	 * @param paths
+	 *            the path to the package target. the format is
+	 *            "Pkg1/Pkg2/../Pkg2" or "Pkg1/Pkg2/../Pkg2/TargetActor" and
+	 *            represents the path from source (source/<code>paths</code>).
+	 * @return the Class {@link List}
+	 */
+	static public List<Activity> getActivities(Package source, String paths) {
+		List<Activity> results = new ArrayList<>();
+
+		String[] pathsArray = paths.split("/");
+		paths = paths.substring(paths.indexOf("/") + 1, paths.length());
+		String packageName = pathsArray[0];
+		EList<PackageableElement> packagedElements = source.getPackagedElements();
+		for (PackageableElement structurePkg : packagedElements) {
+			if (structurePkg instanceof Package && structurePkg.getName().equals(packageName)) {
+				if (pathsArray.length > 1) {
+					results.addAll(getActivities((Package) structurePkg, paths));
+				} else {
+					EList<PackageableElement> packagedElements2 = ((Package) structurePkg).getPackagedElements();
+					for (PackageableElement packageableElement : packagedElements2) {
+						if (packageableElement instanceof Activity) {
+							results.add((Activity) packageableElement);
+						}
+					}
+				}
+			} else if (structurePkg instanceof Activity && structurePkg.getName().equals(packageName)) {
+				results.add((Activity) structurePkg);
 			}
 		}
 		return results;
