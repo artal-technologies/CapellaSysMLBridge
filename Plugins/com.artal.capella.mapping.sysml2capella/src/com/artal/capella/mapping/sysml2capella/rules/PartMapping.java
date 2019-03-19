@@ -68,7 +68,7 @@ public class PartMapping extends AbstractMapping {
 
 		Resource eResource = _source.eResource();
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
-		LogicalComponent rootLogicalSystem = CapellaUtil.getLogicalSystemRoot(targetScope.getProject());
+		LogicalComponent rootLogicalSystem = Sysml2CapellaUtils.getLogicalSystemRoot(targetScope.getProject());
 
 		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, "03 Structure/Product");
 		for (Class class1 : classes) {

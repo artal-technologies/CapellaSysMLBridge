@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="core dependencies build" default="build" basedir=".">
+	<echo>${osgi.instance.area}</echo>
+	<target name="build">
+		<loadresource property="SELECTED_TARGET_PLUGINS">
+			<url url="${osgi.instance.area}/.metadata/.plugins/org.eclipse.debug.core/.launches/New_configuration.launch" />
+			<filterchain>
+				<linecontainsregexp>
+					<regexp pattern="&lt;stringAttribute\s+key=&quot;selected_target_plugins&quot;\s+value=&quot;(.*)&quot;/&gt;" />
+				</linecontainsregexp>
+				<replaceregex flags="sg" pattern="&lt;stringAttribute\s+key=&quot;selected_target_plugins&quot;\s+value=&quot;(.*)&quot;.*" replace="\1" />
+				<striplinebreaks/>
+			</filterchain>
+		</loadresource>
+		<loadresource property="SELECTED_WORKSPACE_PLUGINS">
+			<url url="${osgi.instance.area}/.metadata/.plugins/org.eclipse.debug.core/.launches/New_configuration.launch" />
+			<filterchain>
+				<linecontainsregexp>
+					<regexp pattern="&lt;stringAttribute\s+key=&quot;selected_workspace_plugins&quot;\s+value=&quot;(.*)&quot;/&gt;.*" />
+				</linecontainsregexp>
+				<replaceregex flags="g" pattern="&lt;stringAttribute\s+key=&quot;selected_workspace_plugins&quot;\s+value=&quot;(.*)&quot;.*" replace="\1" />
+				<striplinebreaks/>
+			</filterchain>
+		</loadresource>
+		
+		<echoproperties/>
+
+		<copy file="SysmlToCapellaTestsConf.launch.template" toFile="SysmlToCapellaTestsConf.launch" overwrite="true">
+			<filterchain>
+				<replacetokens begintoken="%" endtoken="%">
+					<token key="SELECTED_TARGET_PLUGINS" value="${SELECTED_TARGET_PLUGINS}"/>
+					<token key="SELECTED_WORKSPACE_PLUGINS" value="${SELECTED_WORKSPACE_PLUGINS}"/>
+				</replacetokens>
+			</filterchain>
+		</copy>
+	</target>
+</project>

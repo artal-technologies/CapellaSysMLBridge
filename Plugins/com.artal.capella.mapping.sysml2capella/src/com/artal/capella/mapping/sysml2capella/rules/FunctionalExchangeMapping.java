@@ -75,7 +75,7 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 				.getRule(LogicalFunctionMapping.class.getName());
 		Resource eResource = _source.eResource();
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
-		LogicalFunction logicalFunctionRoot = CapellaUtil.getLogicalFunctionRoot(targetScope.getProject());
+		LogicalFunction logicalFunctionRoot = Sysml2CapellaUtils.getLogicalFunctionRoot(targetScope.getProject());
 		transformObjectFlow(eResource, _source, logicalFunctionRoot, functionRule.getMapPinToParam(), true);
 	}
 

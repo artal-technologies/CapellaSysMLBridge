@@ -73,7 +73,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	public void computeMapping() {
 		Resource eResource = _source.eResource();
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
-		LogicalFunction logicalFunctionRoot = CapellaUtil.getLogicalFunctionRoot(targetScope.getProject());
+		LogicalFunction logicalFunctionRoot = Sysml2CapellaUtils.getLogicalFunctionRoot(targetScope.getProject());
 		_mapPinToParam = new HashMap<>();
 		transformCallBehavior(eResource, logicalFunctionRoot, _source, _mapPinToParam);
 		_manager.executeRules();

@@ -26,12 +26,17 @@ import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
 import org.eclipse.uml2.uml.UseCase;
 import org.polarsys.capella.core.data.capellacommon.AbstractCapabilityPkg;
+import org.polarsys.capella.core.data.capellacore.ModellingArchitecture;
 import org.polarsys.capella.core.data.capellamodeller.ModelRoot;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.capellamodeller.SystemEngineering;
+import org.polarsys.capella.core.data.fa.FunctionPkg;
 import org.polarsys.capella.core.data.la.LogicalActorPkg;
 import org.polarsys.capella.core.data.la.LogicalArchitecture;
+import org.polarsys.capella.core.data.la.LogicalComponent;
 import org.polarsys.capella.core.data.la.LogicalContext;
+import org.polarsys.capella.core.data.la.LogicalFunction;
+import org.polarsys.capella.core.data.la.LogicalFunctionPkg;
 
 import com.artal.capella.mapping.rules.AbstractMapping;
 
@@ -297,10 +302,11 @@ public class Sysml2CapellaUtils {
 				EList<ModelRoot> ownedModelRoots = ((Project) root).getOwnedModelRoots();
 				for (ModelRoot modelRoot : ownedModelRoots) {
 					if (modelRoot instanceof SystemEngineering) {
-						EList<LogicalArchitecture> containedLogicalArchitecture = ((SystemEngineering) modelRoot)
-								.getContainedLogicalArchitectures();
-						for (LogicalArchitecture arch : containedLogicalArchitecture) {
-							return arch.getOwnedLogicalActorPkg();
+						EList<ModellingArchitecture> containedLogicalArchitecture = ((SystemEngineering) modelRoot)
+								.getOwnedArchitectures();
+						for (ModellingArchitecture arch : containedLogicalArchitecture) {
+							if (arch instanceof LogicalArchitecture)
+								return ((LogicalArchitecture) arch).getOwnedLogicalActorPkg();
 						}
 					}
 				}
@@ -327,10 +333,11 @@ public class Sysml2CapellaUtils {
 				EList<ModelRoot> ownedModelRoots = ((Project) root).getOwnedModelRoots();
 				for (ModelRoot modelRoot : ownedModelRoots) {
 					if (modelRoot instanceof SystemEngineering) {
-						EList<LogicalArchitecture> containedLogicalArchitecture = ((SystemEngineering) modelRoot)
-								.getContainedLogicalArchitectures();
-						for (LogicalArchitecture arch : containedLogicalArchitecture) {
-							return arch.getOwnedLogicalContext();
+						EList<ModellingArchitecture> containedLogicalArchitecture = ((SystemEngineering) modelRoot)
+								.getOwnedArchitectures();
+						for (ModellingArchitecture arch : containedLogicalArchitecture) {
+							if (arch instanceof LogicalArchitecture)
+								return ((LogicalArchitecture) arch).getOwnedLogicalContext();
 						}
 					}
 				}
@@ -357,16 +364,97 @@ public class Sysml2CapellaUtils {
 				EList<ModelRoot> ownedModelRoots = ((Project) root).getOwnedModelRoots();
 				for (ModelRoot modelRoot : ownedModelRoots) {
 					if (modelRoot instanceof SystemEngineering) {
-						EList<LogicalArchitecture> containedLogicalArchitecture = ((SystemEngineering) modelRoot)
-								.getContainedLogicalArchitectures();
-						for (LogicalArchitecture arch : containedLogicalArchitecture) {
-							return arch.getOwnedAbstractCapabilityPkg();
+						EList<ModellingArchitecture> containedLogicalArchitecture = ((SystemEngineering) modelRoot)
+								.getOwnedArchitectures();
+						for (ModellingArchitecture arch : containedLogicalArchitecture) {
+							if (arch instanceof LogicalArchitecture)
+								return ((LogicalArchitecture) arch).getOwnedAbstractCapabilityPkg();
 						}
 					}
 				}
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the logical component system root given a semantic object
+	 * 
+	 * @param source_p
+	 *            the semantic object
+	 * @return the logical component root
+	 */
+	public static LogicalComponent getLogicalSystemRoot(EObject source_p) {
+		ResourceSet resourceSet = source_p.eResource().getResourceSet();
+		URI semanticResourceURI = source_p.eResource().getURI().trimFileExtension()
+				.appendFileExtension("melodymodeller");
+		Resource semanticResource = resourceSet.getResource(semanticResourceURI, false);
+		if (semanticResource != null) {
+			EObject root = semanticResource.getContents().get(0);
+			if (root instanceof Project) {
+				EList<ModelRoot> ownedModelRoots = ((Project) root).getOwnedModelRoots();
+				for (ModelRoot modelRoot : ownedModelRoots) {
+					if (modelRoot instanceof SystemEngineering) {
+						EList<ModellingArchitecture> containedLogicalArchitecture = ((SystemEngineering) modelRoot)
+								.getOwnedArchitectures();
+						for (ModellingArchitecture arch : containedLogicalArchitecture) {
+							if (arch instanceof LogicalArchitecture)
+								return ((LogicalArchitecture) arch).getOwnedLogicalComponent();
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the logical function root of a Capella model
+	 * 
+	 * @param source_p
+	 *            a (non-null) Capella semantic object
+	 * @return the logical function root given an eObject.
+	 */
+	public static LogicalFunction getLogicalFunctionRoot(EObject source_p) {
+		LogicalFunctionPkg functionPackage = getLogicalFunctionPackage(source_p);
+		return functionPackage.getOwnedLogicalFunctions().get(0);
+	}
+
+	/**
+	 * Returns the physical function package of a Capella model
+	 * 
+	 * @param source_p
+	 *            a (non-null) Capella semantic object
+	 * @return the physical function package.
+	 */
+	public static LogicalFunctionPkg getLogicalFunctionPackage(EObject source_p) {
+		ResourceSet resourceSet = source_p.eResource().getResourceSet();
+		URI semanticResourceURI = source_p.eResource().getURI().trimFileExtension()
+				.appendFileExtension("melodymodeller");
+		Resource semanticResource = resourceSet.getResource(semanticResourceURI, false);
+		LogicalFunctionPkg logicalFunctionPkgTmp = null;
+		if (semanticResource != null) {
+			EObject root = semanticResource.getContents().get(0);
+			if (root instanceof Project) {
+				EList<ModelRoot> ownedModelRoots = ((Project) root).getOwnedModelRoots();
+				for (ModelRoot modelRoot : ownedModelRoots) {
+					if (modelRoot instanceof SystemEngineering) {
+						EList<ModellingArchitecture> containedPhysicalArchitectures = ((SystemEngineering) modelRoot)
+								.getOwnedArchitectures();
+						for (ModellingArchitecture arch : containedPhysicalArchitectures) {
+							if (arch instanceof LogicalArchitecture) {
+								FunctionPkg ownedFunctionPkg = ((LogicalArchitecture) arch).getOwnedFunctionPkg();
+								if (ownedFunctionPkg instanceof LogicalFunctionPkg) {
+									logicalFunctionPkgTmp = (LogicalFunctionPkg) ownedFunctionPkg;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return logicalFunctionPkgTmp;
 	}
 
 }

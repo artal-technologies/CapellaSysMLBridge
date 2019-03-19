@@ -14,3 +14,4 @@ Require-Bundle: org.polarsys.capella.core.data.gen,
  org.polarsys.capella.core.model.handler,
  org.eclipse.uml2.uml,
  com.artal.capella.mapping
+Export-Package: com.artal.capella.mapping.sysml2capella

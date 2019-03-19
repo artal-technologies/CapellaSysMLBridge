@@ -86,7 +86,7 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 		Resource eResource = _source.eResource();
 		List<Activity> activities = Sysml2CapellaUtils.getActivities(_source, "02 Behavior/02 Functional Architecture");
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
-		LogicalFunction logicalFunctionRoot = CapellaUtil.getLogicalFunctionRoot(targetScope.getProject());
+		LogicalFunction logicalFunctionRoot = Sysml2CapellaUtils.getLogicalFunctionRoot(targetScope.getProject());
 		LogicalActorPkg logicalActorPkg = Sysml2CapellaUtils.getLogicalActorPkg(targetScope.getProject());
 		LogicalContext logicalContext = Sysml2CapellaUtils.getLogicalContext(targetScope.getProject());
 

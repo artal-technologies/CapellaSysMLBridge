@@ -76,7 +76,7 @@ public class ConnectorMapping extends AbstractMapping {
 		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, "03 Structure/Product");
 		Resource eResource = _source.eResource();
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
-		LogicalComponent rootLogicalSystem = CapellaUtil.getLogicalSystemRoot(targetScope.getProject());
+		LogicalComponent rootLogicalSystem = Sysml2CapellaUtils.getLogicalSystemRoot(targetScope.getProject());
 		for (Class class1 : classes) {
 			EList<Connector> ownedConnectors = class1.getOwnedConnectors();
 			for (Connector connector : ownedConnectors) {
