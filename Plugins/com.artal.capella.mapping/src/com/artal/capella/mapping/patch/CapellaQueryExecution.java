@@ -62,8 +62,10 @@ public class CapellaQueryExecution<C, P> extends QueryExecution {
 		if (queryID_p.equals(_realIdentifier)) {
 			return (O) _value;
 		}
-
-		return _superQueryExecution.get(queryID_p);
+		if (_superQueryExecution != null) {
+			return _superQueryExecution.get(queryID_p);
+		}
+		return null;
 	}
 
 	public RuleIdentifierWrapper<?, ?> getCurrentIdentifierWrapper() {

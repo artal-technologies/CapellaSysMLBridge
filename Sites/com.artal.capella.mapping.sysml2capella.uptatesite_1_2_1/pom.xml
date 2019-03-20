@@ -17,7 +17,7 @@
 		<groupId>CapellaMapping</groupId>
 		<artifactId>com.artal.capella.mapping.parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>../com.artal.capella.mapping.parent</relativePath>
+		<relativePath>../../Maven/com.artal.capella.mapping.parent</relativePath>
 	</parent>
 	<build>
 		<plugins>
