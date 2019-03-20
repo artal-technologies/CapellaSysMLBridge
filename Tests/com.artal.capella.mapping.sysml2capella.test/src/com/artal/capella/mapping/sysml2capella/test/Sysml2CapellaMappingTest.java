@@ -60,22 +60,50 @@ public class Sysml2CapellaMappingTest {
 	@Test
 	public void classesToComponentsTest() throws IOException {
 		// load uml source project.
-		Model model = SysmlToCapellaTestUtils.loadUMLModel("resources/cameoResources/CameoToCapella.uml");
+		String pathUmlModel = "resources/cameoResources/CameoToCapella.uml";
+		String pathReferenceModel = "resources/capellaResources/referenceProject/CapellaProjectReference.melodymodeller";
+		String pathRefBridgeTrace = "resources/capellaResources/referenceProject/test.bridgetraces";
+		String bridgeTraceName = "test";
+		String pathEmptyProject = "resources/capellaResources/emptyproject/CapellaProjectEmpty.melodymodeller";
+		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "", pathEmptyProject);
+	}
+
+	@Test
+	public void comp01Test() throws IOException {
+		String pathUmlModel = "resources/capellaResources/Components/Comp_01/ComponentCameo01.uml";
+		String pathReferenceModel = "resources/capellaResources/Components/Comp_01/Comp_1.melodymodeller";
+		String pathRefBridgeTrace = "resources/capellaResources/Components/Comp_01/Comp_1.melodymodeller.bridgetraces";
+		String bridgeTraceName = "Comp_1.melodymodeller";
+		String pathEmptyProject = "resources/capellaResources/Components/Comp_01/Comp_1_empty.melodymodeller";
+		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "comp01Test",
+				pathEmptyProject);
+	}
+
+	private void launchTest(String pathUmlModel, String pathReferenceModel, String pathRefBridgeTrace,
+			String bridgeTraceName, String nameTest, String pathEmptyProject) throws IOException {
+		Model model = SysmlToCapellaTestUtils.loadUMLModel(pathUmlModel);
 
 		// load the reference capella project
-		File referenceFile = new File(
-				"resources/capellaResources/referenceProject/CapellaProjectReference.melodymodeller");
+
+		File referenceFile = new File(pathReferenceModel);
 
 		// load the empty capella project to fill.
 		// and copy them in the the os temp repository.
-		File targetFile = new File("resources/capellaResources/emptyproject/CapellaProjectEmpty.melodymodeller");
-		String absolutePath = fileTemp.getAbsolutePath();
+
+		File targetFile = new File(pathEmptyProject);
+		String absolutePath = fileTemp.getAbsolutePath() + "/" + nameTest;
+		File d = new File(absolutePath);
 		absolutePath = absolutePath + "/" + targetFile.getName();
 		File tmpFile = new File(absolutePath);
+		if (!tmpFile.getParentFile().exists()) {
+			tmpFile.getParentFile().mkdirs();
+		}
+
 		Files.copy(targetFile.toPath(), tmpFile.toPath());
 
 		// create the trace file
-		File createdTrace = new File(fileTemp.getAbsolutePath() + "/test.bridgetraces");
+
+		File createdTrace = new File(fileTemp.getAbsolutePath() + "/" + bridgeTraceName + ".bridgetraces");
 
 		// launch the sysml to capella mapping.
 		SysmlToCapellaTestUtils.launchSysml2Capella(model, tmpFile, createdTrace.getAbsolutePath());
@@ -85,7 +113,8 @@ public class Sysml2CapellaMappingTest {
 		// load the reference capella project.
 		Project refereceCapellaModel = SysmlToCapellaTestUtils.loadCapellaModel(referenceFile.getAbsolutePath());
 		// load the reference bridge trace.
-		File existingTrace = new File("resources/capellaResources/referenceProject/test.bridgetraces");
+
+		File existingTrace = new File(pathRefBridgeTrace);
 
 		// compare the created capella project and the reference capella
 		// project.

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.diffmerge.bridge.traces.gen:Trace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.emf.diffmerge.bridge.traces.gen="http://www.eclipse.org/emf/diffmerge/bridge/1.0.0/traces">
+  <targetToCause key="addc583d-5819-4861-b9ae-4caa1c2efcd6" value="LogicalComponent__19_0_1_62f021d_1553072604403_201026_13498"/>
+  <targetToCause key="409f7ae2-8383-449f-9bf9-e2a515fd06b7" value="LogicalComponent__19_0_1_62f021d_1553072707365_544465_13594"/>
+  <targetToCause key="86d130ba-23c0-4e94-8a43-87ff271a8aca" value="LogicalComponent__19_0_1_62f021d_1553072772038_563191_13641"/>
+  <targetToCause key="0ee67e7e-f420-4eb7-9d4c-9ee80418d8b6" value="LogicalComponent__19_0_1_62f021d_1553072822130_7204_13694"/>
+  <targetToCause key="00597d1c-5237-496c-96c3-3150c63bd611" value="Part__19_0_1_62f021d_1553072630595_806638_13502"/>
+  <targetToCause key="0d2b96cf-6f3a-47d5-b8bf-fc15b505917c" value="Part__19_0_1_62f021d_1553072715155_955435_13598"/>
+  <targetToCause key="2bfcba56-682f-471b-9e10-9332fd81ed51" value="Part__19_0_1_62f021d_1553072788100_193174_13645"/>
+  <targetToCause key="669ad639-e92d-4a55-acce-3c858753df8c" value="Part__19_0_1_62f021d_1553072832293_323247_13698"/>
+  <targetToCause key="563bf4c4-25ed-4f37-8340-e787b8561620" value="EnvFunction__19_0_1_62f021d_1553072511758_135320_13415"/>
+  <targetToCause key="f30736fc-bb04-4680-9da8-e8a2de7330b4" value="GenericActor__19_0_1_62f021d_1553072511758_135320_13415"/>
+  <targetToCause key="db7a2e18-850a-4c69-b112-58ddf52ba577" value="GenericActorPart__19_0_1_62f021d_1553072511758_135320_13415"/>
+  <targetToCause key="e88a49a1-19f7-448f-961b-d7933334dded" value="GenericActorPartFunctionalAlloc__19_0_1_62f021d_1553072511758_135320_13415"/>
+</org.eclipse.emf.diffmerge.bridge.traces.gen:Trace>

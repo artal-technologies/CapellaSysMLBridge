@@ -9,11 +9,11 @@
  *******************************************************************************/
 package com.artal.capella.mapping.sysml2capella.rules;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
-import org.eclipse.emf.diffmerge.bridge.capella.integration.util.CapellaUtil;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
@@ -71,12 +71,38 @@ public class PartMapping extends AbstractMapping {
 		LogicalComponent rootLogicalSystem = Sysml2CapellaUtils.getLogicalSystemRoot(targetScope.getProject());
 
 		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, "03 Structure/Product");
+		transformPartsFromBreakDownBlock(classes, rootLogicalSystem, eResource);
+
+		List<Class> blocks = Sysml2CapellaUtils.getClasses(_source, "03 Structure/Parts");
+		for (Class class1 : blocks) {
+			ArrayList<Class> classes2 = new ArrayList<Class>();
+			classes2.add(class1);
+			AbstractMapping rule = MappingRulesManager.getRule(ComponentMapping.class.getName());
+			LogicalComponent lc = (LogicalComponent) rule.getMapSourceToTarget().get(class1);
+			transformPartsFromBreakDownBlock(classes2, lc, eResource);
+		}
+
+	}
+
+	/**
+	 * Transform the parts.
+	 * 
+	 * @param classes
+	 *            the classes to browse for create parts.
+	 * @param parent
+	 *            the parent container
+	 * @param eResource
+	 *            the sysml resource.
+	 */
+	private void transformPartsFromBreakDownBlock(List<Class> classes, LogicalComponent parent, Resource eResource) {
+		AbstractMapping rule = MappingRulesManager.getRule(ComponentMapping.class.getName());
 		for (Class class1 : classes) {
+
 			EList<Property> ownedAttributes = class1.getOwnedAttributes();
 			for (Property property : ownedAttributes) {
 				Type type = property.getType();
-				Object object = MappingRulesManager.getRule(ComponentMapping.class.getName()).getMapSourceToTarget()
-						.get(type);
+
+				Object object = rule.getMapSourceToTarget().get(type);
 				if (object == null) {
 					continue;
 				}
@@ -86,10 +112,15 @@ public class PartMapping extends AbstractMapping {
 					part.setAbstractType((AbstractType) object);
 				}
 				part.setName(property.getName());
-				rootLogicalSystem.getOwnedFeatures().add(part);
+
+				parent.getOwnedFeatures().add(part);
 
 				Sysml2CapellaUtils.trace(this, eResource, property, part, "Part_");
 			}
+
+			List<Class> subClasses = Sysml2CapellaUtils.getSubClasses(class1);
+			LogicalComponent lc = (LogicalComponent) rule.getMapSourceToTarget().get(class1);
+			transformPartsFromBreakDownBlock(subClasses, lc, eResource);
 		}
 	}
 

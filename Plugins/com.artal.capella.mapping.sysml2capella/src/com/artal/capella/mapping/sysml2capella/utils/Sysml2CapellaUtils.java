@@ -22,6 +22,7 @@ import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.Actor;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
 import org.eclipse.uml2.uml.UseCase;
@@ -457,4 +458,22 @@ public class Sysml2CapellaUtils {
 		return logicalFunctionPkgTmp;
 	}
 
+	/**
+	 * Get all sub {@link Class}.
+	 * 
+	 * @param parent
+	 *            the parent {@link Class}
+	 * @return list of sub {@link Class}
+	 */
+	static public List<Class> getSubClasses(Class parent) {
+		List<Class> results = new ArrayList<Class>();
+		EList<Classifier> nestedClassifiers = parent.getNestedClassifiers();
+		for (Classifier classifier : nestedClassifiers) {
+			if (classifier instanceof Class) {
+				results.add((Class) classifier);
+			}
+		}
+		return results;
+	}
+	
 }
