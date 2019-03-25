@@ -111,7 +111,7 @@ public class PartMapping extends AbstractMapping {
 				if (object instanceof AbstractType) {
 					part.setAbstractType((AbstractType) object);
 				}
-				part.setName(property.getName());
+				part.setName(((AbstractType) object).getName());
 
 				parent.getOwnedFeatures().add(part);
 

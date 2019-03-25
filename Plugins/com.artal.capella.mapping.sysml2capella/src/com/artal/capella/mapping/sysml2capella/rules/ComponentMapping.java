@@ -92,8 +92,6 @@ public class ComponentMapping extends AbstractMapping {
 		for (Class class1 : sourceClasses) {
 			LogicalComponent lComponent = LaFactory.eINSTANCE.createLogicalComponent();
 			lComponent.setName(class1.getName());
-			String date = new Date().toString();
-			lComponent.setDescription(date);
 
 			parent.getOwnedLogicalComponents().add(lComponent);
 
