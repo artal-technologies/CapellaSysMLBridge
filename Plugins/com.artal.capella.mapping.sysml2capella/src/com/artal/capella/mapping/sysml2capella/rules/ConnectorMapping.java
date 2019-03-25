@@ -9,7 +9,10 @@
  *******************************************************************************/
 package com.artal.capella.mapping.sysml2capella.rules;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
@@ -20,6 +23,8 @@ import org.eclipse.uml2.uml.ConnectableElement;
 import org.eclipse.uml2.uml.Connector;
 import org.eclipse.uml2.uml.ConnectorEnd;
 import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.Port;
+import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
 import org.polarsys.capella.core.data.fa.ComponentExchange;
 import org.polarsys.capella.core.data.fa.ComponentPort;
@@ -72,14 +77,37 @@ public class ConnectorMapping extends AbstractMapping {
 	 */
 	@Override
 	public void computeMapping() {
+		// manage product block and all sub block.
 		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, "03 Structure/Product");
 		Resource eResource = _source.eResource();
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
 		LogicalComponent rootLogicalSystem = Sysml2CapellaUtils.getLogicalSystemRoot(targetScope.getProject());
 		transfomConnectors(classes, eResource, rootLogicalSystem);
+
+		// manage all block of Parts.
+		List<Class> subClasses = Sysml2CapellaUtils.getClasses(_source, "03 Structure/Parts");
+		for (Class class1 : subClasses) {
+			ArrayList<Class> classes2 = new ArrayList<Class>();
+			classes2.add(class1);
+			AbstractMapping rule = MappingRulesManager.getRule(ComponentMapping.class.getName());
+			LogicalComponent lc = (LogicalComponent) rule.getMapSourceToTarget().get(class1);
+			transfomConnectors(classes2, eResource, lc);
+		}
+
 	}
 
-	private void transfomConnectors(List<Class> classes, Resource eResource, LogicalComponent rootLogicalSystem) {
+	/**
+	 * Transform all connectors. It's a recursive method.
+	 * 
+	 * @param classes
+	 *            the class to browse for get the connectors
+	 * @param eResource
+	 *            the sysml resource
+	 * @param rootLogicalSystem
+	 *            the {@link LogicalComponent} containing all the created
+	 *            {@link ComponentExchange}
+	 */
+	private void transfomConnectors(List<Class> classes, Resource eResource, LogicalComponent lcContainer) {
 		for (Class class1 : classes) {
 			EList<Connector> ownedConnectors = class1.getOwnedConnectors();
 			for (Connector connector : ownedConnectors) {
@@ -90,7 +118,7 @@ public class ConnectorMapping extends AbstractMapping {
 				if (ends.size() == 2) {
 					ComponentExchange ce = FaFactory.eINSTANCE.createComponentExchange();
 					ce.setName(connector.getName());
-					rootLogicalSystem.getOwnedComponentExchanges().add(ce);
+					lcContainer.getOwnedComponentExchanges().add(ce);
 
 					Sysml2CapellaUtils.trace(this, eResource, connector, ce, "Connector_");
 
@@ -98,6 +126,7 @@ public class ConnectorMapping extends AbstractMapping {
 					transformEnd(ce, ends.get(1), false, eResource);
 				}
 			}
+
 			List<Class> subClasses = Sysml2CapellaUtils.getSubClasses(class1);
 			AbstractMapping rule = MappingRulesManager.getRule(ComponentMapping.class.getName());
 			LogicalComponent lc = (LogicalComponent) rule.getMapSourceToTarget().get(class1);
@@ -120,10 +149,34 @@ public class ConnectorMapping extends AbstractMapping {
 	 */
 	private void transformEnd(ComponentExchange ce, ConnectorEnd connectorEnd, boolean isSource, Resource eResource) {
 		ConnectableElement role = connectorEnd.getRole();
-		Type part = connectorEnd.getPartWithPort().getType();
+		Property partWithPort = connectorEnd.getPartWithPort();
+		if (partWithPort == null) {
+			return;
+		}
+		Type part = partWithPort.getType();
 		String partID = Sysml2CapellaUtils.getSysMLID(eResource, part);
-		Object object = MappingRulesManager.getRule(ComponentPortMapping.class.getName() + partID)
-				.getMapSourceToTarget().get(role);
+		ComponentPortMapping rule = (ComponentPortMapping) MappingRulesManager
+				.getRule(ComponentPortMapping.class.getName() + partID);
+		Object object = null;
+
+		if (rule == null) {
+			return;
+		}
+
+		Map<Port, Map<String, Port>> mapPortToSubPort = rule.getMapPortToSubPort();
+		Map<String, Port> map = mapPortToSubPort.get(role);
+
+		if (map != null) {
+			Entry<String, Port> next = map.entrySet().iterator().next();
+			String subPartID = next.getKey();
+			Port subPort = next.getValue();
+			ComponentPortMapping subRule = (ComponentPortMapping) MappingRulesManager
+					.getRule(ComponentPortMapping.class.getName() + subPartID);
+			object = subRule.getMapSourceToTarget().get(subPort);
+		} else {
+			object = rule.getMapSourceToTarget().get(role);
+		}
+
 		if (object instanceof ComponentPort) {
 			if (isSource) {
 				ce.setSource((ComponentPort) object);

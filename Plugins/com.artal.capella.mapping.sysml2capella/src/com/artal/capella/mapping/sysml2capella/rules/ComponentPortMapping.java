@@ -9,10 +9,17 @@
  *******************************************************************************/
 package com.artal.capella.mapping.sysml2capella.rules;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.ConnectableElement;
+import org.eclipse.uml2.uml.Connector;
+import org.eclipse.uml2.uml.ConnectorEnd;
 import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Port;
@@ -49,6 +56,8 @@ public class ComponentPortMapping extends AbstractMapping {
 	 */
 	IMappingExecution _mappingExecution;
 
+	Map<Port, Map<String, Port>> _mapPortToSubPort;
+
 	/**
 	 * Constructor.
 	 * 
@@ -74,21 +83,144 @@ public class ComponentPortMapping extends AbstractMapping {
 	@Override
 	public void computeMapping() {
 		Resource eResource = _source.eResource();
-		EList<Port> ownedPorts = _source.getOwnedPorts();
+		_mapPortToSubPort = new HashMap<Port, Map<String, Port>>();
+
+		// transform all port of source Class.
+		transformPorts(eResource, _source);
+	}
+
+	/**
+	 * Transform all leaf ports. Leaf port are the port of class doesn't have
+	 * sub classes.
+	 * 
+	 * @param eResource
+	 *            the sysml resource
+	 * @param class1
+	 *            the Class to browse to get the ports.
+	 */
+	private void transformPorts(Resource eResource, Class class1) {
+
+		// browse all port of the class
+		EList<Port> ownedPorts = class1.getOwnedPorts();
 		for (Port port : ownedPorts) {
-			OrientationPortKind directionPort = getDirectionPort(port);
 
-			ComponentPort cport = FaFactory.eINSTANCE.createComponentPort();
-			cport.setOrientation(directionPort);
-			cport.setKind(ComponentPortKind.FLOW);
-			cport.setName(port.getName());
+			// if the port is not associated at an sub port (internal connector
+			// in the browsed class), then create the ComponentPort.
+			if (!hasSubPortConnected(eResource, port, port, class1)) {
 
-			Sysml2CapellaUtils.trace(this, eResource, port, cport, "Port_");
+				OrientationPortKind directionPort = getDirectionPort(port);
+				ComponentPort cport = FaFactory.eINSTANCE.createComponentPort();
+				cport.setOrientation(directionPort);
+				cport.setKind(ComponentPortKind.FLOW);
+				cport.setName(port.getName());
 
-			AbstractMapping rule = MappingRulesManager.getRule(ComponentMapping.class.getName());
-			LogicalComponent lComponent = (LogicalComponent) rule.getMapSourceToTarget().get(_source);
-			lComponent.getOwnedFeatures().add(cport);
+				Sysml2CapellaUtils.trace(this, eResource, port, cport, "Port_");
 
+				AbstractMapping rule = MappingRulesManager.getRule(ComponentMapping.class.getName());
+				LogicalComponent lComponent = (LogicalComponent) rule.getMapSourceToTarget().get(_source);
+				lComponent.getOwnedFeatures().add(cport);
+			}
+		}
+	}
+
+	/**
+	 * Check the port has connected sub port.
+	 * 
+	 * @param eResource
+	 *            the sysml resource
+	 * @param refPort
+	 *            the reference port. The "root" port
+	 * @param parent
+	 *            the parent port.
+	 * @param class1
+	 *            the class
+	 * @return true if has sub port.
+	 */
+	private boolean hasSubPortConnected(Resource eResource, Port refPort, Port parent, Class class1) {
+		Class type = class1;
+		// browse all connector.
+		EList<Connector> ownedConnectors = type.getOwnedConnectors();
+		for (Connector connector : ownedConnectors) {
+			// get the ConnectorEnds
+			EList<ConnectorEnd> ends = connector.getEnds();
+			ConnectorEnd connectorEnd = ends.get(0);
+			Property partWithPort = connectorEnd.getPartWithPort();
+			ConnectorEnd connectorEnd2 = ends.get(1);
+			Property partWithPort2 = connectorEnd2.getPartWithPort();
+
+			// check the connector is connected at the parent port. In this case
+			// this is a connector of interest.
+			if (!connectorEnd.getRole().equals(parent) && !connectorEnd2.getRole().equals(parent)) {
+				continue;
+			}
+
+			// check source end connector
+			if (hasConnectedPort(partWithPort, connectorEnd, connectorEnd2, refPort, class1, eResource)) {
+				return true;
+			}
+
+			// check target end connector
+			if (hasConnectedPort(partWithPort2, connectorEnd2, connectorEnd, refPort, class1, eResource)) {
+				return true;
+			}
+
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 * Check has connected port.
+	 * 
+	 * @param partWithPort
+	 *            the part associated at the connected port.
+	 * @param connectorEnd
+	 *            the source end
+	 * @param connectorEnd2
+	 *            the target end
+	 * @param refPort
+	 *            the port reference
+	 * @param class1
+	 *            the browsed class
+	 * @param eResource
+	 *            the sysml resource
+	 * @return true if has sub port.
+	 */
+	private boolean hasConnectedPort(Property partWithPort, ConnectorEnd connectorEnd, ConnectorEnd connectorEnd2,
+			Port refPort, Class class1, Resource eResource) {
+		if (partWithPort == null) {
+			ConnectableElement role = connectorEnd.getRole();
+			EObject eContainer = role.eContainer();
+			if (eContainer.equals(class1)) {
+				checkHasSubPortConnectedOrFillMap(connectorEnd2, refPort, eResource);
+				return true;
+			}
+		} else {
+			Type type1 = partWithPort.getType();
+			if (type1.equals(class1)) {
+				checkHasSubPortConnectedOrFillMap(connectorEnd2, refPort, eResource);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Check the has connected sub port. If has the connected port has not sub
+	 * port connected, it's put in map to link the connected port at the
+	 * reference
+	 * 
+	 * @param connectorEnd2
+	 * @param refPort
+	 * @param eResource
+	 */
+	private void checkHasSubPortConnectedOrFillMap(ConnectorEnd connectorEnd2, Port refPort, Resource eResource) {
+		if (!hasSubPortConnected(eResource, refPort, (Port) connectorEnd2.getRole(),
+				(Class) connectorEnd2.getRole().eContainer())) {
+			Map<String, Port> partIDTOPort = new HashMap<>();
+			partIDTOPort.put(Sysml2CapellaUtils.getSysMLID(eResource, (Class) connectorEnd2.getRole().eContainer()),
+					(Port) connectorEnd2.getRole());
+			_mapPortToSubPort.put(refPort, partIDTOPort);
 		}
 	}
 
@@ -170,5 +302,14 @@ public class ComponentPortMapping extends AbstractMapping {
 	@Override
 	public Sysml2CapellaAlgo getAlgo() {
 		return (Sysml2CapellaAlgo) super.getAlgo();
+	}
+
+	/**
+	 * Get the {@link Map} Reference port to leaf sub port.
+	 * 
+	 * @return {@link Map}
+	 */
+	public Map<Port, Map<String, Port>> getMapPortToSubPort() {
+		return _mapPortToSubPort;
 	}
 }
