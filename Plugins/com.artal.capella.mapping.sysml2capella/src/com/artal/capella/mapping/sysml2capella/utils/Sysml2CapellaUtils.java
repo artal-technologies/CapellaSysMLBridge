@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.uml2.uml.Abstraction;
 import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.Actor;
 import org.eclipse.uml2.uml.Association;
@@ -84,6 +85,22 @@ public class Sysml2CapellaUtils {
 				results.add((Class) structurePkg);
 			}
 		}
+		return results;
+	}
+
+	static public List<Abstraction> getAllAbstractions(Package source) {
+		List<Abstraction> results = new ArrayList<>();
+
+		EList<PackageableElement> packagedElements = source.getPackagedElements();
+		for (PackageableElement packageableElement : packagedElements) {
+			if (packageableElement instanceof Abstraction) {
+				results.add((Abstraction) packageableElement);
+			}
+			if (packageableElement instanceof Package) {
+				results.addAll(getAllAbstractions((Package) packageableElement));
+			}
+		}
+
 		return results;
 	}
 
@@ -475,5 +492,5 @@ public class Sysml2CapellaUtils {
 		}
 		return results;
 	}
-	
+
 }

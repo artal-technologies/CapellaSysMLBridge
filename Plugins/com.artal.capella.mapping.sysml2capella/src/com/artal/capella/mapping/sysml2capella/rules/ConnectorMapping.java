@@ -76,6 +76,10 @@ public class ConnectorMapping extends AbstractMapping {
 		Resource eResource = _source.eResource();
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
 		LogicalComponent rootLogicalSystem = Sysml2CapellaUtils.getLogicalSystemRoot(targetScope.getProject());
+		transfomConnectors(classes, eResource, rootLogicalSystem);
+	}
+
+	private void transfomConnectors(List<Class> classes, Resource eResource, LogicalComponent rootLogicalSystem) {
 		for (Class class1 : classes) {
 			EList<Connector> ownedConnectors = class1.getOwnedConnectors();
 			for (Connector connector : ownedConnectors) {
@@ -94,6 +98,10 @@ public class ConnectorMapping extends AbstractMapping {
 					transformEnd(ce, ends.get(1), false, eResource);
 				}
 			}
+			List<Class> subClasses = Sysml2CapellaUtils.getSubClasses(class1);
+			AbstractMapping rule = MappingRulesManager.getRule(ComponentMapping.class.getName());
+			LogicalComponent lc = (LogicalComponent) rule.getMapSourceToTarget().get(class1);
+			transfomConnectors(subClasses, eResource, lc);
 		}
 	}
 

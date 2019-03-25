@@ -9,16 +9,22 @@
  *******************************************************************************/
 package com.artal.capella.mapping.sysml2capella.rules;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.uml2.uml.Abstraction;
 import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ActivityParameterNode;
+import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.ParameterDirectionKind;
 import org.polarsys.capella.core.data.cs.CsFactory;
@@ -58,6 +64,7 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 	 * Manage sub rules
 	 */
 	MappingRulesManager _manager = new MappingRulesManager();
+	private Map<Abstraction,Map<Activity, List<Class>>> _mapAbstractToActivityToClasses;
 
 	/**
 	 * Constructor.
@@ -139,9 +146,40 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 				}
 			}
 
+			_mapAbstractToActivityToClasses = new HashMap<Abstraction,Map<Activity, List<Class>>>();
+			List<Abstraction> allAbstractions = Sysml2CapellaUtils.getAllAbstractions(_source);
+			Activity act = null;
+			Class comp = null;
+			for (Abstraction abstraction : allAbstractions) {
+				Map<Activity, List<Class>> mapActivityToClasses = _mapAbstractToActivityToClasses.get(abstraction);
+				if(mapActivityToClasses == null){
+					 mapActivityToClasses = new HashMap<>();
+					 _mapAbstractToActivityToClasses.put(abstraction, mapActivityToClasses);
+				}
+				
+				List<NamedElement> clients = abstraction.getClients();
+				for (NamedElement namedElement : clients) {
+					if (namedElement instanceof Activity) {
+						act = (Activity) namedElement;
+						break;
+					}
+				}
+				EList<NamedElement> suppliers = abstraction.getSuppliers();
+				for (NamedElement namedElement : suppliers) {
+					if (namedElement instanceof Class) {
+						comp = (Class) namedElement;
+						List<Class> list = mapActivityToClasses.get(act);
+						if (list == null) {
+							list = new ArrayList<Class>();
+							mapActivityToClasses.put(act, list);
+						}
+						list.add(comp);
+					}
+				}
+			}
+
 			LogicalFunctionMapping functionMapping = new LogicalFunctionMapping(getAlgo(), activity, _mappingExecution);
 			_manager.add(functionMapping.getClass().getName(), functionMapping);
-
 			_manager.executeRules();
 
 			FunctionalExchangeMapping functionExMapping = new FunctionalExchangeMapping(getAlgo(), activity,
@@ -150,6 +188,10 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 
 			_manager.executeRules();
 		}
+	}
+
+	public Map<Abstraction,Map<Activity, List<Class>>> getMapAbstractionToActivityToClasses() {
+		return _mapAbstractToActivityToClasses;
 	}
 
 	@Override

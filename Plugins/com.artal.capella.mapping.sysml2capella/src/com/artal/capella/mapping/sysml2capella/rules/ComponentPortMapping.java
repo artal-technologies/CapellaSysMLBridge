@@ -95,7 +95,7 @@ public class ComponentPortMapping extends AbstractMapping {
 	/**
 	 * Get the direction port. If the FlowPort is nonatomic, and the
 	 * FlowSpecification typing the port has flow properties with direction
-	 * “in,” the FlowPort direction is “in” (or “out” if isConjugated=true). If
+	 * ï¿½in,ï¿½ the FlowPort direction is ï¿½inï¿½ (or ï¿½outï¿½ if isConjugated=true). If
 	 * the flow properties are all out, the FlowPort direction is out (or in if
 	 * isConjugated=true). If flow properties are both in and out, the direction
 	 * is inout.
@@ -110,50 +110,52 @@ public class ComponentPortMapping extends AbstractMapping {
 		boolean isIn = false;
 		boolean isOut = false;
 
-		for (Property prop : ((Class) type).getOwnedAttributes()) {
-			Stereotype flowProperty = prop.getAppliedStereotype("SysML::Ports&Flows::FlowProperty");
-			if (flowProperty != null) {
-				Object val = prop.getValue(flowProperty, "direction");
+		if (type != null) {
+			for (Property prop : ((Class) type).getOwnedAttributes()) {
+				Stereotype flowProperty = prop.getAppliedStereotype("SysML::Ports&Flows::FlowProperty");
+				if (flowProperty != null) {
+					Object val = prop.getValue(flowProperty, "direction");
 
-				if (val instanceof EnumerationLiteral) {
-					String direction = ((EnumerationLiteral) val).getName();
-					if (direction != null) {
-						switch (direction) {
-						case "in":
-							isIn = true;
-							break;
-						case "inout":
-							isIn = true;
-							isOut = true;
-							break;
-						case "out":
-							isOut = true;
-							break;
-						default:
-							break;
+					if (val instanceof EnumerationLiteral) {
+						String direction = ((EnumerationLiteral) val).getName();
+						if (direction != null) {
+							switch (direction) {
+							case "in":
+								isIn = true;
+								break;
+							case "inout":
+								isIn = true;
+								isOut = true;
+								break;
+							case "out":
+								isOut = true;
+								break;
+							default:
+								break;
+							}
 						}
 					}
 				}
-			}
-			if (isIn) {
-				if (isOut) {
-					return OrientationPortKind.INOUT;
-				} else {
-					if (conjugated) {
-						return OrientationPortKind.OUT;
+				if (isIn) {
+					if (isOut) {
+						return OrientationPortKind.INOUT;
 					} else {
-						return OrientationPortKind.IN;
-					}
-				}
-			} else {
-				if (isOut) {
-					if (conjugated) {
-						return OrientationPortKind.IN;
-					} else {
-						return OrientationPortKind.OUT;
+						if (conjugated) {
+							return OrientationPortKind.OUT;
+						} else {
+							return OrientationPortKind.IN;
+						}
 					}
 				} else {
-					return OrientationPortKind.INOUT;
+					if (isOut) {
+						if (conjugated) {
+							return OrientationPortKind.IN;
+						} else {
+							return OrientationPortKind.OUT;
+						}
+					} else {
+						return OrientationPortKind.INOUT;
+					}
 				}
 			}
 		}

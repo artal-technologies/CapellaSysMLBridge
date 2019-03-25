@@ -10,25 +10,32 @@
 package com.artal.capella.mapping.sysml2capella.rules;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.uml2.uml.Abstraction;
 import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ActivityParameterNode;
 import org.eclipse.uml2.uml.Behavior;
 import org.eclipse.uml2.uml.CallBehaviorAction;
+import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.InputPin;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.OutputPin;
 import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.Pin;
+import org.polarsys.capella.core.data.fa.ComponentFunctionalAllocation;
+import org.polarsys.capella.core.data.fa.FaFactory;
 import org.polarsys.capella.core.data.fa.FunctionPort;
 import org.polarsys.capella.core.data.la.LaFactory;
+import org.polarsys.capella.core.data.la.LogicalComponent;
 import org.polarsys.capella.core.data.la.LogicalFunction;
 
 import com.artal.capella.mapping.rules.AbstractMapping;
@@ -72,8 +79,13 @@ public class LogicalFunctionMapping extends AbstractMapping {
 		Resource eResource = _source.eResource();
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
 		LogicalFunction logicalFunctionRoot = Sysml2CapellaUtils.getLogicalFunctionRoot(targetScope.getProject());
+		FunctionalArchitectureMapping rule = (FunctionalArchitectureMapping) MappingRulesManager
+				.getRule(FunctionalArchitectureMapping.class.getName());
+		Map<Abstraction, Map<Activity, List<Class>>> mapAbstractionToActivityToClasses = rule
+				.getMapAbstractionToActivityToClasses();
 		_mapPinToParam = new HashMap<>();
-		transformCallBehavior(eResource, logicalFunctionRoot, _source, _mapPinToParam);
+		transformCallBehavior(eResource, logicalFunctionRoot, _source, _mapPinToParam,
+				mapAbstractionToActivityToClasses);
 		_manager.executeRules();
 
 	}
@@ -96,11 +108,13 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 *            {@link LogicalFunction}
 	 * @param activity
 	 *            the source activity to browse.
+	 * @param mapActivityToClasses
 	 * @return a {@link Boolean} true if the source <code>activity</code> are
 	 *         children.
 	 */
 	private boolean transformCallBehavior(Resource eResource, LogicalFunction logicalFunctionRoot, Activity activity,
-			Map<Pin, ActivityParameterNode> mapPinToParam) {
+			Map<Pin, ActivityParameterNode> mapPinToParam,
+			Map<Abstraction, Map<Activity, List<Class>>> mapAbstractionToActivityToClasses) {
 		EList<ActivityNode> nodes = activity.getNodes();
 		boolean hasChild = false;
 		for (ActivityNode activityNode : nodes) {
@@ -150,7 +164,34 @@ public class LogicalFunctionMapping extends AbstractMapping {
 						for (OutputPin outputPin : results) {
 							map.put(outputPin, null);
 						}
-						transformPort = !transformCallBehavior(eResource, lFunction, (Activity) behavior, map);
+						transformPort = !transformCallBehavior(eResource, lFunction, (Activity) behavior, map,
+								mapAbstractionToActivityToClasses);
+
+						AbstractMapping rule = MappingRulesManager.getRule(ComponentMapping.class.getName());
+						for (Entry<Abstraction, Map<Activity, List<Class>>> entry : mapAbstractionToActivityToClasses
+								.entrySet()) {
+							Abstraction abstraction = entry.getKey();
+							Map<Activity, List<Class>> mapActivityToClasses = entry.getValue();
+							List<Class> list = mapActivityToClasses.get(behavior);
+							if (list != null) {
+								for (Class class1 : list) {
+									Object object = rule.getMapSourceToTarget().get(class1);
+									if (object instanceof LogicalComponent) {
+										ComponentFunctionalAllocation createComponentFunctionalAllocation = FaFactory.eINSTANCE
+												.createComponentFunctionalAllocation();
+										createComponentFunctionalAllocation.setTargetElement(lFunction);
+										createComponentFunctionalAllocation.setSourceElement((LogicalComponent) object);
+										((LogicalComponent) object).getOwnedFunctionalAllocation()
+												.add(createComponentFunctionalAllocation);
+										Sysml2CapellaUtils.trace(this, eResource, abstraction,
+												createComponentFunctionalAllocation, "FunctionAllocation_");
+									}
+
+								}
+							}
+
+						}
+
 						mapPinToParam.putAll(map);
 					}
 				}
