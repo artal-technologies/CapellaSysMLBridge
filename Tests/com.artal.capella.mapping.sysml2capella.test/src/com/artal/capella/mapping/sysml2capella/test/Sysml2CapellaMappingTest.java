@@ -100,6 +100,17 @@ public class Sysml2CapellaMappingTest {
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "comp03Test",
 				pathEmptyProject);
 	}
+	
+	@Test
+	public void capa04Test() throws IOException {
+		String pathUmlModel = "resources/capellaResources/Capabilities/Capa_04/CapabilitiesCameo04.uml";
+		String pathReferenceModel = "resources/capellaResources/Capabilities/Capa_04/Capa_4.melodymodeller";
+		String pathRefBridgeTrace = "resources/capellaResources/Capabilities/Capa_04/Capa_4.melodymodeller.bridgetraces";
+		String bridgeTraceName = "Capa_4.melodymodeller";
+		String pathEmptyProject = "resources/capellaResources/Capabilities/Capa_04/Capa_4_empty.melodymodeller";
+		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "capa04Test",
+				pathEmptyProject);
+	}
 
 	private void launchTest(String pathUmlModel, String pathReferenceModel, String pathRefBridgeTrace,
 			String bridgeTraceName, String nameTest, String pathEmptyProject) throws IOException {

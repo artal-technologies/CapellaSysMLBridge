@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.diffmerge.bridge.traces.gen:Trace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.emf.diffmerge.bridge.traces.gen="http://www.eclipse.org/emf/diffmerge/bridge/1.0.0/traces">
+  <targetToCause key="d85d6fed-8cad-4c92-a403-2b2fe8341a12" value="LogicalActor__19_0_1_62f021d_1553593564943_953627_13504"/>
+  <targetToCause key="4573a854-affb-4c12-8595-b1d494469774" value="LogicalActor_Part__19_0_1_62f021d_1553593564943_953627_13504"/>
+  <targetToCause key="c417ea2e-aa4b-44f4-8ef7-d72188b92755" value="CapabilityRealization__19_0_1_62f021d_1553593736773_599786_13640"/>
+  <targetToCause key="5551ac9b-2201-4c89-9a6f-ce1ff1851783" value="CapabilityRealization__19_0_1_62f021d_1553593718844_339937_13619"/>
+  <targetToCause key="cd152fd5-9475-4076-9169-9e65be8dda2a" value="CapabilityRealization__19_0_1_62f021d_1553593591559_175789_13532"/>
+  <targetToCause key="ee877ddf-5747-44bb-8713-7cba09323835" value="CapabilityRealization__19_0_1_62f021d_1553593701035_70581_13598"/>
+  <targetToCause key="e5d44574-4f51-4b6c-899f-2688aef89485" value="AbstractCapabilityInclude__19_0_1_62f021d_1553593763468_559708_13691"/>
+  <targetToCause key="25fd3271-f505-458e-8a74-45eeb4f07556" value="AbstractCapabilityInclude__19_0_1_62f021d_1553593754853_748926_13663"/>
+  <targetToCause key="9de7a9ea-daba-4b19-a0df-1de207f0ddd2" value="AbstractCapabilityInclude__19_0_1_62f021d_1553593759381_486290_13677"/>
+  <targetToCause key="389f6be9-0178-4ba3-8553-0369624eddd0" value="AssociationActorUseCase__19_0_1_62f021d_1553593684342_73972_13581"/>
+  <targetToCause key="3f7ca976-acde-436a-ba18-a8bf338dad90" value="EnvFunction__19_0_1_62f021d_1553593486714_40069_13334"/>
+  <targetToCause key="8771dd2a-97fc-4d82-9037-9e3adad426a9" value="GenericActor__19_0_1_62f021d_1553593486714_40069_13334"/>
+  <targetToCause key="8dc17a2f-fa50-4ebe-a8fd-0a75e5efb166" value="GenericActorPart__19_0_1_62f021d_1553593486714_40069_13334"/>
+  <targetToCause key="b69b9e9b-fb8c-4fc8-9846-b05ec9746bb2" value="GenericActorPartFunctionalAlloc__19_0_1_62f021d_1553593486714_40069_13334"/>
+</org.eclipse.emf.diffmerge.bridge.traces.gen:Trace>

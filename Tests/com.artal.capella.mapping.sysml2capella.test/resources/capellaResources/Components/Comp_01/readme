@@ -1,0 +1,11 @@
+
+/**************Comp_1 Test************************/
+/*************************************************/
+
+Check:
+      - Creation LogicalComponents from Cameo Blocks
+      - Creation Capella Part from Cameo PartProperty.
+      - Breakdown of LogicatComponents
+      - Breakdown of Parts.
+
+
