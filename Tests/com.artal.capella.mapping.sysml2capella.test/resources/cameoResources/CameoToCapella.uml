@@ -78,7 +78,7 @@
             <end xmi:id="_19_0_77e01af_1538650167947_267789_17761" partWithPort="_19_0_77e01af_1538649922362_651329_17506" role="_19_0_77e01af_1538649983388_587879_17556"/>
           </ownedConnector>
         </packagedElement>
-        <packagedElement xmi:type="uml:Class" xmi:id="_18_5_1_78501b2_1501073340563_766120_15160" name="Coffee Grounds Container" visibility="public" useCase="_18_5_1_78501b2_1501071241005_742040_14690 _18_5_1_78501b2_1501064586285_256036_14483">
+        <packagedElement xmi:type="uml:Class" xmi:id="_18_5_1_78501b2_1501073340563_766120_15160" name="Coffee roasted Grounds Container" visibility="public" useCase="_18_5_1_78501b2_1501071241005_742040_14690 _18_5_1_78501b2_1501064586285_256036_14483">
           <ownedAttribute xmi:type="uml:Port" xmi:id="_19_0_77e01af_1538646206807_795998_15530" name="Water In" visibility="public" type="_18_5_1_78501b2_1501408527333_259170_19213" aggregation="composite" isConjugated="true"/>
           <ownedAttribute xmi:type="uml:Port" xmi:id="_19_0_77e01af_1538646209877_526096_15549" name="Water Out" visibility="public" type="_18_5_1_78501b2_1501408527333_259170_19213" aggregation="composite"/>
         </packagedElement>
