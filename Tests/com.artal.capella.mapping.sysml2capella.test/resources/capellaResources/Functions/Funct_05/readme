@@ -1,0 +1,11 @@
+
+/**************Funct_05 Test************************/
+/*************************************************/
+
+Check:
+      - Creation LogicalFunction from Cameo CallBehaviorActivity.
+      - LogicalFunctions breakdown from Cameo Activity breakdown.
+      - Creation FunctionPort from Cameo Pin.
+      - Creation FunctionExchange from Cameo ObjectFlow.
+
+

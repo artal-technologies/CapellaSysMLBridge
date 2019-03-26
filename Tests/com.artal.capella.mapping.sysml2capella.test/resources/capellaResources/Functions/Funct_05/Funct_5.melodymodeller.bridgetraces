@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.diffmerge.bridge.traces.gen:Trace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.emf.diffmerge.bridge.traces.gen="http://www.eclipse.org/emf/diffmerge/bridge/1.0.0/traces">
+  <targetToCause key="10362c11-97ea-457b-b8c7-810dfbeac41a" value="EnvFunction__19_0_1_62f021d_1553595622789_537874_13253"/>
+  <targetToCause key="840943c8-2066-4057-9237-b78a11fe3f37" value="GenericActor__19_0_1_62f021d_1553595622789_537874_13253"/>
+  <targetToCause key="42cfb64e-979a-43f4-8e20-da9559aa82a7" value="GenericActorPart__19_0_1_62f021d_1553595622789_537874_13253"/>
+  <targetToCause key="5861b415-48a6-47c8-8ae6-0b476b9718a0" value="GenericActorPartFunctionalAlloc__19_0_1_62f021d_1553595622789_537874_13253"/>
+  <targetToCause key="0e41eda8-b006-4987-9688-0d280ecb3bf9" value="LogicalFunction__19_0_1_62f021d_1553595667353_217775_13497"/>
+  <targetToCause key="0bc10bd0-551c-4a55-9aee-e8b0a8f16456" value="LogicalFunction__19_0_1_62f021d_1553596088200_677165_13755"/>
+  <targetToCause key="706a9a1c-812c-4a04-8f88-79db49889a4e" value="LogicalFunction__19_0_1_62f021d_1553596135942_861924_13833"/>
+  <targetToCause key="30dfad3a-a8e5-46f3-bfea-442fefa293a5" value="LogicalFunction__19_0_1_62f021d_1553595720173_547982_13525"/>
+  <targetToCause key="7478f3e0-eb6f-407b-95d5-1b38d9caa8ff" value="LogicalFunction__19_0_1_62f021d_1553596171411_694921_13897"/>
+  <targetToCause key="9c89a777-a175-48c6-aab2-a1ada61d36fd" value="LogicalFunction__19_0_1_62f021d_1553595747284_508299_13558"/>
+  <targetToCause key="482cf005-f499-447a-ae2b-2ef1689589b3" value="InputPIN_19_0_1_62f021d_1553596775812_677296_14724"/>
+  <targetToCause key="e9dfcad4-d685-41e5-ad09-7584f739c07e" value="OutputPIN_19_0_1_62f021d_1553596777642_666750_14744"/>
+  <targetToCause key="9102b888-894f-4d7a-9382-c48f5f30a4a6" value="OutputPIN_19_0_1_62f021d_1553596254282_630123_14076"/>
+  <targetToCause key="3bf66d0d-3936-42cf-8805-1db12886426f" value="InputPIN_19_0_1_62f021d_1553596197386_464647_13948"/>
+  <targetToCause key="2cb78f27-454c-4c5e-ae4c-70766533a397" value="FunctionalExchange__19_0_1_62f021d_1553596202484_798504_13974"/>
+  <targetToCause key="626245f9-abd9-4309-b64f-475dbd9876e1" value="FunctionalExchange__19_0_1_62f021d_1553596229681_734791_14037"/>
+</org.eclipse.emf.diffmerge.bridge.traces.gen:Trace>
