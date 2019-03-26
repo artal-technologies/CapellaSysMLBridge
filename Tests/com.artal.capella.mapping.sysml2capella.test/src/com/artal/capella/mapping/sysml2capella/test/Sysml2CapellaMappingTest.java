@@ -89,6 +89,17 @@ public class Sysml2CapellaMappingTest {
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "comp02Test",
 				pathEmptyProject);
 	}
+	
+	@Test
+	public void comp03Test() throws IOException {
+		String pathUmlModel = "resources/capellaResources/Components/Comp_03/ComponentCameo03.uml";
+		String pathReferenceModel = "resources/capellaResources/Components/Comp_03/Comp_03.melodymodeller";
+		String pathRefBridgeTrace = "resources/capellaResources/Components/Comp_03/Comp_03.melodymodeller.bridgetraces";
+		String bridgeTraceName = "Comp_03.melodymodeller";
+		String pathEmptyProject = "resources/capellaResources/Components/Comp_03/Comp_03_empty.melodymodeller";
+		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "comp03Test",
+				pathEmptyProject);
+	}
 
 	private void launchTest(String pathUmlModel, String pathReferenceModel, String pathRefBridgeTrace,
 			String bridgeTraceName, String nameTest, String pathEmptyProject) throws IOException {

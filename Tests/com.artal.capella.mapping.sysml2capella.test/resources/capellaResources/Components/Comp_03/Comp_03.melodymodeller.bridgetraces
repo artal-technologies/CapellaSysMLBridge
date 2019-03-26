@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<org.eclipse.emf.diffmerge.bridge.traces.gen:Trace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.emf.diffmerge.bridge.traces.gen="http://www.eclipse.org/emf/diffmerge/bridge/1.0.0/traces">
+  <targetToCause key="d954f379-a956-4ff9-befc-acb9b14cc11d" value="LogicalComponent__19_0_1_62f021d_1553586742364_95562_13494"/>
+  <targetToCause key="201db46e-8709-4a5a-b23a-8c1122c411f3" value="Part__19_0_1_62f021d_1553586769999_939113_13508"/>
+  <targetToCause key="572f78a4-2551-4648-b74e-11bd40ec03b8" value="EnvFunction__19_0_1_62f021d_1553586724363_27808_13402"/>
+  <targetToCause key="8825c5ed-71b1-461d-8278-957b51f2eff3" value="GenericActor__19_0_1_62f021d_1553586724363_27808_13402"/>
+  <targetToCause key="8d3a859a-aeb5-40b4-9c68-f1d164dc0c45" value="GenericActorPart__19_0_1_62f021d_1553586724363_27808_13402"/>
+  <targetToCause key="c381a12b-af44-4986-9393-2bd1fca6c7c8" value="GenericActorPartFunctionalAlloc__19_0_1_62f021d_1553586724363_27808_13402"/>
+  <targetToCause key="ee9e7e9e-19c4-4d79-b7fb-b97a4b1820c2" value="LogicalFunction__19_0_1_62f021d_1553586886012_119179_13556"/>
+  <targetToCause key="68c5d7fe-92e4-4f93-bbc3-1437f37e2833" value="FunctionAllocation__19_0_1_62f021d_1553588281502_232974_13837"/>
+</org.eclipse.emf.diffmerge.bridge.traces.gen:Trace>
