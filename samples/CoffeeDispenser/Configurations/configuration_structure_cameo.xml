@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurations>
+	<useCasesPath path="02 Behavior/02 Use Cases" />
+	<activitiesPah path="02 Behavior/02 Functional Architecture" />
+	<partPath path="03 Structure/Parts" />
+	<productPath path="03 Structure/Product" />
+</configurations>
