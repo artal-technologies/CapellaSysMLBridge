@@ -11,7 +11,7 @@
 <feature
       id="com.artal.capella.mapping.sysml2capella.feature"
       label="Feature"
-      version="1.0.0.qualifier">
+      version="1.0.1.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -37,21 +37,21 @@
          id="com.artal.capella.mapping.sysml2capella"
          download-size="0"
          install-size="0"
-         version="1.0.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="com.artal.capella.mapping"
          download-size="0"
          install-size="0"
-         version="1.0.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.emf.diffmerge.bridge.capella.integration"
          download-size="0"
          install-size="0"
-         version="0.8.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>

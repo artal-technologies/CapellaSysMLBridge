@@ -17,4 +17,5 @@
   	<version>1.0.0-SNAPSHOT</version>
   	<relativePath>../../Maven/com.artal.capella.mapping.parent</relativePath>
   </parent>
+  <version>1.0.1-SNAPSHOT</version>
 </project>
