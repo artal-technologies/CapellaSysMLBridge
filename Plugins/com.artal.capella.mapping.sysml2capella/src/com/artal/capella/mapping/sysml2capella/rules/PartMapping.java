@@ -70,10 +70,10 @@ public class PartMapping extends AbstractMapping {
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
 		LogicalComponent rootLogicalSystem = Sysml2CapellaUtils.getLogicalSystemRoot(targetScope.getProject());
 
-		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, "03 Structure/Product");
+		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, getAlgo().getConfiguration().getProductPath());
 		transformPartsFromBreakDownBlock(classes, rootLogicalSystem, eResource);
 
-		List<Class> blocks = Sysml2CapellaUtils.getClasses(_source, "03 Structure/Parts");
+		List<Class> blocks = Sysml2CapellaUtils.getClasses(_source, getAlgo().getConfiguration().getPartPath());
 		for (Class class1 : blocks) {
 			ArrayList<Class> classes2 = new ArrayList<Class>();
 			classes2.add(class1);

@@ -17,6 +17,7 @@ import org.eclipse.uml2.uml.Model;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.rules.MappingRulesManager;
+import com.artal.capella.mapping.sysml2capella.preferences.SysMLConfiguration;
 import com.artal.capella.mapping.sysml2capella.rules.ActorMapping;
 import com.artal.capella.mapping.sysml2capella.rules.AssociationActorUseCaseMapping;
 import com.artal.capella.mapping.sysml2capella.rules.ComponentMapping;
@@ -37,6 +38,28 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 
 	MappingRulesManager _managerRules = new MappingRulesManager();
 
+	/**
+	 * configuration provides the package where get the sysml data.
+	 */
+	private SysMLConfiguration _configuration;
+
+	/**
+	 * Default constructor
+	 */
+	public Sysml2CapellaAlgo() {
+
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param configuration
+	 *            provides the package where get the sysml data.
+	 */
+	public Sysml2CapellaAlgo(SysMLConfiguration configuration) {
+		_configuration = configuration;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -44,6 +67,11 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 	 */
 	@Override
 	public void launch(Model source, IMappingExecution mappingExecution_p) {
+
+		if (_configuration == null) {
+			// default value
+			_configuration = new SysMLConfiguration();
+		}
 
 		// manage components mapping.
 		ComponentMapping componentMapping = new ComponentMapping(this, source, mappingExecution_p);
@@ -65,7 +93,8 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 				mappingExecution_p);
 		_managerRules.add(associationActorUseCaseMapping.getClass().getName(), associationActorUseCaseMapping);
 
-		FunctionalArchitectureMapping functionMapping = new FunctionalArchitectureMapping(this, source, mappingExecution_p);
+		FunctionalArchitectureMapping functionMapping = new FunctionalArchitectureMapping(this, source,
+				mappingExecution_p);
 		_managerRules.add(functionMapping.getClass().getName(), functionMapping);
 
 		// execute rules
@@ -80,6 +109,15 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 	 */
 	public MappingRulesManager getManagerRules() {
 		return _managerRules;
+	}
+
+	/**
+	 * Get the {@link SysMLConfiguration} configuration.
+	 * 
+	 * @return <code>_configuration</code>
+	 */
+	public SysMLConfiguration getConfiguration() {
+		return _configuration;
 	}
 
 }

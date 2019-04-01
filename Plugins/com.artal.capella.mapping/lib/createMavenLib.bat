@@ -1,0 +1,1 @@
+mvn org.apache.maven.plugins:maven-install-plugin:2.5:install-file -Dfile=CapellaVVOAndTMD_V130/Plugins/com.artal.capella.mapping/lib/plugins/org.eclipse.emf.diffmerge.bridge.capella.integration_0.8.0.201903280816.jar -DgroupId=CapellaMapping -DartifactId=org.eclipse.emf.diffmerge.bridge.capella.integration -Dversion=1.0.0 -Dpackaging=jar

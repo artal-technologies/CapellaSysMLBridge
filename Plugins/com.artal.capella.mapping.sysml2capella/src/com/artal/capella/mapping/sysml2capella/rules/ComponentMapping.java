@@ -72,7 +72,7 @@ public class ComponentMapping extends AbstractMapping {
 	 */
 	public void computeMapping() {
 
-		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, "03 Structure/Parts");
+		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, getAlgo().getConfiguration().getPartPath());
 		Resource eResource = _source.eResource();
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
 		LogicalComponent rootPhysicalSystem = Sysml2CapellaUtils.getLogicalSystemRoot(targetScope.getProject());

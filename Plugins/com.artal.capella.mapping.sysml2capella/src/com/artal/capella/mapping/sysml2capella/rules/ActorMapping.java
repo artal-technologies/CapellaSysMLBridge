@@ -72,7 +72,7 @@ public class ActorMapping extends AbstractMapping {
 	 */
 	@Override
 	public void computeMapping() {
-		List<Actor> actors = Sysml2CapellaUtils.getActors(_source, "02 Behavior/02 Use Cases");
+		List<Actor> actors = Sysml2CapellaUtils.getActors(_source, getAlgo().getConfiguration().getUseCasesPath());
 		Resource eResource = _source.eResource();
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
 		LogicalActorPkg logicalActorPkg = Sysml2CapellaUtils.getLogicalActorPkg(targetScope.getProject());
@@ -97,4 +97,9 @@ public class ActorMapping extends AbstractMapping {
 
 	}
 
+	@Override
+	public Sysml2CapellaAlgo getAlgo() {
+		return (Sysml2CapellaAlgo)super.getAlgo();
+	}
+	
 }

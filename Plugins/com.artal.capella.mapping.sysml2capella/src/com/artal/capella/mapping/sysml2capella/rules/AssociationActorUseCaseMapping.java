@@ -67,7 +67,8 @@ public class AssociationActorUseCaseMapping extends AbstractMapping {
 	 */
 	@Override
 	public void computeMapping() {
-		List<Association> associations = Sysml2CapellaUtils.getAssociations(_source, "02 Behavior/02 Use Cases");
+		List<Association> associations = Sysml2CapellaUtils.getAssociations(_source,
+				getAlgo().getConfiguration().getUseCasesPath());
 		Resource eResource = _source.eResource();
 
 		for (Association association : associations) {

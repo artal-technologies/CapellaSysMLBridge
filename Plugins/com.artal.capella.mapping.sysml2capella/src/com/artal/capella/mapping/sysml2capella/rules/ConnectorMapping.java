@@ -78,14 +78,14 @@ public class ConnectorMapping extends AbstractMapping {
 	@Override
 	public void computeMapping() {
 		// manage product block and all sub block.
-		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, "03 Structure/Product");
+		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, getAlgo().getConfiguration().getProductPath());
 		Resource eResource = _source.eResource();
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
 		LogicalComponent rootLogicalSystem = Sysml2CapellaUtils.getLogicalSystemRoot(targetScope.getProject());
 		transfomConnectors(classes, eResource, rootLogicalSystem);
 
 		// manage all block of Parts.
-		List<Class> subClasses = Sysml2CapellaUtils.getClasses(_source, "03 Structure/Parts");
+		List<Class> subClasses = Sysml2CapellaUtils.getClasses(_source, getAlgo().getConfiguration().getPartPath());
 		for (Class class1 : subClasses) {
 			ArrayList<Class> classes2 = new ArrayList<Class>();
 			classes2.add(class1);

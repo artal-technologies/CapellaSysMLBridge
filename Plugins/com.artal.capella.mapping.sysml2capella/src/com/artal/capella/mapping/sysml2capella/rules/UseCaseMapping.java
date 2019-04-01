@@ -65,7 +65,8 @@ public class UseCaseMapping extends AbstractMapping {
 	 */
 	@Override
 	public void computeMapping() {
-		List<UseCase> useCases = Sysml2CapellaUtils.getUseCases(_source, "02 Behavior/02 Use Cases");
+		List<UseCase> useCases = Sysml2CapellaUtils.getUseCases(_source,
+				getAlgo().getConfiguration().getUseCasesPath());
 		Resource eResource = _source.eResource();
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
 		CapabilityRealizationPkg capabilityRealPkg = (CapabilityRealizationPkg) Sysml2CapellaUtils
@@ -81,7 +82,7 @@ public class UseCaseMapping extends AbstractMapping {
 
 			includes.addAll(useCase.getIncludes());
 		}
-		
+
 		for (Include include : includes) {
 			UseCase useCase = (UseCase) include.eContainer();
 			UseCase addition = include.getAddition();
@@ -96,6 +97,11 @@ public class UseCaseMapping extends AbstractMapping {
 
 		}
 
+	}
+
+	@Override
+	public Sysml2CapellaAlgo getAlgo() {
+		return (Sysml2CapellaAlgo) super.getAlgo();
 	}
 
 }
