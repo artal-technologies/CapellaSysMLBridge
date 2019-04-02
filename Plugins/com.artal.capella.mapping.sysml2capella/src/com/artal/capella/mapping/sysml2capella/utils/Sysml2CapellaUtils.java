@@ -283,9 +283,14 @@ public class Sysml2CapellaUtils {
 	 * @param prefix
 	 *            a prefix to add for identification.
 	 */
-	static public void trace(AbstractMapping rule, Resource eResource, EObject sourceElement, EObject targetElement,
+	static public void trace(AbstractMapping rule, Resource eResource, Object sourceElement, EObject targetElement,
 			String prefix) {
-		String id = Sysml2CapellaUtils.getSysMLID(eResource, sourceElement);
+		String id = "";
+		if (sourceElement instanceof EObject) {
+			id = Sysml2CapellaUtils.getSysMLID(eResource, (EObject) sourceElement);
+		} else {
+			id = sourceElement.toString();
+		}
 		rule.getAlgo().add(prefix + id, targetElement);
 		if (rule.getMapSourceToTarget().containsKey(sourceElement)) {
 			Object object = rule.getMapSourceToTarget().get(sourceElement);
@@ -419,6 +424,37 @@ public class Sysml2CapellaUtils {
 						for (ModellingArchitecture arch : containedLogicalArchitecture) {
 							if (arch instanceof LogicalArchitecture)
 								return ((LogicalArchitecture) arch).getOwnedLogicalComponent();
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the logical architecture system root given a semantic object
+	 * 
+	 * @param source_p
+	 *            the semantic object
+	 * @return the logical component root
+	 */
+	public static LogicalArchitecture getLogicalArchitecture(EObject source_p) {
+		ResourceSet resourceSet = source_p.eResource().getResourceSet();
+		URI semanticResourceURI = source_p.eResource().getURI().trimFileExtension()
+				.appendFileExtension("melodymodeller");
+		Resource semanticResource = resourceSet.getResource(semanticResourceURI, false);
+		if (semanticResource != null) {
+			EObject root = semanticResource.getContents().get(0);
+			if (root instanceof Project) {
+				EList<ModelRoot> ownedModelRoots = ((Project) root).getOwnedModelRoots();
+				for (ModelRoot modelRoot : ownedModelRoots) {
+					if (modelRoot instanceof SystemEngineering) {
+						EList<ModellingArchitecture> containedLogicalArchitecture = ((SystemEngineering) modelRoot)
+								.getOwnedArchitectures();
+						for (ModellingArchitecture arch : containedLogicalArchitecture) {
+							if (arch instanceof LogicalArchitecture)
+								return ((LogicalArchitecture) arch);
 						}
 					}
 				}

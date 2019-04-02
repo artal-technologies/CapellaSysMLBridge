@@ -19,6 +19,8 @@ import java.util.Set;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EPackage.Registry;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Constraint;
 import org.eclipse.uml2.uml.Model;
@@ -38,6 +40,7 @@ import com.artal.capella.mapping.sysml2capella.rules.ConnectorMapping;
 import com.artal.capella.mapping.sysml2capella.rules.ConstraintsMapping;
 import com.artal.capella.mapping.sysml2capella.rules.FunctionalArchitectureMapping;
 import com.artal.capella.mapping.sysml2capella.rules.PartMapping;
+import com.artal.capella.mapping.sysml2capella.rules.RequirementsMapping;
 import com.artal.capella.mapping.sysml2capella.rules.UseCaseMapping;
 
 /**
@@ -136,7 +139,15 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 				return constraintClassses;
 			}
 		};
+
 		_managerRules.add(constraintsMapping.getClass().getName(), constraintsMapping);
+
+		EPackage ePackage = Registry.INSTANCE.getEPackage("http://www.polarsys.org/capella/requirements");
+		if (ePackage != null) {
+			RequirementsMapping requirementsMapping = new RequirementsMapping(this, source, mappingExecution_p);
+			_managerRules.add(RequirementsMapping.class.getName(), requirementsMapping);
+		}
+
 		// execute rules
 		_managerRules.executeRules();
 

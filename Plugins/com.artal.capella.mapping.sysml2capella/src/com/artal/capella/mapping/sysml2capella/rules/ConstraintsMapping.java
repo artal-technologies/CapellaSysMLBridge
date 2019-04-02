@@ -55,10 +55,6 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 	 */
 	IMappingExecution _mappingExecution;
 
-	/**
-	 * A {@link MappingRulesManager} allowing to manage the sub rules.
-	 */
-	MappingRulesManager _manager = new MappingRulesManager();
 
 	/**
 	 * Constructor.
@@ -126,7 +122,6 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 			}
 
 		}
-		_manager.executeRules();
 
 	}
 
