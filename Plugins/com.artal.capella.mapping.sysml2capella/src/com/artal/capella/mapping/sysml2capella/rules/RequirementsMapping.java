@@ -142,6 +142,12 @@ public class RequirementsMapping extends AbstractMapping {
 			if (text != null) {
 				req.setReqIFText(text.toString());
 			}
+
+			// set id
+			Object id = requirement.getValue(appliedStereotype, "Id");
+			if (id != null) {
+				req.setReqIFIdentifier(id.toString());
+			}
 		}
 	}
 
@@ -226,7 +232,7 @@ public class RequirementsMapping extends AbstractMapping {
 	 * 
 	 * @param source
 	 *            the source Package.
-	 * @return {@link List}	
+	 * @return {@link List}
 	 */
 	private List<Class> getSysMLRequirements(Package source) {
 		EList<PackageableElement> packagedElements = source.getPackagedElements();
