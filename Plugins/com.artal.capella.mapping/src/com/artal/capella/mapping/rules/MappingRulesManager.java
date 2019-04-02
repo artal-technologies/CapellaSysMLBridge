@@ -9,10 +9,13 @@
  *******************************************************************************/
 package com.artal.capella.mapping.rules;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * Manage the rules.
@@ -70,6 +73,18 @@ public class MappingRulesManager {
 	 */
 	static public void clearRules() {
 		_rules.clear();
+	}
+
+	static public Object getCapellaObjectFromAllRules(Object sysmlObj) {
+		Collection<AbstractMapping> values = _rules.values();
+		for (AbstractMapping abstractMapping : values) {
+			Object object = abstractMapping.getMapSourceToTarget().get(sysmlObj);
+			if (object != null) {
+				return object;
+			}
+		}
+
+		return null;
 	}
 
 }
