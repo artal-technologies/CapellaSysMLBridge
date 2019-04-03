@@ -9,6 +9,7 @@
  *******************************************************************************/
 package com.artal.capella.mapping.sysml2capella.rules;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,8 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 */
 	MappingRulesManager _manager = new MappingRulesManager();
 	private Map<Pin, ActivityParameterNode> _mapPinToParam;
+
+	static public Map<Activity, List<CallBehaviorAction>> _mapActivityToCallBehaviors = new HashMap<Activity, List<CallBehaviorAction>>();
 
 	public LogicalFunctionMapping(Sysml2CapellaAlgo algo, Activity source, IMappingExecution mappingExecution) {
 		super(algo);
@@ -150,6 +153,9 @@ public class LogicalFunctionMapping extends AbstractMapping {
 				// if activityNode has children, transform these.
 				Behavior behavior = ((CallBehaviorAction) activityNode).getBehavior();
 				if (behavior != null) {
+					// put activity and this linked callBehaviorAction
+					putActivityToCallBehaviorActions(activityNode, behavior);
+
 					if (behavior.getName() != null && !behavior.getName().isEmpty()) {
 						lfName = behavior.getName();
 						// if behavior has not children, the ports from activity
@@ -211,9 +217,30 @@ public class LogicalFunctionMapping extends AbstractMapping {
 		return hasChild;
 	}
 
+	/**
+	 * Put an {@link Activity} and this linked {@link CallBehaviorAction}
+	 * 
+	 * @param activityNode
+	 *            the {@link CallBehaviorAction}
+	 * @param behavior
+	 *            the {@link Activity}
+	 */
+	private void putActivityToCallBehaviorActions(ActivityNode activityNode, Behavior behavior) {
+		List<CallBehaviorAction> listCallBehaviors = _mapActivityToCallBehaviors.get(behavior);
+		if (listCallBehaviors == null) {
+			listCallBehaviors = new ArrayList<CallBehaviorAction>();
+			_mapActivityToCallBehaviors.put((Activity) behavior, listCallBehaviors);
+		}
+		listCallBehaviors.add((CallBehaviorAction) activityNode);
+	}
+
 	@Override
 	public Sysml2CapellaAlgo getAlgo() {
 		return (Sysml2CapellaAlgo) super.getAlgo();
+	}
+
+	public static Map<Activity, List<CallBehaviorAction>> getMapActivityToCallBehaviors() {
+		return _mapActivityToCallBehaviors;
 	}
 
 }

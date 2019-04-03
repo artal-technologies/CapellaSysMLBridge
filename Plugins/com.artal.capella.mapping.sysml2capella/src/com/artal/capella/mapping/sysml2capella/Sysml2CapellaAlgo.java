@@ -21,7 +21,6 @@ import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EPackage.Registry;
-import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Constraint;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Package;
@@ -41,6 +40,7 @@ import com.artal.capella.mapping.sysml2capella.rules.ConstraintsMapping;
 import com.artal.capella.mapping.sysml2capella.rules.FunctionalArchitectureMapping;
 import com.artal.capella.mapping.sysml2capella.rules.PartMapping;
 import com.artal.capella.mapping.sysml2capella.rules.RequirementsMapping;
+import com.artal.capella.mapping.sysml2capella.rules.StateMachineMapping;
 import com.artal.capella.mapping.sysml2capella.rules.UseCaseMapping;
 
 /**
@@ -113,6 +113,9 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 		FunctionalArchitectureMapping functionMapping = new FunctionalArchitectureMapping(this, source,
 				mappingExecution_p);
 		_managerRules.add(functionMapping.getClass().getName(), functionMapping);
+
+		StateMachineMapping stateMachineMapping = new StateMachineMapping(this, source, mappingExecution_p);
+		_managerRules.add(stateMachineMapping.getClass().getName(), stateMachineMapping);
 
 		// add constraints rule for all rules in the SysML model
 		ConstraintsMapping constraintsMapping = new ConstraintsMapping(this, source, mappingExecution_p) {
