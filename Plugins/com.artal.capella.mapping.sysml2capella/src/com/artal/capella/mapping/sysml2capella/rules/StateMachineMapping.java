@@ -26,7 +26,6 @@ import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.polarsys.capella.common.helpers.EObjectExt;
 import org.polarsys.capella.core.data.capellacommon.CapellacommonFactory;
-import org.polarsys.capella.core.data.capellacommon.State;
 import org.polarsys.capella.core.data.cs.Block;
 import org.polarsys.capella.core.data.la.LogicalComponent;
 
