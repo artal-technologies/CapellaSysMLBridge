@@ -24,7 +24,7 @@
 		<repository>
 			<id>capella</id>
 			<layout>p2</layout>
-			<url>http://era.intranet.artal.fr/capella_1.2.1-mirrors/capella
+			<url>http://odin.phedre.fr/capella_1.2.1-mirrors/capella
 			</url>
 		</repository>
 		<repository>
@@ -35,13 +35,13 @@
 		<repository>
 			<id>coevolution</id>
 			<layout>p2</layout>
-			<url>http://era.intranet.artal.fr/capella_1.2.1-mirrors/coevolution_0.9
+			<url>http://odin.phedre.fr/capella_1.2.1-mirrors/coevolution_0.9
 			</url>
 		</repository>
 		<repository>
 			<id>diffmerge</id>
 			<layout>p2</layout>
-			<url>http://era.intranet.artal.fr/capella_1.2.1-mirrors/diffmerge
+			<url>http://odin.phedre.fr/capella_1.2.1-mirrors/diffmerge
 			</url>
 		</repository>
 		<repository>
@@ -62,12 +62,12 @@
 		<repository>
 			<id>kitalpha</id>
 			<layout>p2</layout>
-			<url>http://era.intranet.artal.fr/capella_1.2.1-mirrors/kitalpha-runtime-core
+			<url>http://odin.phedre.fr/capella_1.2.1-mirrors/kitalpha-runtime-core
 			</url>
 		</repository>
 		<repository>
 			<id>kitalpha-sdk</id>
-			<url>http://era.intranet.artal.fr/capella_1.2.1-mirrors/kitalpha-sdk</url>
+			<url>http://odin.phedre.fr/capella_1.2.1-mirrors/kitalpha-sdk</url>
 			<layout>p2</layout>
 		</repository>
 
