@@ -21,6 +21,7 @@ public class SysMLConfiguration {
 	private String productPath = "03 Structure/Product";
 	private String useCasesPath = "02 Behavior/02 Use Cases";
 	private String activitiesPath = "02 Behavior/02 Functional Architecture";
+	private String parametricPath = "04 Parametric";
 
 	/**
 	 * Get the path package containing the Blocks "part"
@@ -91,7 +92,7 @@ public class SysMLConfiguration {
 	}
 
 	/**
-	 * Set he path package containing the Activities (CallBehavior activities).
+	 * Set the path package containing the Activities (CallBehavior activities).
 	 * 
 	 * @param activitiesPah
 	 *            the activitiesPah to set
@@ -100,4 +101,22 @@ public class SysMLConfiguration {
 		this.activitiesPath = activitiesPah;
 	}
 
+	/**
+	 * Get the path package containing the Parametric data.
+	 * 
+	 * @return the parametricPath
+	 */
+	public String getParametricPath() {
+		return parametricPath;
+	}
+
+	/**
+	 * Set the path package containing the Parametric data.
+	 * 
+	 * @param parametricPath
+	 *            the parametricPath to set
+	 */
+	public void setParametricPath(String parametricPath) {
+		this.parametricPath = parametricPath;
+	}
 }

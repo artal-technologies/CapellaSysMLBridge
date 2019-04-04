@@ -78,7 +78,11 @@ public class ConfigParser {
 					String attribute = ((Element) item).getAttribute("path");
 					configuration.setUseCasesPath(attribute);
 				}
-				if (item.getNodeName().equals("activitiesPah")) {
+				if (item.getNodeName().equals("activitiesPath")) {
+					String attribute = ((Element) item).getAttribute("path");
+					configuration.setActivitiesPath(attribute);
+				}
+				if (item.getNodeName().equals("parametricPath")) {
 					String attribute = ((Element) item).getAttribute("path");
 					configuration.setActivitiesPath(attribute);
 				}
