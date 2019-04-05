@@ -16,14 +16,18 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author YBI
  *
  */
 public class SysMLToCapellaPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+
+	private Text _pathText;
 
 	/**
 	 * Default constructor.
@@ -76,8 +80,28 @@ public class SysMLToCapellaPreferencePage extends PreferencePage implements IWor
 		Composite main = new Composite(parent, SWT.NONE);
 		main.setLayoutData(new GridData(GridData.FILL_BOTH));
 		main.setLayout(new GridLayout());
-		SysmlCapellaPreferenceUtils.createPreferenceComposite(main, true);
+		 _pathText = SysmlCapellaPreferenceUtils.createPreferenceComposite(main, true);
 		return main;
+	}
+
+	@Override
+	public boolean performOk() {
+
+		if (_pathText != null) {
+			PlatformUI.getPreferenceStore().setValue(SysmlCapellaPreferenceUtils.SYSML_STRUCTURE_TEMPLATE,
+					_pathText.getText());
+		}
+
+		return super.performOk();
+	}
+
+	@Override
+	protected void performApply() {
+		if (_pathText != null) {
+			PlatformUI.getPreferenceStore().setValue(SysmlCapellaPreferenceUtils.SYSML_STRUCTURE_TEMPLATE,
+					_pathText.getText());
+		}
+		super.performApply();
 	}
 
 }
