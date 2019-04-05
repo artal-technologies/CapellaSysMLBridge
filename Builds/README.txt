@@ -11,3 +11,7 @@ ViewPoint version                Description
 
 
 1.0.3                            Version containing State machine transformation.
+
+
+
+1.0.4                            Version containing Parametric Class transformation (Capella Class or Capella ExchangeItem)
