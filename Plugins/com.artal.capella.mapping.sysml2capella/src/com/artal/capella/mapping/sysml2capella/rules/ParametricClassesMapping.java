@@ -9,9 +9,11 @@
  *******************************************************************************/
 package com.artal.capella.mapping.sysml2capella.rules;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -19,6 +21,8 @@ import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Stereotype;
 import org.polarsys.capella.core.data.information.DataPkg;
+import org.polarsys.capella.core.data.information.ExchangeItem;
+import org.polarsys.capella.core.data.information.ExchangeMechanism;
 import org.polarsys.capella.core.data.information.InformationFactory;
 
 import com.artal.capella.mapping.rules.AbstractMapping;
@@ -75,26 +79,90 @@ public class ParametricClassesMapping extends AbstractMapping {
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
 		DataPkg dataPkgRoot = Sysml2CapellaUtils.getDataPkgRoot(targetScope.getProject());
 
+		Map<String, AbstractMapping> blocks = new HashMap<String, AbstractMapping>();
+		Map<String, AbstractMapping> interfaces = new HashMap<String, AbstractMapping>();
+
 		for (Class sysmlParamClass : classes) {
 			Stereotype blockStereotype = sysmlParamClass.getApplicableStereotype("SysML::Blocks::Block");
-			EList<Stereotype> appliedSubstereotypes = sysmlParamClass.getAppliedSubstereotypes(blockStereotype);
-			// check is not InterfaceBlock or ConstraintBlock
-			if (blockStereotype != null && appliedSubstereotypes.isEmpty()) {
-				org.polarsys.capella.core.data.information.Class capellaClass = InformationFactory.eINSTANCE
-						.createClass();
-				capellaClass.setName(sysmlParamClass.getName());
-				dataPkgRoot.getOwnedClasses().add(capellaClass);
-				Sysml2CapellaUtils.trace(this, eResource, sysmlParamClass, capellaClass, "Class_");
+			if (blockStereotype != null) {
+				Stereotype interfaceBlock = sysmlParamClass.getAppliedSubstereotype(blockStereotype,
+						"SysML::Ports&Flows::InterfaceBlock");
+				Stereotype constraintBlock = sysmlParamClass.getAppliedSubstereotype(blockStereotype,
+						"SysML::ConstraintBlocks::ConstraintBlock");
+				// check is not InterfaceBlock or ConstraintBlock
+				if (interfaceBlock != null) {
+					transformExchangeItem(eResource, dataPkgRoot, interfaces, sysmlParamClass);
+				} else if (constraintBlock != null) {
 
-				PropertyMapping primitiveTypesMapping = new PropertyMapping(getAlgo(), sysmlParamClass,
-						_mappingExecution);
-				_manager.add(primitiveTypesMapping.getClass().getName()
-						+ Sysml2CapellaUtils.getSysMLID(eResource, sysmlParamClass), primitiveTypesMapping);
+				} else {
+					transformClass(eResource, dataPkgRoot, blocks, sysmlParamClass);
+				}
 
 			}
 		}
+
+		// fill the block properties rule in first
+		for (Entry<String, AbstractMapping> entryBlock : blocks.entrySet()) {
+			_manager.add(entryBlock.getKey(), entryBlock.getValue());
+		}
+		// and the InterfaceBlock rule
+		for (Entry<String, AbstractMapping> entryInterfaces : interfaces.entrySet()) {
+			_manager.add(entryInterfaces.getKey(), entryInterfaces.getValue());
+		}
+
 		_manager.executeRules();
 
+	}
+
+	/**
+	 * Transform the SysML {@link Class} to Capella
+	 * {@link org.polarsys.capella.core.data.information.Class}
+	 * 
+	 * @param eResource
+	 *            the sysml model
+	 * @param dataPkgRoot
+	 *            the {@link DataPkg} root
+	 * @param blocks
+	 *            the {@link Map} to fill with the properties rule
+	 * @param sysmlParamClass
+	 *            the SysML {@link Class} to transform
+	 */
+	private void transformClass(Resource eResource, DataPkg dataPkgRoot, Map<String, AbstractMapping> blocks,
+			Class sysmlParamClass) {
+		org.polarsys.capella.core.data.information.Class capellaClass = InformationFactory.eINSTANCE.createClass();
+		capellaClass.setName(sysmlParamClass.getName());
+		dataPkgRoot.getOwnedClasses().add(capellaClass);
+		Sysml2CapellaUtils.trace(this, eResource, sysmlParamClass, capellaClass, "Class_");
+
+		PropertyMapping primitiveTypesMapping = new PropertyMapping(getAlgo(), sysmlParamClass, _mappingExecution);
+		blocks.put(
+				primitiveTypesMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(eResource, sysmlParamClass),
+				primitiveTypesMapping);
+	}
+
+	/**
+	 * Transform the SysML {@link Class} to Capella {@link ExchangeItem}
+	 * 
+	 * @param eResource
+	 *            the sysml model
+	 * @param dataPkgRoot
+	 *            the {@link DataPkg} root
+	 * @param interfaces
+	 *            the {@link Map} to fill with the properties rule
+	 * @param sysmlParamClass
+	 *            the SysML {@link Class} to transform
+	 */
+	private void transformExchangeItem(Resource eResource, DataPkg dataPkgRoot, Map<String, AbstractMapping> interfaces,
+			Class sysmlParamClass) {
+		ExchangeItem ei = InformationFactory.eINSTANCE.createExchangeItem();
+		ei.setName(sysmlParamClass.getName());
+		ei.setExchangeMechanism(ExchangeMechanism.FLOW);
+		dataPkgRoot.getOwnedExchangeItems().add(ei);
+		Sysml2CapellaUtils.trace(this, eResource, sysmlParamClass, ei, "EXCHANGEITEM");
+
+		PropertyMapping propertyMapping = new PropertyMapping(getAlgo(), sysmlParamClass, _mappingExecution);
+		interfaces.put(propertyMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(eResource, sysmlParamClass),
+				propertyMapping);
 	}
 
 	/*

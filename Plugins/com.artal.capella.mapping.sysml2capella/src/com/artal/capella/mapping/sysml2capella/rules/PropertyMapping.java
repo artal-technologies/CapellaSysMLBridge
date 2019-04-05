@@ -10,15 +10,25 @@
 package com.artal.capella.mapping.sysml2capella.rules;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.LiteralInteger;
 import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
+import org.eclipse.uml2.uml.PrimitiveType;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Stereotype;
+import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.ValueSpecification;
+import org.polarsys.capella.common.data.modellingcore.AbstractType;
+import org.polarsys.capella.common.data.modellingcore.AbstractTypedElement;
+import org.polarsys.capella.core.data.capellacore.Feature;
+import org.polarsys.capella.core.data.capellacore.NamedElement;
+import org.polarsys.capella.core.data.information.ExchangeItem;
+import org.polarsys.capella.core.data.information.ExchangeItemElement;
 import org.polarsys.capella.core.data.information.InformationFactory;
+import org.polarsys.capella.core.data.information.MultiplicityElement;
 import org.polarsys.capella.core.data.information.datavalue.DatavalueFactory;
 import org.polarsys.capella.core.data.information.datavalue.LiteralNumericValue;
 
@@ -88,23 +98,75 @@ public class PropertyMapping extends AbstractMapping {
 	 *            all the SysML properties
 	 */
 	private void transformProperties(Resource eResource, EList<Property> allAttributes) {
+		CapellaUpdateScope scope = _mappingExecution.getTargetDataSet();
 		for (Property property : allAttributes) {
 			Stereotype valuePropStereotype = property.getApplicableStereotype("additional_stereotypes::ValueProperty");
 			if (valuePropStereotype != null) {
-				org.polarsys.capella.core.data.information.Property capellaProp = InformationFactory.eINSTANCE
-						.createProperty();
-				capellaProp.setName(property.getName());
-				Sysml2CapellaUtils.trace(this, eResource, property, capellaProp, "PROPERTY_");
-
-				ValueSpecification lowerValue = property.getLowerValue();
-				transformMinCard(eResource, property, capellaProp, lowerValue);
-
-				ValueSpecification upperValue = property.getUpperValue();
-				transformMaxCard(eResource, property, capellaProp, upperValue);
-
-				org.polarsys.capella.core.data.information.Class capellaObjectFromAllRules = (org.polarsys.capella.core.data.information.Class) MappingRulesManager
+				NamedElement capellaObjectFromAllRules = (NamedElement) MappingRulesManager
 						.getCapellaObjectFromAllRules(_source);
-				capellaObjectFromAllRules.getOwnedFeatures().add(capellaProp);
+				NamedElement capellaProp = null;
+				if (capellaObjectFromAllRules instanceof org.polarsys.capella.core.data.information.Class) {
+					capellaProp = InformationFactory.eINSTANCE.createProperty();
+				} else if (capellaObjectFromAllRules instanceof ExchangeItem) {
+					capellaProp = InformationFactory.eINSTANCE.createExchangeItemElement();
+				}
+
+				if (capellaProp != null) {
+					capellaProp.setName(property.getName());
+					Sysml2CapellaUtils.trace(this, eResource, property, capellaProp, "PROPERTY_");
+
+					if (capellaProp instanceof MultiplicityElement) {
+						ValueSpecification lowerValue = property.getLowerValue();
+						transformMinCard(eResource, property, (MultiplicityElement) capellaProp, lowerValue);
+
+						ValueSpecification upperValue = property.getUpperValue();
+						transformMaxCard(eResource, property, (MultiplicityElement) capellaProp, upperValue);
+					}
+				}
+
+				if (capellaProp instanceof Feature
+						&& capellaObjectFromAllRules instanceof org.polarsys.capella.core.data.information.Class) {
+					((org.polarsys.capella.core.data.information.Class) capellaObjectFromAllRules).getOwnedFeatures()
+							.add((Feature) capellaProp);
+				} else if (capellaProp instanceof ExchangeItemElement
+						&& capellaObjectFromAllRules instanceof ExchangeItem) {
+					((ExchangeItem) capellaObjectFromAllRules).getOwnedElements()
+							.add((ExchangeItemElement) capellaProp);
+				}
+
+				if (capellaProp instanceof AbstractTypedElement) {
+
+					transformType(scope, property, (AbstractTypedElement) capellaProp);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Transform the {@link Property} {@link Type} to
+	 * {@link AbstractTypedElement} {@link AbstractType}
+	 * 
+	 * @param scope
+	 *            the mapping scope
+	 * @param property
+	 *            the SysML/UML {@link Property}
+	 * @param capellaProp
+	 *            the Capella {@link AbstractTypedElement}
+	 */
+	private void transformType(CapellaUpdateScope scope, Property property, AbstractTypedElement capellaProp) {
+		Type type = property.getType();
+		if (type != null) {
+			// Stereotype appliedStereotype =
+			// type.getAppliedStereotype("SysML::Blocks::ValueType");
+			Object capellaObjectFromAllRules2 = null;
+			if (type instanceof PrimitiveType) {
+				capellaObjectFromAllRules2 = Sysml2CapellaUtils.getPrimitiveType((PrimitiveType) type,
+						scope.getProject());
+			} else {
+				capellaObjectFromAllRules2 = MappingRulesManager.getCapellaObjectFromAllRules(type);
+			}
+			if (capellaObjectFromAllRules2 instanceof AbstractType) {
+				((AbstractTypedElement) capellaProp).setAbstractType((AbstractType) capellaObjectFromAllRules2);
 			}
 
 		}
@@ -123,8 +185,8 @@ public class PropertyMapping extends AbstractMapping {
 	 * @param upperValue
 	 *            the {@link LiteralUnlimitedNatural} upper value
 	 */
-	private void transformMaxCard(Resource eResource, Property property,
-			org.polarsys.capella.core.data.information.Property capellaProp, ValueSpecification upperValue) {
+	private void transformMaxCard(Resource eResource, Property property, MultiplicityElement capellaProp,
+			ValueSpecification upperValue) {
 		if (upperValue != null) {
 			if (upperValue instanceof LiteralUnlimitedNatural) {
 				int value = ((LiteralUnlimitedNatural) upperValue).getValue();
@@ -156,8 +218,8 @@ public class PropertyMapping extends AbstractMapping {
 	 * @param upperValue
 	 *            the {@link LiteralUnlimitedNatural} lower value
 	 */
-	private void transformMinCard(Resource eResource, Property property,
-			org.polarsys.capella.core.data.information.Property capellaProp, ValueSpecification lowerValue) {
+	private void transformMinCard(Resource eResource, Property property, MultiplicityElement capellaProp,
+			ValueSpecification lowerValue) {
 		if (lowerValue != null) {
 			if (lowerValue instanceof LiteralInteger) {
 				int value = ((LiteralInteger) lowerValue).getValue();

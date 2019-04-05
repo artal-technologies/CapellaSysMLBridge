@@ -26,14 +26,17 @@ import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
+import org.eclipse.uml2.uml.PrimitiveType;
 import org.eclipse.uml2.uml.UseCase;
 import org.polarsys.capella.core.data.capellacommon.AbstractCapabilityPkg;
 import org.polarsys.capella.core.data.capellacore.ModellingArchitecture;
 import org.polarsys.capella.core.data.capellamodeller.ModelRoot;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.capellamodeller.SystemEngineering;
+import org.polarsys.capella.core.data.ctx.SystemAnalysis;
 import org.polarsys.capella.core.data.fa.FunctionPkg;
 import org.polarsys.capella.core.data.information.DataPkg;
+import org.polarsys.capella.core.data.information.datatype.DataType;
 import org.polarsys.capella.core.data.la.LogicalActorPkg;
 import org.polarsys.capella.core.data.la.LogicalArchitecture;
 import org.polarsys.capella.core.data.la.LogicalComponent;
@@ -544,6 +547,44 @@ public class Sysml2CapellaUtils {
 	}
 
 	/**
+	 * Returns the data package given a semantic object
+	 * 
+	 * @param source_p
+	 *            the semantic object
+	 * @return the data pkg root
+	 */
+	public static DataPkg getDataPkgPredefinedTypeRoot(EObject source_p) {
+		ResourceSet resourceSet = source_p.eResource().getResourceSet();
+		URI semanticResourceURI = source_p.eResource().getURI().trimFileExtension()
+				.appendFileExtension("melodymodeller");
+		Resource semanticResource = resourceSet.getResource(semanticResourceURI, false);
+		if (semanticResource != null) {
+			EObject root = semanticResource.getContents().get(0);
+			if (root instanceof Project) {
+				EList<ModelRoot> ownedModelRoots = ((Project) root).getOwnedModelRoots();
+				for (ModelRoot modelRoot : ownedModelRoots) {
+					if (modelRoot instanceof SystemEngineering) {
+						EList<ModellingArchitecture> containedLogicalArchitecture = ((SystemEngineering) modelRoot)
+								.getOwnedArchitectures();
+						for (ModellingArchitecture arch : containedLogicalArchitecture) {
+							if (arch instanceof SystemAnalysis) {
+								DataPkg ownedDataPkg = ((SystemAnalysis) arch).getOwnedDataPkg();
+								EList<DataPkg> ownedDataPkgs = ownedDataPkg.getOwnedDataPkgs();
+								for (DataPkg dataPkg : ownedDataPkgs) {
+									if (dataPkg.getName().equals("Predefined Types")) {
+										return dataPkg;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Get all sub {@link Class}.
 	 * 
 	 * @param parent
@@ -559,6 +600,43 @@ public class Sysml2CapellaUtils {
 			}
 		}
 		return results;
+	}
+
+	static public DataType getPrimitiveType(PrimitiveType primitiveType, Project capella) {
+		String name = primitiveType.getName();
+		String capellaDataTypeName = "";
+		switch (name) {
+		case "Boolean":
+			capellaDataTypeName = "Boolean";
+			break;
+		case "Complex":
+			capellaDataTypeName = "";
+			break;
+		case "Integer":
+			capellaDataTypeName = "Integer";
+			break;
+		case "Number":
+			capellaDataTypeName = "Float";
+			break;
+		case "Real":
+			capellaDataTypeName = "Float";
+			break;
+		case "String":
+			capellaDataTypeName = "String";
+			break;
+		default:
+			break;
+		}
+
+		DataPkg dataPkgPredefinedTypeRoot = getDataPkgPredefinedTypeRoot(capella);
+		EList<DataType> ownedDataTypes = dataPkgPredefinedTypeRoot.getOwnedDataTypes();
+		for (DataType dataType : ownedDataTypes) {
+			if (dataType.getName().equals(capellaDataTypeName)) {
+				return dataType;
+			}
+		}
+
+		return null;
 	}
 
 }
