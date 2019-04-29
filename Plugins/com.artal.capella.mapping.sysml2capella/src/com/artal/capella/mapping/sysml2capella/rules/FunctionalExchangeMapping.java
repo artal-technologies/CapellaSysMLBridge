@@ -10,6 +10,8 @@
 package com.artal.capella.mapping.sysml2capella.rules;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +26,9 @@ import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ActivityParameterNode;
 import org.eclipse.uml2.uml.Behavior;
 import org.eclipse.uml2.uml.CallBehaviorAction;
+import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.InputPin;
+import org.eclipse.uml2.uml.MergeNode;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.ObjectFlow;
 import org.eclipse.uml2.uml.ParameterDirectionKind;
@@ -55,6 +59,8 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 	 * the {@link IMappingExecution} allows to get the mapping data.
 	 */
 	IMappingExecution _mappingExecution;
+
+	Map<ObjectFlow, List<FunctionPort>> managedMergedObjectFlow = new HashMap<>();
 
 	public FunctionalExchangeMapping(Sysml2CapellaAlgo algo, Activity source, IMappingExecution mappingExecution) {
 		super(algo);
@@ -135,6 +141,7 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 			Map<Pin, ActivityParameterNode> mapPinToParam, boolean firstLevel) {
 		EList<ActivityEdge> edges = activity.getEdges();
 		for (ActivityEdge edge : edges) {
+
 			if (edge instanceof ObjectFlow) {
 				ObjectFlow objecFlow = (ObjectFlow) edge;
 				ActivityNode source = objecFlow.getSource();
@@ -143,34 +150,51 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 						&& !firstLevel) {
 					continue;
 				}
-				FunctionPort sourceCapPort = getCapellaFunctionPort(eResource, source, mapPinToParam, true, false,
-						objecFlow);
-				FunctionPort targetCapPort = getCapellaFunctionPort(eResource, target, mapPinToParam, false, false,
-						objecFlow);
+				if (target instanceof MergeNode) {
+					continue;
+				}
+				List<FunctionPort> sourceCapPorts = getCapellaFunctionPort(eResource, source, mapPinToParam, true,
+						false, objecFlow);
 
-				if (targetCapPort != null && sourceCapPort != null) {
-					FunctionalExchange exchange = FaFactory.eINSTANCE.createFunctionalExchange();
-					if (objecFlow.getName() != null && !objecFlow.getName().isEmpty()) {
-						exchange.setName(objecFlow.getName());
-					} else if (sourceCapPort instanceof FunctionOutputPort) {
-						if (sourceCapPort.getName() != null && !sourceCapPort.getName().isEmpty()) {
-							exchange.setName(sourceCapPort.getName());
-						} else {
-							exchange.setName(targetCapPort.getName());
-						}
-					} else if (targetCapPort instanceof FunctionOutputPort) {
-						if (targetCapPort.getName() != null && !targetCapPort.getName().isEmpty()) {
-							exchange.setName(targetCapPort.getName());
-						} else {
-							exchange.setName(sourceCapPort.getName());
-						}
-					}
-					functionContainer.getOwnedFunctionalExchanges().add(exchange);
-					exchange.setSource((org.polarsys.capella.common.data.activity.ActivityNode) sourceCapPort);
-					exchange.setTarget((org.polarsys.capella.common.data.activity.ActivityNode) targetCapPort);
-					Sysml2CapellaUtils.trace(this, eResource, objecFlow, exchange, "FunctionalExchange_");
+				List<FunctionPort> targetCapPorts = getCapellaFunctionPort(eResource, target, mapPinToParam, false,
+						false, objecFlow);
+
+				boolean hasManyFE = false;
+				if (sourceCapPorts.size() > 1 || targetCapPorts.size() > 1) {
+					hasManyFE = true;
 				}
 
+				for (FunctionPort targetCapPort : targetCapPorts) {
+					for (FunctionPort sourceCapPort : sourceCapPorts) {
+						String suffix = "";
+						if (hasManyFE) {
+							suffix = targetCapPort.getName() + "_" + sourceCapPort.getName();
+						}
+						if (targetCapPort != null && sourceCapPort != null) {
+							FunctionalExchange exchange = FaFactory.eINSTANCE.createFunctionalExchange();
+							if (objecFlow.getName() != null && !objecFlow.getName().isEmpty()) {
+								exchange.setName(objecFlow.getName());
+							} else if (sourceCapPort instanceof FunctionOutputPort) {
+								if (sourceCapPort.getName() != null && !sourceCapPort.getName().isEmpty()) {
+									exchange.setName(sourceCapPort.getName());
+								} else {
+									exchange.setName(targetCapPort.getName());
+								}
+							} else if (targetCapPort instanceof FunctionOutputPort) {
+								if (targetCapPort.getName() != null && !targetCapPort.getName().isEmpty()) {
+									exchange.setName(targetCapPort.getName());
+								} else {
+									exchange.setName(sourceCapPort.getName());
+								}
+							}
+							functionContainer.getOwnedFunctionalExchanges().add(exchange);
+							exchange.setSource((org.polarsys.capella.common.data.activity.ActivityNode) sourceCapPort);
+							exchange.setTarget((org.polarsys.capella.common.data.activity.ActivityNode) targetCapPort);
+							Sysml2CapellaUtils.trace(this, eResource, objecFlow, exchange,
+									"FunctionalExchange_" + suffix);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -192,7 +216,7 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 	 *            the source exchange
 	 * @return {@link FunctionPort}
 	 */
-	private FunctionPort getCapellaFunctionPort(Resource eResource, ActivityNode source,
+	private List<FunctionPort> getCapellaFunctionPort(Resource eResource, ActivityNode source,
 			Map<Pin, ActivityParameterNode> mapPinToParam, boolean isSource, boolean transformParam,
 			ObjectFlow objecFlow) {
 
@@ -205,9 +229,143 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 		else if (source instanceof CallBehaviorAction) {
 			return manageExchangeWithCallBehavior(eResource, source, isSource, objecFlow);
 
+		} else if (source instanceof MergeNode) {
+			List<FunctionPort> mergeResults = manageMergeNode(eResource, source, mapPinToParam, isSource,
+					transformParam, objecFlow);
+			return mergeResults;
+
+		} else if (source instanceof ForkNode) {
+			List<FunctionPort> forkResults = manageForkNode(eResource, source, mapPinToParam, isSource, transformParam,
+					objecFlow);
+			return forkResults;
+
 		}
 
-		return null;
+		return Collections.emptyList();
+	}
+
+	/**
+	 * Manage the fork node
+	 * 
+	 * @param eResource
+	 *            the Sysml resource
+	 * @param source
+	 *            the {@link Activity} node to treat
+	 * @param mapPinToParam
+	 *            {@link Map} allowing to have the link between the {@link Pin}
+	 *            and the {@link ActivityParameterNode}
+	 * @param isSource
+	 *            true if the port is source
+	 * @param transformParam
+	 * @param objecFlow
+	 *            the source exchange
+	 */
+	private List<FunctionPort> manageForkNode(Resource eResource, ActivityNode source,
+			Map<Pin, ActivityParameterNode> mapPinToParam, boolean isSource, boolean transformParam,
+			ObjectFlow objecFlow) {
+		List<FunctionPort> forkResults = new ArrayList<>();
+		if (isSource) {
+			EList<ActivityEdge> incomings = ((ForkNode) source).getOutgoings();
+			for (ActivityEdge activityEdge : incomings) {
+				if (managedMergedObjectFlow.containsKey(activityEdge)) {
+					forkResults.addAll(managedMergedObjectFlow.get(activityEdge));
+					continue;
+				}
+				if (activityEdge.getSource().equals(source)) {
+					ActivityNode target = activityEdge.getTarget();
+					forkResults.addAll(getCapellaFunctionPort(eResource, target, mapPinToParam, isSource,
+							transformParam, objecFlow));
+				} else if (activityEdge.getTarget().equals(source)) {
+					ActivityNode target = activityEdge.getSource();
+					forkResults.addAll(getCapellaFunctionPort(eResource, target, mapPinToParam, isSource,
+							transformParam, objecFlow));
+				}
+				managedMergedObjectFlow.put((ObjectFlow) activityEdge, forkResults);
+			}
+
+		} else {
+			EList<ActivityEdge> outgoings = ((ForkNode) source).getIncomings();
+			for (ActivityEdge activityEdge : outgoings) {
+				if (managedMergedObjectFlow.containsKey(activityEdge)) {
+					forkResults.addAll(managedMergedObjectFlow.get(activityEdge));
+					continue;
+				}
+				if (activityEdge.getSource().equals(source)) {
+					ActivityNode target = activityEdge.getTarget();
+					forkResults.addAll(getCapellaFunctionPort(eResource, target, mapPinToParam, isSource,
+							transformParam, objecFlow));
+				} else if (activityEdge.getTarget().equals(source)) {
+					ActivityNode target = activityEdge.getSource();
+					forkResults.addAll(getCapellaFunctionPort(eResource, target, mapPinToParam, isSource,
+							transformParam, objecFlow));
+				}
+				managedMergedObjectFlow.put((ObjectFlow) activityEdge, forkResults);
+			}
+		}
+		return forkResults;
+	}
+
+	/**
+	 * 
+	 * Manage the merge node
+	 * 
+	 * @param eResource
+	 *            the Sysml resource
+	 * @param source
+	 *            the {@link Activity} node to treat
+	 * @param mapPinToParam
+	 *            {@link Map} allowing to have the link between the {@link Pin}
+	 *            and the {@link ActivityParameterNode}
+	 * @param isSource
+	 *            true if the port is source
+	 * @param transformParam
+	 * @param objecFlow
+	 *            the source exchange
+	 * @return
+	 */
+	private List<FunctionPort> manageMergeNode(Resource eResource, ActivityNode source,
+			Map<Pin, ActivityParameterNode> mapPinToParam, boolean isSource, boolean transformParam,
+			ObjectFlow objecFlow) {
+		List<FunctionPort> mergeResults = new ArrayList<>();
+		if (isSource) {
+			EList<ActivityEdge> incomings = ((MergeNode) source).getIncomings();
+			for (ActivityEdge activityEdge : incomings) {
+				if (managedMergedObjectFlow.containsKey(activityEdge)) {
+					mergeResults.addAll(managedMergedObjectFlow.get(activityEdge));
+					continue;
+				}
+				if (activityEdge.getSource().equals(source)) {
+					ActivityNode target = activityEdge.getTarget();
+					mergeResults.addAll(getCapellaFunctionPort(eResource, target, mapPinToParam, isSource,
+							transformParam, objecFlow));
+				} else if (activityEdge.getTarget().equals(source)) {
+					ActivityNode target = activityEdge.getSource();
+					mergeResults.addAll(getCapellaFunctionPort(eResource, target, mapPinToParam, isSource,
+							transformParam, objecFlow));
+				}
+				managedMergedObjectFlow.put((ObjectFlow) activityEdge, mergeResults);
+			}
+
+		} else {
+			EList<ActivityEdge> outgoings = ((MergeNode) source).getOutgoings();
+			for (ActivityEdge activityEdge : outgoings) {
+				if (managedMergedObjectFlow.containsKey(activityEdge)) {
+					mergeResults.addAll(managedMergedObjectFlow.get(activityEdge));
+					continue;
+				}
+				if (activityEdge.getSource().equals(source)) {
+					ActivityNode target = activityEdge.getTarget();
+					mergeResults.addAll(getCapellaFunctionPort(eResource, target, mapPinToParam, isSource,
+							transformParam, objecFlow));
+				} else if (activityEdge.getTarget().equals(source)) {
+					ActivityNode target = activityEdge.getSource();
+					mergeResults.addAll(getCapellaFunctionPort(eResource, target, mapPinToParam, isSource,
+							transformParam, objecFlow));
+				}
+				managedMergedObjectFlow.put((ObjectFlow) activityEdge, mergeResults);
+			}
+		}
+		return mergeResults;
 	}
 
 	/**
@@ -223,13 +381,15 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 	 * @param transformParam
 	 * @return {@link FunctionPort}
 	 */
-	private FunctionPort manageExchangeWithParam(Resource eResource, ActivityNode source,
+	private List<FunctionPort> manageExchangeWithParam(Resource eResource, ActivityNode source,
 			Map<Pin, ActivityParameterNode> mapPinToParam, boolean transformParam) {
 		EObject sourcePortParent = source.eContainer();
 		if (sourcePortParent instanceof Activity
 				&& ((Activity) sourcePortParent).getName().equals("02 Functional Architecture")) {
 			AbstractMapping rule = MappingRulesManager.getRule(FunctionalArchitectureMapping.class.getName());
-			return (FunctionPort) rule.getMapSourceToTarget().get(source);
+			List<FunctionPort> ports = new ArrayList<>();
+			ports.add((FunctionPort) rule.getMapSourceToTarget().get(source));
+			return ports;
 		}
 		if (transformParam) {
 			ActivityParameterNode an = (ActivityParameterNode) source;
@@ -253,7 +413,7 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 				}
 			}
 		}
-		return null;
+		return Collections.emptyList();
 	}
 
 	/**
@@ -270,7 +430,7 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 	 *            the source exchange
 	 * @return {@link FunctionPort}
 	 */
-	private FunctionPort manageExchangeWithPin(Resource eResource, ActivityNode source,
+	private List<FunctionPort> manageExchangeWithPin(Resource eResource, ActivityNode source,
 			Map<Pin, ActivityParameterNode> mapPinToParam, ObjectFlow objecFlow) {
 		ActivityParameterNode parameter = mapPinToParam.get(source);
 		if (parameter != null) {
@@ -281,9 +441,11 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 		AbstractMapping rule = MappingRulesManager.getRule(LogicalFunctionPortMapping.class.getName()
 				+ Sysml2CapellaUtils.getSysMLID(eResource, sourcePortParent));
 		if (rule == null) {
-			return null;
+			return Collections.emptyList();
 		}
-		return (FunctionPort) rule.getMapSourceToTarget().get(source);
+		List<FunctionPort> ports = new ArrayList<>();
+		ports.add((FunctionPort) rule.getMapSourceToTarget().get(source));
+		return ports;
 	}
 
 	/**
@@ -299,7 +461,7 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 	 *            the exchange
 	 * @return {@link FunctionPort}
 	 */
-	private FunctionPort manageExchangeWithCallBehavior(Resource eResource, ActivityNode source, boolean isSource,
+	private List<FunctionPort> manageExchangeWithCallBehavior(Resource eResource, ActivityNode source, boolean isSource,
 			ObjectFlow objecFlow) {
 		Object object = MappingRulesManager.getRule(LogicalFunctionMapping.class.getName()).getMapSourceToTarget()
 				.get(source);
@@ -327,7 +489,9 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 		}
 		port.setName(objecFlow.getName());
 		Sysml2CapellaUtils.trace(this, eResource, objecFlow, port, "NewPort");
-		return port;
+		List<FunctionPort> ports = new ArrayList<>();
+		ports.add(port);
+		return ports;
 	}
 
 }

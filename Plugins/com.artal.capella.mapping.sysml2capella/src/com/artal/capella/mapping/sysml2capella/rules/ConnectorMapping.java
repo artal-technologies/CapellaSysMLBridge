@@ -29,6 +29,7 @@ import org.eclipse.uml2.uml.Type;
 import org.polarsys.capella.core.data.fa.ComponentExchange;
 import org.polarsys.capella.core.data.fa.ComponentPort;
 import org.polarsys.capella.core.data.fa.FaFactory;
+import org.polarsys.capella.core.data.information.ExchangeItem;
 import org.polarsys.capella.core.data.la.LogicalComponent;
 
 import com.artal.capella.mapping.rules.AbstractMapping;
@@ -170,10 +171,21 @@ public class ConnectorMapping extends AbstractMapping {
 			Entry<String, Port> next = map.entrySet().iterator().next();
 			String subPartID = next.getKey();
 			Port subPort = next.getValue();
+			
+			Type type = subPort.getType();
+			Object capellaObjectFromAllRules = MappingRulesManager.getCapellaObjectFromAllRules(type);
+			if(capellaObjectFromAllRules instanceof ExchangeItem){
+				ce.getConvoyedInformations().add((ExchangeItem)capellaObjectFromAllRules);
+			}
+			
 			ComponentPortMapping subRule = (ComponentPortMapping) MappingRulesManager
 					.getRule(ComponentPortMapping.class.getName() + subPartID);
 			object = subRule.getMapSourceToTarget().get(subPort);
 		} else {
+			Object capellaObjectFromAllRules = MappingRulesManager.getCapellaObjectFromAllRules(role.getType());
+			if(capellaObjectFromAllRules instanceof ExchangeItem){
+				ce.getConvoyedInformations().add((ExchangeItem)capellaObjectFromAllRules);
+			}
 			object = rule.getMapSourceToTarget().get(role);
 		}
 

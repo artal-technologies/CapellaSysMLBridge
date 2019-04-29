@@ -22,6 +22,7 @@ import org.eclipse.uml2.uml.Abstraction;
 import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.Actor;
 import org.eclipse.uml2.uml.Association;
+import org.eclipse.uml2.uml.Behavior;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Package;
@@ -69,24 +70,32 @@ public class Sysml2CapellaUtils {
 	static public List<Class> getClasses(Package source, String paths) {
 		List<Class> results = new ArrayList<>();
 
-		String[] pathsArray = paths.split("/");
-		paths = paths.substring(paths.indexOf("/") + 1, paths.length());
-		String packageName = pathsArray[0];
-		EList<PackageableElement> packagedElements = source.getPackagedElements();
-		for (PackageableElement structurePkg : packagedElements) {
-			if (structurePkg instanceof Package && structurePkg.getName().equals(packageName)) {
-				if (pathsArray.length > 1) {
-					results.addAll(getClasses((Package) structurePkg, paths));
-				} else {
-					EList<PackageableElement> packagedElements2 = ((Package) structurePkg).getPackagedElements();
-					for (PackageableElement packageableElement : packagedElements2) {
-						if (packageableElement instanceof Class) {
-							results.add((Class) packageableElement);
+		if (paths.contains(",")) {
+			String[] split = paths.split(",");
+			for (String string : split) {
+				results.addAll(getClasses(source, string));
+			}
+
+		} else {
+			String[] pathsArray = paths.split("/");
+			paths = paths.substring(paths.indexOf("/") + 1, paths.length());
+			String packageName = pathsArray[0];
+			EList<PackageableElement> packagedElements = source.getPackagedElements();
+			for (PackageableElement structurePkg : packagedElements) {
+				if (structurePkg instanceof Package && structurePkg.getName().equals(packageName)) {
+					if (pathsArray.length > 1) {
+						results.addAll(getClasses((Package) structurePkg, paths));
+					} else {
+						EList<PackageableElement> packagedElements2 = ((Package) structurePkg).getPackagedElements();
+						for (PackageableElement packageableElement : packagedElements2) {
+							if (packageableElement instanceof Class) {
+								results.add((Class) packageableElement);
+							}
 						}
 					}
+				} else if (structurePkg instanceof Class && structurePkg.getName().equals(packageName)) {
+					results.add((Class) structurePkg);
 				}
-			} else if (structurePkg instanceof Class && structurePkg.getName().equals(packageName)) {
-				results.add((Class) structurePkg);
 			}
 		}
 		return results;
@@ -214,6 +223,14 @@ public class Sysml2CapellaUtils {
 				}
 			} else if (structurePkg instanceof Activity && structurePkg.getName().equals(packageName)) {
 				results.add((Activity) structurePkg);
+			} else if (structurePkg instanceof UseCase && structurePkg.getName().equals(packageName)) {
+				EList<Behavior> ownedBehaviors = ((UseCase) structurePkg).getOwnedBehaviors();
+				for (Behavior behavior : ownedBehaviors) {
+					if (behavior instanceof Activity) {
+						results.add((Activity) behavior);
+					}
+				}
+
 			}
 		}
 		return results;

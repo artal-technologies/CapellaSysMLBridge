@@ -84,7 +84,7 @@ public class ConfigParser {
 				}
 				if (item.getNodeName().equals("parametricPath")) {
 					String attribute = ((Element) item).getAttribute("path");
-					configuration.setActivitiesPath(attribute);
+					configuration.setParametricPath(attribute);
 				}
 			}
 
