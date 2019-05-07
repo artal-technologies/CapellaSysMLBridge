@@ -27,6 +27,7 @@ import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.ParameterDirectionKind;
+import org.eclipse.uml2.uml.Stereotype;
 import org.polarsys.capella.core.data.cs.CsFactory;
 import org.polarsys.capella.core.data.cs.Part;
 import org.polarsys.capella.core.data.fa.ComponentFunctionalAllocation;
@@ -64,7 +65,7 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 	 * Manage sub rules
 	 */
 	MappingRulesManager _manager = new MappingRulesManager();
-	private Map<Abstraction,Map<Activity, List<Class>>> _mapAbstractToActivityToClasses;
+	private Map<Abstraction, Map<Activity, List<Class>>> _mapAbstractToActivityToClasses;
 
 	/**
 	 * Constructor.
@@ -90,7 +91,8 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 	@Override
 	public void computeMapping() {
 		Resource eResource = _source.eResource();
-		List<Activity> activities = Sysml2CapellaUtils.getActivities(_source, getAlgo().getConfiguration().getActivitiesPath());
+		List<Activity> activities = Sysml2CapellaUtils.getActivities(_source,
+				getAlgo().getConfiguration().getActivitiesPath());
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
 		LogicalFunction logicalFunctionRoot = Sysml2CapellaUtils.getLogicalFunctionRoot(targetScope.getProject());
 		LogicalActorPkg logicalActorPkg = Sysml2CapellaUtils.getLogicalActorPkg(targetScope.getProject());
@@ -146,17 +148,17 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 				}
 			}
 
-			_mapAbstractToActivityToClasses = new HashMap<Abstraction,Map<Activity, List<Class>>>();
+			_mapAbstractToActivityToClasses = new HashMap<Abstraction, Map<Activity, List<Class>>>();
 			List<Abstraction> allAbstractions = Sysml2CapellaUtils.getAllAbstractions(_source);
 			Activity act = null;
 			Class comp = null;
 			for (Abstraction abstraction : allAbstractions) {
 				Map<Activity, List<Class>> mapActivityToClasses = _mapAbstractToActivityToClasses.get(abstraction);
-				if(mapActivityToClasses == null){
-					 mapActivityToClasses = new HashMap<>();
-					 _mapAbstractToActivityToClasses.put(abstraction, mapActivityToClasses);
+				if (mapActivityToClasses == null) {
+					mapActivityToClasses = new HashMap<>();
+					_mapAbstractToActivityToClasses.put(abstraction, mapActivityToClasses);
 				}
-				
+
 				List<NamedElement> clients = abstraction.getClients();
 				for (NamedElement namedElement : clients) {
 					if (namedElement instanceof Activity) {
@@ -167,13 +169,16 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 				EList<NamedElement> suppliers = abstraction.getSuppliers();
 				for (NamedElement namedElement : suppliers) {
 					if (namedElement instanceof Class) {
-						comp = (Class) namedElement;
-						List<Class> list = mapActivityToClasses.get(act);
-						if (list == null) {
-							list = new ArrayList<Class>();
-							mapActivityToClasses.put(act, list);
+						Stereotype blockStereotype = namedElement.getAppliedStereotype("SysML::Blocks::Block");
+						if (blockStereotype != null) {
+							comp = (Class) namedElement;
+							List<Class> list = mapActivityToClasses.get(act);
+							if (list == null) {
+								list = new ArrayList<Class>();
+								mapActivityToClasses.put(act, list);
+							}
+							list.add(comp);
 						}
-						list.add(comp);
 					}
 				}
 			}
@@ -190,7 +195,7 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 		}
 	}
 
-	public Map<Abstraction,Map<Activity, List<Class>>> getMapAbstractionToActivityToClasses() {
+	public Map<Abstraction, Map<Activity, List<Class>>> getMapAbstractionToActivityToClasses() {
 		return _mapAbstractToActivityToClasses;
 	}
 

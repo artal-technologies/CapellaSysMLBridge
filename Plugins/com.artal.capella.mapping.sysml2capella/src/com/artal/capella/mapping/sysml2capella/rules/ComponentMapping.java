@@ -9,12 +9,18 @@
  *******************************************************************************/
 package com.artal.capella.mapping.sysml2capella.rules;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Classifier;
+import org.eclipse.uml2.uml.Generalization;
 import org.eclipse.uml2.uml.Model;
 import org.polarsys.capella.core.data.la.LaFactory;
 import org.polarsys.capella.core.data.la.LogicalComponent;
@@ -48,6 +54,8 @@ public class ComponentMapping extends AbstractMapping {
 	 * A {@link MappingRulesManager} allowing to manage the sub rules.
 	 */
 	MappingRulesManager _manager = new MappingRulesManager();
+
+	Map<Class, List<Class>> _mapGeneralizations = new HashMap<>();
 
 	/**
 	 * Constructor.
@@ -95,6 +103,22 @@ public class ComponentMapping extends AbstractMapping {
 	 */
 	private void fillBreakdownLogicalComponent(LogicalComponent parent, List<Class> sourceClasses, Resource eResource) {
 		for (Class class1 : sourceClasses) {
+			EList<Generalization> generalizations = class1.getGeneralizations();
+			if (generalizations != null && !generalizations.isEmpty()) {
+
+				for (Generalization generalization : generalizations) {
+					Classifier general = generalization.getGeneral();
+					if (general instanceof Class) {
+						List<Class> list = _mapGeneralizations.get(general);
+						if (list == null) {
+							list = new ArrayList<>();
+							_mapGeneralizations.put((Class) general, list);
+						}
+						list.add(class1);
+					}
+				}
+			}
+
 			LogicalComponent lComponent = LaFactory.eINSTANCE.createLogicalComponent();
 			lComponent.setName(class1.getName());
 
@@ -110,6 +134,10 @@ public class ComponentMapping extends AbstractMapping {
 			fillBreakdownLogicalComponent(lComponent, subClasses, eResource);
 
 		}
+	}
+
+	public Map<Class, List<Class>> getMapGeneralizations() {
+		return _mapGeneralizations;
 	}
 
 	/*

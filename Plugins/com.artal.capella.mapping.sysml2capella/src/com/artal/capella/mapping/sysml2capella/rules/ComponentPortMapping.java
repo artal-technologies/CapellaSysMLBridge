@@ -241,8 +241,9 @@ public class ComponentPortMapping extends AbstractMapping {
 		boolean conjugated = port.isConjugated();
 		boolean isIn = false;
 		boolean isOut = false;
-
+		OrientationPortKind directionPort = null;
 		if (type != null) {
+
 			for (Property prop : ((Class) type).getOwnedAttributes()) {
 				Stereotype flowProperty = prop.getAppliedStereotype("SysML::Ports&Flows::FlowProperty");
 				if (flowProperty != null) {
@@ -273,17 +274,49 @@ public class ComponentPortMapping extends AbstractMapping {
 						return OrientationPortKind.INOUT;
 					} else {
 						if (conjugated) {
-							return OrientationPortKind.OUT;
+							if (directionPort == null) {
+								directionPort = OrientationPortKind.OUT;
+								continue;
+							} else {
+								if (directionPort != OrientationPortKind.OUT) {
+									return OrientationPortKind.INOUT;
+								}
+							}
+							// return OrientationPortKind.OUT;
 						} else {
-							return OrientationPortKind.IN;
+							if (directionPort == null) {
+								directionPort = OrientationPortKind.IN;
+								continue;
+							} else {
+								if (directionPort != OrientationPortKind.IN) {
+									return OrientationPortKind.INOUT;
+								}
+							}
+							// return OrientationPortKind.IN;
 						}
 					}
 				} else {
 					if (isOut) {
 						if (conjugated) {
-							return OrientationPortKind.IN;
+							if (directionPort == null) {
+								directionPort = OrientationPortKind.IN;
+								continue;
+							} else {
+								if (directionPort != OrientationPortKind.IN) {
+									return OrientationPortKind.INOUT;
+								}
+							}
+							// return OrientationPortKind.IN;
 						} else {
-							return OrientationPortKind.OUT;
+							if (directionPort == null) {
+								directionPort = OrientationPortKind.OUT;
+								continue;
+							} else {
+								if (directionPort != OrientationPortKind.OUT) {
+									return OrientationPortKind.INOUT;
+								}
+							}
+							// return OrientationPortKind.OUT;
 						}
 					} else {
 						return OrientationPortKind.INOUT;
@@ -291,7 +324,10 @@ public class ComponentPortMapping extends AbstractMapping {
 				}
 			}
 		}
-		return OrientationPortKind.INOUT;
+		if (directionPort == null) {
+			directionPort = OrientationPortKind.INOUT;
+		}
+		return directionPort;
 	}
 
 	/*
