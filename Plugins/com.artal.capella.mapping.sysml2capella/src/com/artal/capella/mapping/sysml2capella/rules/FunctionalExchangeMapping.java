@@ -230,15 +230,18 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 		Map<Abstraction, Map<Activity, List<Class>>> mapAbstractionToActivityToClasses = ruleFunctArch
 				.getMapAbstractionToActivityToClasses();
 
-		CallBehaviorAction fSource = null;
+		ActivityNode fSource = null;
 		Class sourceParent = null;
 		if (source instanceof CallBehaviorAction) {
 			fSource = (CallBehaviorAction) source;
 		} else if (source instanceof Pin) {
-			fSource = (CallBehaviorAction) source.eContainer();
+			fSource = (ActivityNode) source.eContainer();
 		}
 		if (fSource != null) {
-			Behavior sourceBehavior = fSource.getBehavior();
+			Behavior sourceBehavior = null;
+			if (fSource instanceof CallBehaviorAction) {
+				sourceBehavior = ((CallBehaviorAction) fSource).getBehavior();
+			}
 			List<Class> listSource = null;
 			for (Entry<Abstraction, Map<Activity, List<Class>>> entry : mapAbstractionToActivityToClasses.entrySet()) {
 				Map<Activity, List<Class>> mapActivityToClasses = entry.getValue();
@@ -256,15 +259,18 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 				sourceParent = listSource.get(0);
 			}
 		}
-		CallBehaviorAction fTarget = null;
+		ActivityNode fTarget = null;
 		Class targetParent = null;
 		if (target instanceof CallBehaviorAction) {
 			fTarget = (CallBehaviorAction) source;
 		} else if (target instanceof Pin) {
-			fTarget = (CallBehaviorAction) target.eContainer();
+			fTarget = (ActivityNode) target.eContainer();
 		}
 		if (fTarget != null) {
-			Behavior targetBehavior = fTarget.getBehavior();
+			Behavior targetBehavior = null;
+			if (fTarget instanceof CallBehaviorAction) {
+				targetBehavior = ((CallBehaviorAction) fTarget).getBehavior();
+			}
 			List<Class> listTarget = null;
 			for (Entry<Abstraction, Map<Activity, List<Class>>> entry : mapAbstractionToActivityToClasses.entrySet()) {
 				Map<Activity, List<Class>> mapActivityToClasses = entry.getValue();

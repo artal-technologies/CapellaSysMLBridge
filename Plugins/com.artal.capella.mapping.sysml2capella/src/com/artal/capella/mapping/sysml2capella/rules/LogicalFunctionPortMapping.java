@@ -15,6 +15,8 @@ import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.uml2.uml.AcceptEventAction;
+import org.eclipse.uml2.uml.Action;
 import org.eclipse.uml2.uml.ActivityEdge;
 import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.CallBehaviorAction;
@@ -24,6 +26,7 @@ import org.eclipse.uml2.uml.InputPin;
 import org.eclipse.uml2.uml.MergeNode;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.OutputPin;
+import org.eclipse.uml2.uml.SendSignalAction;
 import org.polarsys.capella.core.data.fa.FaFactory;
 import org.polarsys.capella.core.data.fa.FunctionInputPort;
 import org.polarsys.capella.core.data.fa.FunctionOutputPort;
@@ -95,6 +98,27 @@ public class LogicalFunctionPortMapping extends AbstractMapping {
 	 * @param lf
 	 */
 	private void manageLogicalFunctionPort(Resource eResource, LogicalFunction lf, String prefix) {
+		if (_source instanceof AcceptEventAction) {
+			EList<OutputPin> results = ((AcceptEventAction) _source).getResults();
+			for (OutputPin outputPin : results) {
+				FunctionOutputPort outPort = FaFactory.eINSTANCE.createFunctionOutputPort();
+				outPort.setName(outputPin.getName());
+
+				lf.getOutputs().add(outPort);
+				Sysml2CapellaUtils.trace(this, eResource, outputPin, outPort, "OutputPIN" + prefix);
+			}
+		}
+		if (_source instanceof SendSignalAction) {
+			EList<InputPin> arguments = ((SendSignalAction) _source).getArguments();
+			for (InputPin inputPin : arguments) {
+				FunctionInputPort inPort = FaFactory.eINSTANCE.createFunctionInputPort();
+				inPort.setName(inputPin.getName());
+
+				lf.getInputs().add(inPort);
+				Sysml2CapellaUtils.trace(this, eResource, inputPin, inPort, "InputPIN" + prefix);
+
+			}
+		}
 		if (_source instanceof CallBehaviorAction) {
 			EList<InputPin> arguments = ((CallBehaviorAction) _source).getArguments();
 			for (InputPin inputPin : arguments) {

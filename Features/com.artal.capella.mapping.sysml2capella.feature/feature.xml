@@ -11,7 +11,7 @@
 <feature
       id="com.artal.capella.mapping.sysml2capella.feature"
       label="Feature"
-      version="1.0.4.qualifier">
+      version="1.0.5.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -31,6 +31,10 @@
 
    <includes
          id="org.eclipse.uml2"
+         version="0.0.0"/>
+
+   <includes
+         id="com.artal.licensing.feature"
          version="0.0.0"/>
 
    <plugin

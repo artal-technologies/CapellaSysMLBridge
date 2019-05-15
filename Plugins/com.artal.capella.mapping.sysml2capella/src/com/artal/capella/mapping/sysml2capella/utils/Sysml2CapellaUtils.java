@@ -130,25 +130,32 @@ public class Sysml2CapellaUtils {
 	 */
 	static public List<Actor> getActors(Package source, String paths) {
 		List<Actor> results = new ArrayList<>();
+		if (paths.contains(",")) {
+			String[] split = paths.split(",");
+			for (String string : split) {
+				results.addAll(getActors(source, string));
+			}
 
-		String[] pathsArray = paths.split("/");
-		paths = paths.substring(paths.indexOf("/") + 1, paths.length());
-		String packageName = pathsArray[0];
-		EList<PackageableElement> packagedElements = source.getPackagedElements();
-		for (PackageableElement structurePkg : packagedElements) {
-			if (structurePkg instanceof Package && structurePkg.getName().equals(packageName)) {
-				if (pathsArray.length > 1) {
-					results.addAll(getActors((Package) structurePkg, paths));
-				} else {
-					EList<PackageableElement> packagedElements2 = ((Package) structurePkg).getPackagedElements();
-					for (PackageableElement packageableElement : packagedElements2) {
-						if (packageableElement instanceof Actor) {
-							results.add((Actor) packageableElement);
+		} else {
+			String[] pathsArray = paths.split("/");
+			paths = paths.substring(paths.indexOf("/") + 1, paths.length());
+			String packageName = pathsArray[0];
+			EList<PackageableElement> packagedElements = source.getPackagedElements();
+			for (PackageableElement structurePkg : packagedElements) {
+				if (structurePkg instanceof Package && structurePkg.getName().equals(packageName)) {
+					if (pathsArray.length > 1) {
+						results.addAll(getActors((Package) structurePkg, paths));
+					} else {
+						EList<PackageableElement> packagedElements2 = ((Package) structurePkg).getPackagedElements();
+						for (PackageableElement packageableElement : packagedElements2) {
+							if (packageableElement instanceof Actor) {
+								results.add((Actor) packageableElement);
+							}
 						}
 					}
+				} else if (structurePkg instanceof Actor && structurePkg.getName().equals(packageName)) {
+					results.add((Actor) structurePkg);
 				}
-			} else if (structurePkg instanceof Actor && structurePkg.getName().equals(packageName)) {
-				results.add((Actor) structurePkg);
 			}
 		}
 		return results;
@@ -167,25 +174,32 @@ public class Sysml2CapellaUtils {
 	 */
 	static public List<UseCase> getUseCases(Package source, String paths) {
 		List<UseCase> results = new ArrayList<>();
+		if (paths.contains(",")) {
+			String[] split = paths.split(",");
+			for (String string : split) {
+				results.addAll(getUseCases(source, string));
+			}
 
-		String[] pathsArray = paths.split("/");
-		paths = paths.substring(paths.indexOf("/") + 1, paths.length());
-		String packageName = pathsArray[0];
-		EList<PackageableElement> packagedElements = source.getPackagedElements();
-		for (PackageableElement structurePkg : packagedElements) {
-			if (structurePkg instanceof Package && structurePkg.getName().equals(packageName)) {
-				if (pathsArray.length > 1) {
-					results.addAll(getUseCases((Package) structurePkg, paths));
-				} else {
-					EList<PackageableElement> packagedElements2 = ((Package) structurePkg).getPackagedElements();
-					for (PackageableElement packageableElement : packagedElements2) {
-						if (packageableElement instanceof UseCase) {
-							results.add((UseCase) packageableElement);
+		} else {
+			String[] pathsArray = paths.split("/");
+			paths = paths.substring(paths.indexOf("/") + 1, paths.length());
+			String packageName = pathsArray[0];
+			EList<PackageableElement> packagedElements = source.getPackagedElements();
+			for (PackageableElement structurePkg : packagedElements) {
+				if (structurePkg instanceof Package && structurePkg.getName().equals(packageName)) {
+					if (pathsArray.length > 1) {
+						results.addAll(getUseCases((Package) structurePkg, paths));
+					} else {
+						EList<PackageableElement> packagedElements2 = ((Package) structurePkg).getPackagedElements();
+						for (PackageableElement packageableElement : packagedElements2) {
+							if (packageableElement instanceof UseCase) {
+								results.add((UseCase) packageableElement);
+							}
 						}
 					}
+				} else if (structurePkg instanceof UseCase && structurePkg.getName().equals(packageName)) {
+					results.add((UseCase) structurePkg);
 				}
-			} else if (structurePkg instanceof UseCase && structurePkg.getName().equals(packageName)) {
-				results.add((UseCase) structurePkg);
 			}
 		}
 		return results;
@@ -204,33 +218,53 @@ public class Sysml2CapellaUtils {
 	 */
 	static public List<Activity> getActivities(Package source, String paths) {
 		List<Activity> results = new ArrayList<>();
+		if (paths.contains(",")) {
+			String[] split = paths.split(",");
+			for (String string : split) {
+				results.addAll(getActivities(source, string));
+			}
 
-		String[] pathsArray = paths.split("/");
-		paths = paths.substring(paths.indexOf("/") + 1, paths.length());
-		String packageName = pathsArray[0];
-		EList<PackageableElement> packagedElements = source.getPackagedElements();
-		for (PackageableElement structurePkg : packagedElements) {
-			if (structurePkg instanceof Package && structurePkg.getName().equals(packageName)) {
-				if (pathsArray.length > 1) {
-					results.addAll(getActivities((Package) structurePkg, paths));
-				} else {
-					EList<PackageableElement> packagedElements2 = ((Package) structurePkg).getPackagedElements();
-					for (PackageableElement packageableElement : packagedElements2) {
-						if (packageableElement instanceof Activity) {
-							results.add((Activity) packageableElement);
+		} else {
+			String[] pathsArray = paths.split("/");
+			paths = paths.substring(paths.indexOf("/") + 1, paths.length());
+			String packageName = pathsArray[0];
+			EList<PackageableElement> packagedElements = source.getPackagedElements();
+			for (PackageableElement structurePkg : packagedElements) {
+				if (structurePkg instanceof Package && structurePkg.getName().equals(packageName)) {
+					if (pathsArray.length > 1) {
+						results.addAll(getActivities((Package) structurePkg, paths));
+					} else {
+						EList<PackageableElement> packagedElements2 = ((Package) structurePkg).getPackagedElements();
+						for (PackageableElement packageableElement : packagedElements2) {
+							if (packageableElement instanceof Activity) {
+								results.add((Activity) packageableElement);
+							}
 						}
 					}
-				}
-			} else if (structurePkg instanceof Activity && structurePkg.getName().equals(packageName)) {
-				results.add((Activity) structurePkg);
-			} else if (structurePkg instanceof UseCase && structurePkg.getName().equals(packageName)) {
-				EList<Behavior> ownedBehaviors = ((UseCase) structurePkg).getOwnedBehaviors();
-				for (Behavior behavior : ownedBehaviors) {
-					if (behavior instanceof Activity) {
-						results.add((Activity) behavior);
+				} else if (structurePkg instanceof Activity && structurePkg.getName().equals(packageName)) {
+					results.add((Activity) structurePkg);
+				} else if (structurePkg instanceof UseCase && structurePkg.getName().equals(packageName)) {
+					EList<Behavior> ownedBehaviors = ((UseCase) structurePkg).getOwnedBehaviors();
+					for (Behavior behavior : ownedBehaviors) {
+						if (behavior instanceof Activity) {
+							if (behavior.getName() != null && behavior.getName().equals(paths)) {
+								results.add((Activity) behavior);
+							}
+						}
 					}
-				}
 
+				} else if (structurePkg instanceof Class && structurePkg.getName().equals(packageName)) {
+
+					EList<Behavior> ownedBehaviors = ((Class) structurePkg).getOwnedBehaviors();
+					for (Behavior behavior : ownedBehaviors) {
+						if (behavior instanceof Activity) {
+							if (behavior.getName() != null && behavior.getName().equals(paths)) {
+								results.add((Activity) behavior);
+							}
+						}
+					}
+
+				}
 			}
 		}
 		return results;
@@ -249,25 +283,32 @@ public class Sysml2CapellaUtils {
 	 */
 	static public List<Association> getAssociations(Package source, String paths) {
 		List<Association> results = new ArrayList<>();
+		if (paths.contains(",")) {
+			String[] split = paths.split(",");
+			for (String string : split) {
+				results.addAll(getAssociations(source, string));
+			}
 
-		String[] pathsArray = paths.split("/");
-		paths = paths.substring(paths.indexOf("/") + 1, paths.length());
-		String packageName = pathsArray[0];
-		EList<PackageableElement> packagedElements = source.getPackagedElements();
-		for (PackageableElement structurePkg : packagedElements) {
-			if (structurePkg instanceof Package && structurePkg.getName().equals(packageName)) {
-				if (pathsArray.length > 1) {
-					results.addAll(getAssociations((Package) structurePkg, paths));
-				} else {
-					EList<PackageableElement> packagedElements2 = ((Package) structurePkg).getPackagedElements();
-					for (PackageableElement packageableElement : packagedElements2) {
-						if (packageableElement instanceof Association) {
-							results.add((Association) packageableElement);
+		} else {
+			String[] pathsArray = paths.split("/");
+			paths = paths.substring(paths.indexOf("/") + 1, paths.length());
+			String packageName = pathsArray[0];
+			EList<PackageableElement> packagedElements = source.getPackagedElements();
+			for (PackageableElement structurePkg : packagedElements) {
+				if (structurePkg instanceof Package && structurePkg.getName().equals(packageName)) {
+					if (pathsArray.length > 1) {
+						results.addAll(getAssociations((Package) structurePkg, paths));
+					} else {
+						EList<PackageableElement> packagedElements2 = ((Package) structurePkg).getPackagedElements();
+						for (PackageableElement packageableElement : packagedElements2) {
+							if (packageableElement instanceof Association) {
+								results.add((Association) packageableElement);
+							}
 						}
 					}
+				} else if (structurePkg instanceof Association && structurePkg.getName().equals(packageName)) {
+					results.add((Association) structurePkg);
 				}
-			} else if (structurePkg instanceof Association && structurePkg.getName().equals(packageName)) {
-				results.add((Association) structurePkg);
 			}
 		}
 		return results;

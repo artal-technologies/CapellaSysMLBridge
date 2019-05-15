@@ -98,29 +98,30 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 		LogicalActorPkg logicalActorPkg = Sysml2CapellaUtils.getLogicalActorPkg(targetScope.getProject());
 		LogicalContext logicalContext = Sysml2CapellaUtils.getLogicalContext(targetScope.getProject());
 
+		LogicalFunction evironnement = LaFactory.eINSTANCE.createLogicalFunction();
+		evironnement.setName("Environment");
+		LogicalActor genericActor = LaFactory.eINSTANCE.createLogicalActor();
+		genericActor.setName("Generic Actor");
+		Part partGenActor = CsFactory.eINSTANCE.createPart();
+		partGenActor.setName(genericActor.getName());
+		partGenActor.setAbstractType(genericActor);
+
+		logicalActorPkg.getOwnedLogicalActors().add(genericActor);
+		logicalContext.getOwnedFeatures().add(partGenActor);
+		logicalFunctionRoot.getOwnedFunctions().add(evironnement);
+
+		ComponentFunctionalAllocation cfa = FaFactory.eINSTANCE.createComponentFunctionalAllocation();
+		cfa.setTargetElement(evironnement);
+		cfa.setSourceElement(genericActor);
+
+		genericActor.getOwnedFunctionalAllocation().add(cfa);
+
+		Sysml2CapellaUtils.trace(this, eResource, _source, evironnement, "EnvFunction_");
+		Sysml2CapellaUtils.trace(this, eResource, _source, genericActor, "GenericActor_");
+		Sysml2CapellaUtils.trace(this, eResource, _source, partGenActor, "GenericActorPart_");
+		Sysml2CapellaUtils.trace(this, eResource, _source, cfa, "GenericActorPartFunctionalAlloc_");
+
 		for (Activity activity : activities) {
-			LogicalFunction evironnement = LaFactory.eINSTANCE.createLogicalFunction();
-			evironnement.setName("Environment");
-			LogicalActor genericActor = LaFactory.eINSTANCE.createLogicalActor();
-			genericActor.setName("Generic Actor");
-			Part partGenActor = CsFactory.eINSTANCE.createPart();
-			partGenActor.setName(genericActor.getName());
-			partGenActor.setAbstractType(genericActor);
-
-			logicalActorPkg.getOwnedLogicalActors().add(genericActor);
-			logicalContext.getOwnedFeatures().add(partGenActor);
-			logicalFunctionRoot.getOwnedFunctions().add(evironnement);
-
-			ComponentFunctionalAllocation cfa = FaFactory.eINSTANCE.createComponentFunctionalAllocation();
-			cfa.setTargetElement(evironnement);
-			cfa.setSourceElement(genericActor);
-
-			genericActor.getOwnedFunctionalAllocation().add(cfa);
-
-			Sysml2CapellaUtils.trace(this, eResource, activity, evironnement, "EnvFunction_");
-			Sysml2CapellaUtils.trace(this, eResource, activity, genericActor, "GenericActor_");
-			Sysml2CapellaUtils.trace(this, eResource, activity, partGenActor, "GenericActorPart_");
-			Sysml2CapellaUtils.trace(this, eResource, activity, cfa, "GenericActorPartFunctionalAlloc_");
 
 			EList<ActivityNode> nodes2 = activity.getNodes();
 			EList<ActivityNode> nodes = nodes2;
@@ -202,6 +203,10 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 	@Override
 	public Sysml2CapellaAlgo getAlgo() {
 		return (Sysml2CapellaAlgo) super.getAlgo();
+	}
+
+	public Model getSource() {
+		return _source;
 	}
 
 }
