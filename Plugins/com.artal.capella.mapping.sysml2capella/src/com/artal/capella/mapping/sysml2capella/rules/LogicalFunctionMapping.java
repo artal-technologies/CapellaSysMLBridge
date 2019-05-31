@@ -32,7 +32,6 @@ import org.eclipse.uml2.uml.Behavior;
 import org.eclipse.uml2.uml.CallBehaviorAction;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Element;
-import org.eclipse.uml2.uml.Event;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.InputPin;
 import org.eclipse.uml2.uml.MergeNode;
@@ -43,8 +42,6 @@ import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.Pin;
 import org.eclipse.uml2.uml.SendSignalAction;
 import org.eclipse.uml2.uml.Signal;
-import org.eclipse.uml2.uml.SignalEvent;
-import org.eclipse.uml2.uml.Trigger;
 import org.polarsys.capella.core.data.fa.AbstractFunction;
 import org.polarsys.capella.core.data.fa.ComponentFunctionalAllocation;
 import org.polarsys.capella.core.data.fa.FaFactory;
@@ -81,6 +78,8 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	IMappingExecution _mappingExecution;
 
 	Map<LogicalFunction, Class> _mapActivityNodeToClass = new HashMap<>();
+
+	Map<Signal, List<ActivityNode>> _mapSignalActivityNode = new HashMap<>();
 
 	/**
 	 * Manage sub rules
@@ -157,11 +156,9 @@ public class LogicalFunctionMapping extends AbstractMapping {
 						suffix, activityNode);
 			}
 			if (activityNode instanceof AcceptEventAction) {
-
 				manageAcceptEventAction(eResource, logicalFunctionRoot, suffix, activityNode);
 			}
 			if (activityNode instanceof SendSignalAction) {
-
 				manageSendEventAction(eResource, logicalFunctionRoot, suffix, activityNode);
 			}
 			if (activityNode instanceof MergeNode) {
@@ -302,43 +299,64 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 */
 	private void manageSendEventAction(Resource eResource, LogicalFunction logicalFunctionRoot, String suffix,
 			ActivityNode activityNode) {
-		Signal signal = ((SendSignalAction) activityNode).getSignal();
+		Signal signal = Sysml2CapellaUtils.getSignal(activityNode);
 		String lfName = "";
 		if (signal != null) {
 			lfName = signal.getName();
 		}
-		LogicalFunction lf = createLogicalFunction(eResource, logicalFunctionRoot, activityNode, lfName, suffix);
-		managePartitions(activityNode, eResource, lf, null, logicalFunctionRoot);
+		fillSignalActivityNodeMap(activityNode, signal);
+		if (getAlgo().isEventOption()) {
+			LogicalFunction lf = createLogicalFunction(eResource, logicalFunctionRoot, activityNode, lfName, suffix);
+			managePartitions(activityNode, eResource, lf, null, logicalFunctionRoot);
 
-		FunctionOutputPort input = FaFactory.eINSTANCE.createFunctionOutputPort();
-		lf.getOutputs().add(input);
-		Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, activityNode)
-				+ Sysml2CapellaUtils.getSysMLID(eResource, signal), input, "_ApplyEvent");
+			FunctionOutputPort input = FaFactory.eINSTANCE.createFunctionOutputPort();
+			lf.getOutputs().add(input);
+			Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, activityNode)
+					+ Sysml2CapellaUtils.getSysMLID(eResource, signal), input, "_ApplyEvent");
 
-		FunctionInputPort out = FaFactory.eINSTANCE.createFunctionInputPort();
-		FunctionalArchitectureMapping rule = (FunctionalArchitectureMapping) MappingRulesManager
-				.getRule(FunctionalArchitectureMapping.class.getName());
-		Model source = rule.getSource();
-		List<?> objects = (List<?>) rule.getMapSourceToTarget().get(source);
-		LogicalFunction env = null;
-		for (Object object : objects) {
-			if (object instanceof LogicalFunction) {
-				env = ((LogicalFunction) object);
-				env.getInputs().add(out);
-				break;
+			FunctionInputPort out = FaFactory.eINSTANCE.createFunctionInputPort();
+			FunctionalArchitectureMapping rule = (FunctionalArchitectureMapping) MappingRulesManager
+					.getRule(FunctionalArchitectureMapping.class.getName());
+			Model source = rule.getSource();
+			List<?> objects = (List<?>) rule.getMapSourceToTarget().get(source);
+			LogicalFunction env = null;
+			for (Object object : objects) {
+				if (object instanceof LogicalFunction) {
+					env = ((LogicalFunction) object);
+					env.getInputs().add(out);
+					break;
+				}
 			}
+			Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, activityNode)
+					+ Sysml2CapellaUtils.getSysMLID(eResource, signal), out, "_SendEvent");
+
+			FunctionalExchange fe = manageFunctionExchange(eResource, activityNode, signal, input, out, env);
+
+			manageSignal(eResource, activityNode, signal, fe);
+
+			LogicalFunctionPortMapping functionPortMapping = new LogicalFunctionPortMapping(getAlgo(),
+					(Action) activityNode, _mappingExecution);
+			_manager.add(
+					functionPortMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(eResource, activityNode),
+					functionPortMapping);
 		}
-		Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, activityNode)
-				+ Sysml2CapellaUtils.getSysMLID(eResource, signal), out, "_SendEvent");
+	}
 
-		FunctionalExchange fe = manageFunctionExchange(eResource, activityNode, signal, input, out, env);
+	/**
+	 * @param activityNode
+	 * @param signal
+	 */
+	private void fillSignalActivityNodeMap(ActivityNode activityNode, Signal signal) {
+		List<ActivityNode> list = _mapSignalActivityNode.get(signal);
+		if (list == null) {
+			list = new ArrayList<>();
+			_mapSignalActivityNode.put(signal, list);
+		}
+		list.add(activityNode);
+	}
 
-		manageSignal(eResource, activityNode, signal, fe);
-
-		LogicalFunctionPortMapping functionPortMapping = new LogicalFunctionPortMapping(getAlgo(),
-				(Action) activityNode, _mappingExecution);
-		_manager.add(functionPortMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(eResource, activityNode),
-				functionPortMapping);
+	public Map<Signal, List<ActivityNode>> getMapSignalActivityNode() {
+		return _mapSignalActivityNode;
 	}
 
 	/**
@@ -390,53 +408,45 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 */
 	private void manageAcceptEventAction(Resource eResource, LogicalFunction logicalFunctionRoot, String suffix,
 			ActivityNode activityNode) {
-		EList<Trigger> triggers = ((AcceptEventAction) activityNode).getTriggers();
-		Trigger trigger = triggers.get(0);
+		Signal signal = Sysml2CapellaUtils.getSignal(activityNode);
 		String lfName = "";
-		Signal signal = null;
-		if (trigger != null) {
-			Event event = trigger.getEvent();
-			if (event != null) {
-				if (event instanceof SignalEvent) {
-					signal = ((SignalEvent) event).getSignal();
-					if (signal != null) {
-						lfName = signal.getName();
+		if (signal != null) {
+			lfName = signal.getName();
+		}
+		fillSignalActivityNodeMap(activityNode, signal);
+		if (getAlgo().isEventOption()) {
+			if (signal != null) {
+				LogicalFunction lf = createLogicalFunction(eResource, logicalFunctionRoot, activityNode, lfName,
+						suffix);
+				FunctionInputPort input = FaFactory.eINSTANCE.createFunctionInputPort();
+				lf.getInputs().add(input);
+				Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, activityNode)
+						+ Sysml2CapellaUtils.getSysMLID(eResource, signal), input, "_ApplyEvent");
+
+				FunctionOutputPort output = FaFactory.eINSTANCE.createFunctionOutputPort();
+				FunctionalArchitectureMapping rule = (FunctionalArchitectureMapping) MappingRulesManager
+						.getRule(FunctionalArchitectureMapping.class.getName());
+				Model source = rule.getSource();
+				List<?> objects = (List<?>) rule.getMapSourceToTarget().get(source);
+				LogicalFunction env = null;
+				for (Object object : objects) {
+					if (object instanceof LogicalFunction) {
+						env = ((LogicalFunction) object);
+						env.getOutputs().add(output);
+						break;
 					}
 				}
+				Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, activityNode)
+						+ Sysml2CapellaUtils.getSysMLID(eResource, signal), output, "_SendEvent");
+
+				FunctionalExchange fe = manageFunctionExchange(eResource, activityNode, signal, output, input, env);
+				manageSignal(eResource, activityNode, signal, fe);
+
+				LogicalFunctionPortMapping functionPortMapping = new LogicalFunctionPortMapping(getAlgo(),
+						(Action) activityNode, _mappingExecution);
+				_manager.add(functionPortMapping.getClass().getName()
+						+ Sysml2CapellaUtils.getSysMLID(eResource, activityNode), functionPortMapping);
 			}
-		}
-		if (signal != null) {
-			LogicalFunction lf = createLogicalFunction(eResource, logicalFunctionRoot, activityNode, lfName, suffix);
-			FunctionInputPort input = FaFactory.eINSTANCE.createFunctionInputPort();
-			lf.getInputs().add(input);
-			Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, activityNode)
-					+ Sysml2CapellaUtils.getSysMLID(eResource, signal), input, "_ApplyEvent");
-
-			FunctionOutputPort output = FaFactory.eINSTANCE.createFunctionOutputPort();
-			FunctionalArchitectureMapping rule = (FunctionalArchitectureMapping) MappingRulesManager
-					.getRule(FunctionalArchitectureMapping.class.getName());
-			Model source = rule.getSource();
-			List<?> objects = (List<?>) rule.getMapSourceToTarget().get(source);
-			LogicalFunction env = null;
-			for (Object object : objects) {
-				if (object instanceof LogicalFunction) {
-					env = ((LogicalFunction) object);
-					env.getOutputs().add(output);
-					break;
-				}
-			}
-			Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, activityNode)
-					+ Sysml2CapellaUtils.getSysMLID(eResource, signal), output, "_SendEvent");
-
-			FunctionalExchange fe = manageFunctionExchange(eResource, activityNode, signal, output, input, env);
-
-			manageSignal(eResource, activityNode, signal, fe);
-
-			LogicalFunctionPortMapping functionPortMapping = new LogicalFunctionPortMapping(getAlgo(),
-					(Action) activityNode, _mappingExecution);
-			_manager.add(
-					functionPortMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(eResource, activityNode),
-					functionPortMapping);
 		}
 	}
 
@@ -491,16 +501,16 @@ public class LogicalFunctionMapping extends AbstractMapping {
 							for (Class class2 : listGeneralizations) {
 								transformPort = manageLogicalFunction(eResource, logicalFunctionRoot, mapPinToParam,
 										mapAbstractionToActivityToClasses, activityNode, transformPort, abstraction,
-										behavior, lfName, rule.getMapSourceToTarget().get(class2), class2);
+										behavior, lfName, rule.getMapSourceToTarget().get(class2), class2, false);
 
 							}
 							transformPort = manageLogicalFunction(eResource, logicalFunctionRoot, mapPinToParam,
 									mapAbstractionToActivityToClasses, activityNode, transformPort, abstraction,
-									behavior, lfName, object, class1);
+									behavior, lfName, object, class1, false);
 						} else {
 							transformPort = manageLogicalFunction(eResource, logicalFunctionRoot, mapPinToParam,
 									mapAbstractionToActivityToClasses, activityNode, transformPort, abstraction,
-									behavior, lfName, object, class1);
+									behavior, lfName, object, class1, false);
 						}
 
 					}
@@ -509,7 +519,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 			} else {
 				transformPort = manageLogicalFunction(eResource, logicalFunctionRoot, mapPinToParam,
 						mapAbstractionToActivityToClasses, activityNode, transformPort, abstraction, behavior, lfName,
-						null, null);
+						null, null, true);
 			}
 		}
 		// transform the ports of the leaf activity.
@@ -573,7 +583,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 			Map<Pin, ActivityParameterNode> mapPinToParam,
 			Map<Abstraction, Map<Activity, List<Class>>> mapAbstractionToActivityToClasses, ActivityNode activityNode,
 			boolean transformPort, Abstraction abstraction, Behavior behavior, String lfName, Object object,
-			Class parentClass) {
+			Class parentClass, boolean checkPartition) {
 		String sysMLID = "";
 		if (parentClass != null) {
 			sysMLID = Sysml2CapellaUtils.getSysMLID(eResource, parentClass);
@@ -583,9 +593,11 @@ public class LogicalFunctionMapping extends AbstractMapping {
 
 		_mapActivityNodeToClass.put(lFunction, parentClass);
 
-		if (object != null) {
+		if (object != null && !checkPartition) {
 			createFunctionAllocation(activityNode, eResource, lFunction, "FunctionAllocation_" + sysMLID, abstraction,
 					object);
+		} else {
+			managePartitions(activityNode, eResource, lFunction, null, logicalFunctionRoot);
 		}
 		// put activity and this linked
 		// callBehaviorAction

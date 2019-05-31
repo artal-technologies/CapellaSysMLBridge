@@ -22,6 +22,7 @@ import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Abstraction;
+import org.eclipse.uml2.uml.AcceptEventAction;
 import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.ActivityEdge;
 import org.eclipse.uml2.uml.ActivityNode;
@@ -34,8 +35,11 @@ import org.eclipse.uml2.uml.InputPin;
 import org.eclipse.uml2.uml.MergeNode;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.ObjectFlow;
+import org.eclipse.uml2.uml.OutputPin;
 import org.eclipse.uml2.uml.ParameterDirectionKind;
 import org.eclipse.uml2.uml.Pin;
+import org.eclipse.uml2.uml.SendSignalAction;
+import org.eclipse.uml2.uml.Signal;
 import org.polarsys.capella.core.data.fa.AbstractFunctionalBlock;
 import org.polarsys.capella.core.data.fa.ComponentFunctionalAllocation;
 import org.polarsys.capella.core.data.fa.FaFactory;
@@ -45,6 +49,7 @@ import org.polarsys.capella.core.data.fa.FunctionPort;
 import org.polarsys.capella.core.data.fa.FunctionalExchange;
 import org.polarsys.capella.core.data.la.LogicalFunction;
 
+import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.Sysml2CapellaAlgo;
@@ -454,7 +459,46 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 				return capellaFunctionPort;
 			}
 		}
+
 		EObject sourcePortParent = source.eContainer();
+		if (!getAlgo().isEventOption()) {
+			LogicalFunctionMapping functionRule = (LogicalFunctionMapping) MappingRulesManager
+					.getRule(LogicalFunctionMapping.class.getName());
+			Map<Signal, List<ActivityNode>> mapSignalActivityNode = functionRule.getMapSignalActivityNode();
+			if (sourcePortParent instanceof SendSignalAction) {
+				Signal signal = Sysml2CapellaUtils.getSignal((SendSignalAction) sourcePortParent);
+				List<ActivityNode> list = mapSignalActivityNode.get(signal);
+				for (ActivityNode activityNode : list) {
+					if (activityNode instanceof AcceptEventAction) {
+						EList<OutputPin> results = ((AcceptEventAction) activityNode).getResults();
+						List<FunctionPort> ports = new ArrayList<>();
+						for (OutputPin outputPin : results) {
+							EList<ActivityEdge> incomings = outputPin.getOutgoings();
+							for (ActivityEdge activityEdge : incomings) {
+								if (activityEdge instanceof ObjectFlow) {
+									ActivityNode source2 = activityEdge.getSource();
+									ActivityNode target2 = activityEdge.getTarget();
+									if (!source2.equals(outputPin)) {
+										ports.addAll(getCapellaFunctionPort(eResource, source2, mapPinToParam, true,
+												true, objecFlow));
+									}
+									if (!target2.equals(outputPin)) {
+										ports.addAll(getCapellaFunctionPort(eResource, target2, mapPinToParam, true,
+												true, objecFlow));
+									}
+
+								}
+							}
+						}
+						return ports;
+					}
+				}
+			} else if (sourcePortParent instanceof AcceptEventAction) {
+				Signal signal = Sysml2CapellaUtils.getSignal((AcceptEventAction) sourcePortParent);
+				List<SendSignalAction> referencingInverseSignal = Sysml2CapellaUtils
+						.getReferencingInverseElement(signal, SendSignalAction.class);
+			}
+		}
 		AbstractMapping rule = MappingRulesManager.getRule(LogicalFunctionPortMapping.class.getName()
 				+ Sysml2CapellaUtils.getSysMLID(eResource, sourcePortParent));
 		if (rule == null) {
@@ -518,6 +562,11 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 		List<FunctionPort> ports = new ArrayList<>();
 		ports.add(port);
 		return ports;
+	}
+
+	@Override
+	public Sysml2CapellaAlgo getAlgo() {
+		return (Sysml2CapellaAlgo) super.getAlgo();
 	}
 
 }

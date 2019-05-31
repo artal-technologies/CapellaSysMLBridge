@@ -41,7 +41,7 @@ public class SysMLCapellaLaunchDialog extends TitleAreaDialog {
 
 	private String _umlPath;
 	private String _configPath;
-
+	private boolean _eventOption=true;
 	public SysMLCapellaLaunchDialog(Shell parent) {
 		super(parent);
 	}
@@ -82,6 +82,24 @@ public class SysMLCapellaLaunchDialog extends TitleAreaDialog {
 		button.setLayoutData(new GridData());
 		button.setText("Browse..");
 
+		Button eventOptionsButton = new Button(sysmlGroup, SWT.CHECK);
+		eventOptionsButton.setText("Event is connected with Environement function.");
+		eventOptionsButton.setSelection(true);
+		eventOptionsButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				_eventOption = eventOptionsButton.getSelection();
+				
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+				
+			}
+		});
+		
 		button.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -137,6 +155,13 @@ public class SysMLCapellaLaunchDialog extends TitleAreaDialog {
 		return _configPath;
 	}
 
+	/**
+	 * @return the eventOption
+	 */
+	public boolean isEventOption() {
+		return _eventOption;
+	}
+	
 	private void validate() {
 		String errorMessage = null;
 		if (_umlPath == null || _umlPath.trim().isEmpty()) {

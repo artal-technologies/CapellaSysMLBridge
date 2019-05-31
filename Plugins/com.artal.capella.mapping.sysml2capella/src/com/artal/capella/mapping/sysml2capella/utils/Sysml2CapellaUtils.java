@@ -10,24 +10,36 @@
 package com.artal.capella.mapping.sysml2capella.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.uml2.uml.Abstraction;
+import org.eclipse.uml2.uml.AcceptEventAction;
 import org.eclipse.uml2.uml.Activity;
+import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.Actor;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Behavior;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
+import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.Event;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
 import org.eclipse.uml2.uml.PrimitiveType;
+import org.eclipse.uml2.uml.SendSignalAction;
+import org.eclipse.uml2.uml.Signal;
+import org.eclipse.uml2.uml.SignalEvent;
+import org.eclipse.uml2.uml.Trigger;
 import org.eclipse.uml2.uml.UseCase;
 import org.polarsys.capella.core.data.capellacommon.AbstractCapabilityPkg;
 import org.polarsys.capella.core.data.capellacore.ModellingArchitecture;
@@ -695,6 +707,64 @@ public class Sysml2CapellaUtils {
 		}
 
 		return null;
+	}
+
+	static public <T extends Element> List<T> getReferencingInverseElement(Element element, java.lang.Class<T> clazz) {
+		List<T> results = new ArrayList<>();
+		Collection<Setting> referencingInverse = getReferencingInverse(element);
+		for (Setting setting : referencingInverse) {
+			EObject eObject = setting.getEObject();
+			if (clazz.isAssignableFrom(eObject.getClass())) {
+				results.add(clazz.cast(eObject));
+			}
+		}
+		return results;
+	}
+
+	/**
+	 * Get referencing Inverse
+	 * 
+	 * @param referenceTarget
+	 * @return
+	 */
+	static public Collection<Setting> getReferencingInverse(EObject referenceTarget) {
+		Resource res = referenceTarget.eResource();
+		ResourceSet rs = res.getResourceSet();
+		ECrossReferenceAdapter crossReferencer = null;
+		List<Adapter> adapters = rs.eAdapters();
+		for (Adapter adapter : adapters) {
+			if (adapter instanceof ECrossReferenceAdapter) {
+				crossReferencer = (ECrossReferenceAdapter) adapter;
+				break;
+			}
+		}
+		if (crossReferencer == null) {
+			crossReferencer = new ECrossReferenceAdapter();
+			rs.eAdapters().add(crossReferencer);
+		}
+		Collection<Setting> referencers = crossReferencer.getInverseReferences(referenceTarget, true);
+
+		return referencers;
+
+	}
+
+	public static Signal getSignal(ActivityNode activityNode) {
+		Signal signal = null;
+		if (activityNode instanceof AcceptEventAction) {
+			EList<Trigger> triggers = ((AcceptEventAction) activityNode).getTriggers();
+			Trigger trigger = triggers.get(0);
+			if (trigger != null) {
+				Event event = trigger.getEvent();
+				if (event != null) {
+					if (event instanceof SignalEvent) {
+						signal = ((SignalEvent) event).getSignal();
+					}
+				}
+			}
+		} else if (activityNode instanceof SendSignalAction) {
+			signal = ((SendSignalAction) activityNode).getSignal();
+		}
+		return signal;
 	}
 
 }

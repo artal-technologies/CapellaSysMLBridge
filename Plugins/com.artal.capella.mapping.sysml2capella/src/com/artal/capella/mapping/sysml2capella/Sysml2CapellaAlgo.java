@@ -61,6 +61,8 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 	 */
 	private SysMLConfiguration _configuration;
 
+	private boolean _eventOption;
+
 	/**
 	 * Default constructor
 	 */
@@ -75,7 +77,12 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 	 *            provides the package where get the sysml data.
 	 */
 	public Sysml2CapellaAlgo(SysMLConfiguration configuration) {
+		this(configuration, true);
+	}
+
+	public Sysml2CapellaAlgo(SysMLConfiguration configuration, boolean eventOption) {
 		_configuration = configuration;
+		_eventOption = eventOption;
 	}
 
 	/*
@@ -176,6 +183,15 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 	 */
 	public SysMLConfiguration getConfiguration() {
 		return _configuration;
+	}
+
+	/**
+	 * Check if Event option is activated.
+	 * 
+	 * @return <code>_eventOption</code>
+	 */
+	public boolean isEventOption() {
+		return _eventOption;
 	}
 
 }
