@@ -10,6 +10,7 @@
 package com.artal.capella.mapping.sysml2capella.rules;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,12 +20,15 @@ import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdate
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.ConnectableElement;
 import org.eclipse.uml2.uml.Connector;
 import org.eclipse.uml2.uml.ConnectorEnd;
+import org.eclipse.uml2.uml.InformationFlow;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Port;
 import org.eclipse.uml2.uml.Property;
+import org.eclipse.uml2.uml.Signal;
 import org.eclipse.uml2.uml.Type;
 import org.polarsys.capella.core.data.fa.ComponentExchange;
 import org.polarsys.capella.core.data.fa.ComponentPort;
@@ -53,6 +57,8 @@ public class ConnectorMapping extends AbstractMapping {
 	 * the {@link IMappingExecution} allows to get the mapping data.
 	 */
 	IMappingExecution _mappingExecution;
+
+	Map<Signal, Map<Connector, InformationFlow>> _mapSignalConnector = new HashMap<>();
 
 	/**
 	 * Constructor.
@@ -125,6 +131,19 @@ public class ConnectorMapping extends AbstractMapping {
 
 					transformEnd(ce, ends.get(0), true, eResource);
 					transformEnd(ce, ends.get(1), false, eResource);
+
+					List<InformationFlow> informationFlows = Sysml2CapellaUtils.getReferencingInverseElement(connector,
+							InformationFlow.class);
+					for (InformationFlow informationFlow : informationFlows) {
+						EList<Classifier> conveyeds = informationFlow.getConveyeds();
+						for (Classifier classifier : conveyeds) {
+							if (classifier instanceof Signal) {
+								Map<Connector, InformationFlow> map = new HashMap<>();
+								map.put(connector, informationFlow);
+								_mapSignalConnector.put((Signal) classifier, map);
+							}
+						}
+					}
 				}
 			}
 
@@ -171,20 +190,20 @@ public class ConnectorMapping extends AbstractMapping {
 			Entry<String, Port> next = map.entrySet().iterator().next();
 			String subPartID = next.getKey();
 			Port subPort = next.getValue();
-			
+
 			Type type = subPort.getType();
 			Object capellaObjectFromAllRules = MappingRulesManager.getCapellaObjectFromAllRules(type);
-			if(capellaObjectFromAllRules instanceof ExchangeItem){
-				ce.getConvoyedInformations().add((ExchangeItem)capellaObjectFromAllRules);
+			if (capellaObjectFromAllRules instanceof ExchangeItem) {
+				ce.getConvoyedInformations().add((ExchangeItem) capellaObjectFromAllRules);
 			}
-			
+
 			ComponentPortMapping subRule = (ComponentPortMapping) MappingRulesManager
 					.getRule(ComponentPortMapping.class.getName() + subPartID);
 			object = subRule.getMapSourceToTarget().get(subPort);
 		} else {
 			Object capellaObjectFromAllRules = MappingRulesManager.getCapellaObjectFromAllRules(role.getType());
-			if(capellaObjectFromAllRules instanceof ExchangeItem){
-				ce.getConvoyedInformations().add((ExchangeItem)capellaObjectFromAllRules);
+			if (capellaObjectFromAllRules instanceof ExchangeItem) {
+				ce.getConvoyedInformations().add((ExchangeItem) capellaObjectFromAllRules);
 			}
 			object = rule.getMapSourceToTarget().get(role);
 		}
@@ -196,6 +215,10 @@ public class ConnectorMapping extends AbstractMapping {
 				ce.setTarget((ComponentPort) object);
 			}
 		}
+	}
+
+	public Map<Signal, Map<Connector, InformationFlow>> getMapSignalConnector() {
+		return _mapSignalConnector;
 	}
 
 	/*

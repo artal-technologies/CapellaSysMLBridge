@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
@@ -30,7 +31,9 @@ import org.eclipse.uml2.uml.ActivityParameterNode;
 import org.eclipse.uml2.uml.Behavior;
 import org.eclipse.uml2.uml.CallBehaviorAction;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Connector;
 import org.eclipse.uml2.uml.ForkNode;
+import org.eclipse.uml2.uml.InformationFlow;
 import org.eclipse.uml2.uml.InputPin;
 import org.eclipse.uml2.uml.MergeNode;
 import org.eclipse.uml2.uml.Model;
@@ -41,6 +44,8 @@ import org.eclipse.uml2.uml.Pin;
 import org.eclipse.uml2.uml.SendSignalAction;
 import org.eclipse.uml2.uml.Signal;
 import org.polarsys.capella.core.data.fa.AbstractFunctionalBlock;
+import org.polarsys.capella.core.data.fa.ComponentExchange;
+import org.polarsys.capella.core.data.fa.ComponentExchangeFunctionalExchangeAllocation;
 import org.polarsys.capella.core.data.fa.ComponentFunctionalAllocation;
 import org.polarsys.capella.core.data.fa.FaFactory;
 import org.polarsys.capella.core.data.fa.FunctionInputPort;
@@ -49,8 +54,8 @@ import org.polarsys.capella.core.data.fa.FunctionPort;
 import org.polarsys.capella.core.data.fa.FunctionalExchange;
 import org.polarsys.capella.core.data.information.ExchangeItem;
 import org.polarsys.capella.core.data.la.LogicalFunction;
+import org.polarsys.capella.core.model.helpers.ComponentExchangeExt;
 
-import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.Sysml2CapellaAlgo;
@@ -223,6 +228,40 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 								ExchangeItem ei = (ExchangeItem) MappingRulesManager
 										.getCapellaObjectFromAllRules(signal);
 								exchange.getExchangedItems().add(ei);
+
+								ConnectorMapping connectorMapping = (ConnectorMapping) MappingRulesManager
+										.getRule(ConnectorMapping.class.getName());
+								Map<Connector, InformationFlow> map = connectorMapping.getMapSignalConnector()
+										.get(signal);
+								if (map != null) {
+
+									Set<Entry<Connector, InformationFlow>> entrySet = map.entrySet();
+									for (Entry<Connector, InformationFlow> entry : entrySet) {
+
+										Connector connector = entry.getKey();
+										InformationFlow informationFlow = entry.getValue();
+
+										ComponentExchange ce = (ComponentExchange) MappingRulesManager
+												.getCapellaObjectFromAllRules(connector);
+										if (ce != null) {
+											EList<ComponentExchangeFunctionalExchangeAllocation> ceAllocation = ce
+													.getOwnedComponentExchangeFunctionalExchangeAllocations();
+
+											ComponentExchangeFunctionalExchangeAllocation allocation = FaFactory.eINSTANCE
+													.createComponentExchangeFunctionalExchangeAllocation();
+
+											allocation.setSourceElement(ce);
+											allocation.setTargetElement(exchange);
+											ComponentExchangeExt.synchronizePortAllocations(ce, exchange);
+											ceAllocation.add(allocation);
+
+											Sysml2CapellaUtils.trace(this, eResource,
+													Sysml2CapellaUtils.getSysMLID(eResource, informationFlow)
+															+ Sysml2CapellaUtils.getSysMLID(eResource, edge),
+													allocation, "_ALLOCATION");
+										}
+									}
+								}
 							}
 
 							String prefix = "";
