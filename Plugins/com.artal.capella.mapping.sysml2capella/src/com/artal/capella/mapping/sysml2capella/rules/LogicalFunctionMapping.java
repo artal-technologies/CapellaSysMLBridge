@@ -388,16 +388,11 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 * @param fe
 	 */
 	private void manageSignal(Resource eResource, ActivityNode activityNode, Signal signal, FunctionalExchange fe) {
-		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
-		DataPkg dataPkgRoot = Sysml2CapellaUtils.getDataPkgRoot(targetScope.getProject());
-		ExchangeItem ei = InformationFactory.eINSTANCE.createExchangeItem();
-		ei.setName(signal.getName());
-		ei.setExchangeMechanism(ExchangeMechanism.EVENT);
-		dataPkgRoot.getOwnedExchangeItems().add(ei);
-		fe.getExchangedItems().add(ei);
-
-		Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, activityNode)
-				+ Sysml2CapellaUtils.getSysMLID(eResource, signal), ei, "_ExchangeItemEvent");
+		SignalMapping signalRule = (SignalMapping) MappingRulesManager.getRule(SignalMapping.class.getName());
+		ExchangeItem ei = (ExchangeItem) signalRule.getMapSourceToTarget().get(signal);
+		if (ei != null) {
+			fe.getExchangedItems().add(ei);
+		}
 	}
 
 	/**
@@ -414,8 +409,8 @@ public class LogicalFunctionMapping extends AbstractMapping {
 			lfName = signal.getName();
 		}
 		fillSignalActivityNodeMap(activityNode, signal);
-		if (getAlgo().isEventOption()) {
-			if (signal != null) {
+		if (signal != null) {
+			if (getAlgo().isEventOption()) {
 				LogicalFunction lf = createLogicalFunction(eResource, logicalFunctionRoot, activityNode, lfName,
 						suffix);
 				FunctionInputPort input = FaFactory.eINSTANCE.createFunctionInputPort();

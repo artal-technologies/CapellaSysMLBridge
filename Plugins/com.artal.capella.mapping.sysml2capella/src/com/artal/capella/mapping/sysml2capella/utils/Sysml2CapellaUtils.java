@@ -748,7 +748,7 @@ public class Sysml2CapellaUtils {
 
 	}
 
-	public static Signal getSignal(ActivityNode activityNode) {
+	public static Signal getSignal(EObject activityNode) {
 		Signal signal = null;
 		if (activityNode instanceof AcceptEventAction) {
 			EList<Trigger> triggers = ((AcceptEventAction) activityNode).getTriggers();

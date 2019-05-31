@@ -47,6 +47,7 @@ import org.polarsys.capella.core.data.fa.FunctionInputPort;
 import org.polarsys.capella.core.data.fa.FunctionOutputPort;
 import org.polarsys.capella.core.data.fa.FunctionPort;
 import org.polarsys.capella.core.data.fa.FunctionalExchange;
+import org.polarsys.capella.core.data.information.ExchangeItem;
 import org.polarsys.capella.core.data.la.LogicalFunction;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
@@ -182,6 +183,14 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 					hasManyFE = true;
 				}
 
+				Signal signal = null;
+				if (!getAlgo().isEventOption()) {
+					signal = Sysml2CapellaUtils.getSignal(source.eContainer());
+					if (signal == null) {
+						signal = Sysml2CapellaUtils.getSignal(target.eContainer());
+					}
+				}
+
 				for (FunctionPort targetCapPort : targetCapPorts) {
 					for (FunctionPort sourceCapPort : sourceCapPorts) {
 						String suffix = "";
@@ -209,6 +218,12 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 							functionContainer.getOwnedFunctionalExchanges().add(exchange);
 							exchange.setSource((org.polarsys.capella.common.data.activity.ActivityNode) sourceCapPort);
 							exchange.setTarget((org.polarsys.capella.common.data.activity.ActivityNode) targetCapPort);
+
+							if (signal != null) {
+								ExchangeItem ei = (ExchangeItem) MappingRulesManager
+										.getCapellaObjectFromAllRules(signal);
+								exchange.getExchangedItems().add(ei);
+							}
 
 							String prefix = "";
 							Class class1 = _mapActivityNodeToClass.get(sourceCapPort.eContainer());
@@ -493,10 +508,6 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 						return ports;
 					}
 				}
-			} else if (sourcePortParent instanceof AcceptEventAction) {
-				Signal signal = Sysml2CapellaUtils.getSignal((AcceptEventAction) sourcePortParent);
-				List<SendSignalAction> referencingInverseSignal = Sysml2CapellaUtils
-						.getReferencingInverseElement(signal, SendSignalAction.class);
 			}
 		}
 		AbstractMapping rule = MappingRulesManager.getRule(LogicalFunctionPortMapping.class.getName()

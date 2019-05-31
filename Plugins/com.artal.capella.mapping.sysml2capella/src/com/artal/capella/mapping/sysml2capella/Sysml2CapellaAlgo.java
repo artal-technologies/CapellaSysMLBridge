@@ -41,6 +41,7 @@ import com.artal.capella.mapping.sysml2capella.rules.FunctionalArchitectureMappi
 import com.artal.capella.mapping.sysml2capella.rules.ParametricClassesMapping;
 import com.artal.capella.mapping.sysml2capella.rules.PartMapping;
 import com.artal.capella.mapping.sysml2capella.rules.RequirementsMapping;
+import com.artal.capella.mapping.sysml2capella.rules.SignalMapping;
 import com.artal.capella.mapping.sysml2capella.rules.StateMachineMapping;
 import com.artal.capella.mapping.sysml2capella.rules.UseCaseMapping;
 
@@ -101,6 +102,9 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 		// Class
 		ParametricClassesMapping classesMapping = new ParametricClassesMapping(this, source, mappingExecution_p);
 		_managerRules.add(classesMapping.getClass().getName(), classesMapping);
+
+		SignalMapping signalMapping = new SignalMapping(this, source, mappingExecution_p);
+		_managerRules.add(signalMapping.getClass().getName(), signalMapping);
 		// manage components mapping.
 		ComponentMapping componentMapping = new ComponentMapping(this, source, mappingExecution_p);
 		_managerRules.add(componentMapping.getClass().getName(), componentMapping);
