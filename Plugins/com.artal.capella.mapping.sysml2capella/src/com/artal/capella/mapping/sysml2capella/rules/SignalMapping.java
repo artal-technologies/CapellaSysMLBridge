@@ -33,7 +33,6 @@ import org.polarsys.capella.core.data.information.ExchangeItem;
 import org.polarsys.capella.core.data.information.ExchangeMechanism;
 import org.polarsys.capella.core.data.information.InformationFactory;
 
-import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.sysml2capella.Sysml2CapellaAlgo;
 import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;

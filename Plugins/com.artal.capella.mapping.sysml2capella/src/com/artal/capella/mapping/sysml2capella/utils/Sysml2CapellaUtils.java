@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.uml2.uml.Abstraction;
 import org.eclipse.uml2.uml.AcceptEventAction;
 import org.eclipse.uml2.uml.Activity;
-import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.Actor;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Behavior;
