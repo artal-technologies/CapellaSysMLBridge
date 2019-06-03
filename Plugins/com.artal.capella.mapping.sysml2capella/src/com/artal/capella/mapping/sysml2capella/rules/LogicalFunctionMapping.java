@@ -153,10 +153,12 @@ public class LogicalFunctionMapping extends AbstractMapping {
 						suffix, activityNode);
 			}
 			if (activityNode instanceof AcceptEventAction) {
-				manageAcceptEventAction(eResource, logicalFunctionRoot, suffix, activityNode);
+				manageAcceptEventAction(eResource, logicalFunctionRoot, suffix, activityNode,
+						mapAbstractionToActivityToClasses);
 			}
 			if (activityNode instanceof SendSignalAction) {
-				manageSendEventAction(eResource, logicalFunctionRoot, suffix, activityNode);
+				manageSendEventAction(eResource, logicalFunctionRoot, suffix, activityNode,
+						mapAbstractionToActivityToClasses);
 			}
 			if (activityNode instanceof MergeNode) {
 				manageMergeNode(eResource, logicalFunctionRoot, activityNode, mapAbstractionToActivityToClasses);
@@ -347,7 +349,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 * @param activityNode
 	 */
 	private void manageSendEventAction(Resource eResource, LogicalFunction logicalFunctionRoot, String suffix,
-			ActivityNode activityNode) {
+			ActivityNode activityNode, Map<Abstraction, Map<Element, List<Class>>> mapAbstractionToActivityToClasses) {
 		Signal signal = Sysml2CapellaUtils.getSignal(activityNode);
 		String lfName = "";
 		if (signal != null) {
@@ -356,8 +358,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 		fillSignalActivityNodeMap(activityNode, signal);
 		if (getAlgo().isEventOption()) {
 			LogicalFunction lf = createLogicalFunction(eResource, logicalFunctionRoot, activityNode, lfName, suffix);
-			managePartitions(activityNode, eResource, lf, null, logicalFunctionRoot);
-
+			manageGeneralization(eResource, activityNode, mapAbstractionToActivityToClasses, lf, "SendAllocation_");
 			FunctionOutputPort input = FaFactory.eINSTANCE.createFunctionOutputPort();
 			lf.getOutputs().add(input);
 			Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, activityNode)
@@ -451,7 +452,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 * @param activityNode
 	 */
 	private void manageAcceptEventAction(Resource eResource, LogicalFunction logicalFunctionRoot, String suffix,
-			ActivityNode activityNode) {
+			ActivityNode activityNode, Map<Abstraction, Map<Element, List<Class>>> mapAbstractionToActivityToClasses) {
 		Signal signal = Sysml2CapellaUtils.getSignal(activityNode);
 		String lfName = "";
 		if (signal != null) {
@@ -462,6 +463,8 @@ public class LogicalFunctionMapping extends AbstractMapping {
 			if (getAlgo().isEventOption()) {
 				LogicalFunction lf = createLogicalFunction(eResource, logicalFunctionRoot, activityNode, lfName,
 						suffix);
+				manageGeneralization(eResource, activityNode, mapAbstractionToActivityToClasses, lf,
+						"AcceptAllocation_");
 				FunctionInputPort input = FaFactory.eINSTANCE.createFunctionInputPort();
 				lf.getInputs().add(input);
 				Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, activityNode)

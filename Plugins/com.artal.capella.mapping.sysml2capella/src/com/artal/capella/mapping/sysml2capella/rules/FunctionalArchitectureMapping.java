@@ -19,6 +19,7 @@ import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdate
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Abstraction;
+import org.eclipse.uml2.uml.AcceptEventAction;
 import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ActivityParameterNode;
@@ -30,6 +31,7 @@ import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.ParameterDirectionKind;
+import org.eclipse.uml2.uml.SendSignalAction;
 import org.eclipse.uml2.uml.Stereotype;
 import org.polarsys.capella.core.data.cs.CsFactory;
 import org.polarsys.capella.core.data.cs.Part;
@@ -172,6 +174,12 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 						act = namedElement;
 						break;
 					} else if (namedElement instanceof ForkNode) {
+						act = namedElement;
+						break;
+					} else if (namedElement instanceof SendSignalAction) {
+						act = namedElement;
+						break;
+					} else if (namedElement instanceof AcceptEventAction) {
 						act = namedElement;
 						break;
 					}
