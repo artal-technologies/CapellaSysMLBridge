@@ -32,6 +32,7 @@ import org.eclipse.uml2.uml.Behavior;
 import org.eclipse.uml2.uml.CallBehaviorAction;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Connector;
+import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.ForkNode;
 import org.eclipse.uml2.uml.InformationFlow;
 import org.eclipse.uml2.uml.InputPin;
@@ -329,7 +330,7 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 			FunctionPort targetCapella) {
 		FunctionalArchitectureMapping ruleFunctArch = (FunctionalArchitectureMapping) MappingRulesManager
 				.getRule(FunctionalArchitectureMapping.class.getName());
-		Map<Abstraction, Map<Activity, List<Class>>> mapAbstractionToActivityToClasses = ruleFunctArch
+		Map<Abstraction, Map<Element, List<Class>>> mapAbstractionToActivityToClasses = ruleFunctArch
 				.getMapAbstractionToActivityToClasses();
 
 		ActivityNode fSource = null;
@@ -345,8 +346,8 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 				sourceBehavior = ((CallBehaviorAction) fSource).getBehavior();
 			}
 			List<Class> listSource = null;
-			for (Entry<Abstraction, Map<Activity, List<Class>>> entry : mapAbstractionToActivityToClasses.entrySet()) {
-				Map<Activity, List<Class>> mapActivityToClasses = entry.getValue();
+			for (Entry<Abstraction, Map<Element, List<Class>>> entry : mapAbstractionToActivityToClasses.entrySet()) {
+				Map<Element, List<Class>> mapActivityToClasses = entry.getValue();
 
 				if (sourceBehavior != null) {
 					listSource = mapActivityToClasses.get(sourceBehavior);
@@ -374,8 +375,8 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 				targetBehavior = ((CallBehaviorAction) fTarget).getBehavior();
 			}
 			List<Class> listTarget = null;
-			for (Entry<Abstraction, Map<Activity, List<Class>>> entry : mapAbstractionToActivityToClasses.entrySet()) {
-				Map<Activity, List<Class>> mapActivityToClasses = entry.getValue();
+			for (Entry<Abstraction, Map<Element, List<Class>>> entry : mapAbstractionToActivityToClasses.entrySet()) {
+				Map<Element, List<Class>> mapActivityToClasses = entry.getValue();
 
 				if (targetBehavior != null) {
 					listTarget = mapActivityToClasses.get(targetBehavior);

@@ -104,7 +104,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 		LogicalFunction logicalFunctionRoot = Sysml2CapellaUtils.getLogicalFunctionRoot(targetScope.getProject());
 		FunctionalArchitectureMapping rule = (FunctionalArchitectureMapping) MappingRulesManager
 				.getRule(FunctionalArchitectureMapping.class.getName());
-		Map<Abstraction, Map<Activity, List<Class>>> mapAbstractionToActivityToClasses = rule
+		Map<Abstraction, Map<Element, List<Class>>> mapAbstractionToActivityToClasses = rule
 				.getMapAbstractionToActivityToClasses();
 		_mapPinToParam = new HashMap<>();
 		transformCallBehavior(eResource, logicalFunctionRoot, _source, _mapPinToParam,
@@ -137,7 +137,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 */
 	private boolean transformCallBehavior(Resource eResource, LogicalFunction logicalFunctionRoot, Activity activity,
 			Map<Pin, ActivityParameterNode> mapPinToParam,
-			Map<Abstraction, Map<Activity, List<Class>>> mapAbstractionToActivityToClasses, String suffix) {
+			Map<Abstraction, Map<Element, List<Class>>> mapAbstractionToActivityToClasses, String suffix) {
 		EList<ActivityNode> nodes = activity.getNodes();
 
 		List<CallBehaviorAction> subCallBehav = getSubBehavior(nodes);
@@ -159,10 +159,10 @@ public class LogicalFunctionMapping extends AbstractMapping {
 				manageSendEventAction(eResource, logicalFunctionRoot, suffix, activityNode);
 			}
 			if (activityNode instanceof MergeNode) {
-				manageMergeNode(eResource, logicalFunctionRoot, activityNode);
+				manageMergeNode(eResource, logicalFunctionRoot, activityNode, mapAbstractionToActivityToClasses);
 			}
 			if (activityNode instanceof ForkNode) {
-				manageForkNode(eResource, logicalFunctionRoot, activityNode);
+				manageForkNode(eResource, logicalFunctionRoot, activityNode, mapAbstractionToActivityToClasses);
 			}
 
 		}
@@ -249,15 +249,17 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 * @param logicalFunctionRoot
 	 * @param activityNode
 	 */
-	private void manageForkNode(Resource eResource, LogicalFunction logicalFunctionRoot, ActivityNode activityNode) {
+	private void manageForkNode(Resource eResource, LogicalFunction logicalFunctionRoot, ActivityNode activityNode,
+			Map<Abstraction, Map<Element, List<Class>>> mapAbstractionToActivityToClasses) {
 		if (hasObjectFlow(activityNode)) {
 			FunctionKind functionKing = FunctionKind.SPLIT;
 			LogicalFunction lf = createNodeFunction(activityNode, functionKing, logicalFunctionRoot);
 
 			Sysml2CapellaUtils.trace(this, eResource, activityNode, lf, "SPLIT_");
 
-			managePartitions(activityNode, eResource, lf, FunctionKind.SPLIT, logicalFunctionRoot);
-
+			// managePartitions(activityNode, eResource, lf, FunctionKind.SPLIT,
+			// logicalFunctionRoot);
+			manageGeneralization(eResource, activityNode, mapAbstractionToActivityToClasses, lf, "SplitAllocation_");
 			LogicalFunctionPortMapping functionPortMapping = new LogicalFunctionPortMapping(getAlgo(),
 					(ForkNode) activityNode, _mappingExecution);
 			_manager.add(
@@ -270,21 +272,71 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 * @param eResource
 	 * @param logicalFunctionRoot
 	 * @param activityNode
+	 * @param mapAbstractionToActivityToClasses
 	 */
-	private void manageMergeNode(Resource eResource, LogicalFunction logicalFunctionRoot, ActivityNode activityNode) {
+	private void manageMergeNode(Resource eResource, LogicalFunction logicalFunctionRoot, ActivityNode activityNode,
+			Map<Abstraction, Map<Element, List<Class>>> mapAbstractionToActivityToClasses) {
 		if (hasObjectFlow(activityNode)) {
 			FunctionKind functionKing = FunctionKind.GATHER;
 			LogicalFunction lf = createNodeFunction(activityNode, functionKing, logicalFunctionRoot);
 
 			Sysml2CapellaUtils.trace(this, eResource, activityNode, lf, "GATHER_");
 
-			managePartitions(activityNode, eResource, lf, FunctionKind.GATHER, logicalFunctionRoot);
+			// managePartitions(activityNode, eResource, lf,
+			// FunctionKind.GATHER, logicalFunctionRoot);
+			manageGeneralization(eResource, activityNode, mapAbstractionToActivityToClasses, lf, "GatherAllocation_");
 
 			LogicalFunctionPortMapping functionPortMapping = new LogicalFunctionPortMapping(getAlgo(),
 					(MergeNode) activityNode, _mappingExecution);
 			_manager.add(
 					functionPortMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(eResource, activityNode),
 					functionPortMapping);
+		}
+	}
+
+	/**
+	 * @param eResource
+	 * @param activityNode
+	 * @param mapAbstractionToActivityToClasses
+	 * @param lf
+	 */
+	private void manageGeneralization(Resource eResource, ActivityNode activityNode,
+			Map<Abstraction, Map<Element, List<Class>>> mapAbstractionToActivityToClasses, LogicalFunction lf,
+			String prefix) {
+		List<Class> list = null;
+		Abstraction abstraction = null;
+		AbstractMapping rule = MappingRulesManager.getRule(ComponentMapping.class.getName());
+		for (Entry<Abstraction, Map<Element, List<Class>>> entry : mapAbstractionToActivityToClasses.entrySet()) {
+			abstraction = entry.getKey();
+			Map<Element, List<Class>> mapActivityToClasses = entry.getValue();
+
+			list = mapActivityToClasses.get(activityNode);
+			if (list != null) {
+				break;
+			}
+
+		}
+		if (list != null) {
+			for (Class class1 : list) {
+
+				Object object = rule.getMapSourceToTarget().get(class1);
+				if (object instanceof LogicalComponent) {
+					Map<Class, List<Class>> mapGeneralizations = ((ComponentMapping) rule).getMapGeneralizations();
+					List<Class> listGeneralizations = mapGeneralizations.get(class1);
+					if (listGeneralizations != null && !listGeneralizations.isEmpty()) {
+						for (Class class2 : listGeneralizations) {
+							createFunctionAllocation(activityNode, eResource, lf, prefix, abstraction,
+									rule.getMapSourceToTarget().get(class2));
+
+						}
+						createFunctionAllocation(activityNode, eResource, lf, prefix, abstraction, object);
+					} else {
+						createFunctionAllocation(activityNode, eResource, lf, prefix, abstraction, object);
+					}
+
+				}
+			}
+
 		}
 	}
 
@@ -452,7 +504,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 */
 	private void manageCallBehavior(Resource eResource, LogicalFunction logicalFunctionRoot,
 			Map<Pin, ActivityParameterNode> mapPinToParam,
-			Map<Abstraction, Map<Activity, List<Class>>> mapAbstractionToActivityToClasses, String suffix,
+			Map<Abstraction, Map<Element, List<Class>>> mapAbstractionToActivityToClasses, String suffix,
 			ActivityNode activityNode) {
 		// boolean should be true for transformed activity ports.
 		boolean transformPort = true;
@@ -469,9 +521,9 @@ public class LogicalFunctionMapping extends AbstractMapping {
 			List<Class> list = null;
 			Abstraction abstraction = null;
 			AbstractMapping rule = MappingRulesManager.getRule(ComponentMapping.class.getName());
-			for (Entry<Abstraction, Map<Activity, List<Class>>> entry : mapAbstractionToActivityToClasses.entrySet()) {
+			for (Entry<Abstraction, Map<Element, List<Class>>> entry : mapAbstractionToActivityToClasses.entrySet()) {
 				abstraction = entry.getKey();
-				Map<Activity, List<Class>> mapActivityToClasses = entry.getValue();
+				Map<Element, List<Class>> mapActivityToClasses = entry.getValue();
 
 				if (behavior != null) {
 					list = mapActivityToClasses.get(behavior);
@@ -573,7 +625,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 	 */
 	private boolean manageLogicalFunction(Resource eResource, LogicalFunction logicalFunctionRoot,
 			Map<Pin, ActivityParameterNode> mapPinToParam,
-			Map<Abstraction, Map<Activity, List<Class>>> mapAbstractionToActivityToClasses, ActivityNode activityNode,
+			Map<Abstraction, Map<Element, List<Class>>> mapAbstractionToActivityToClasses, ActivityNode activityNode,
 			boolean transformPort, Abstraction abstraction, Behavior behavior, String lfName, Object object,
 			Class parentClass, boolean checkPartition) {
 		String sysMLID = "";

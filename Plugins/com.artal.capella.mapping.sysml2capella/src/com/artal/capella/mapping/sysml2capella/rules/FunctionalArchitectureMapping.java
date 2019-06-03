@@ -23,6 +23,9 @@ import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ActivityParameterNode;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.ForkNode;
+import org.eclipse.uml2.uml.MergeNode;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Parameter;
@@ -65,7 +68,7 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 	 * Manage sub rules
 	 */
 	MappingRulesManager _manager = new MappingRulesManager();
-	private Map<Abstraction, Map<Activity, List<Class>>> _mapAbstractToActivityToClasses;
+	private Map<Abstraction, Map<Element, List<Class>>> _mapAbstractToActivityToClasses;
 
 	/**
 	 * Constructor.
@@ -149,12 +152,12 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 				}
 			}
 
-			_mapAbstractToActivityToClasses = new HashMap<Abstraction, Map<Activity, List<Class>>>();
+			_mapAbstractToActivityToClasses = new HashMap<Abstraction, Map<Element, List<Class>>>();
 			List<Abstraction> allAbstractions = Sysml2CapellaUtils.getAllAbstractions(_source);
-			Activity act = null;
+			Element act = null;
 			Class comp = null;
 			for (Abstraction abstraction : allAbstractions) {
-				Map<Activity, List<Class>> mapActivityToClasses = _mapAbstractToActivityToClasses.get(abstraction);
+				Map<Element, List<Class>> mapActivityToClasses = _mapAbstractToActivityToClasses.get(abstraction);
 				if (mapActivityToClasses == null) {
 					mapActivityToClasses = new HashMap<>();
 					_mapAbstractToActivityToClasses.put(abstraction, mapActivityToClasses);
@@ -163,7 +166,13 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 				List<NamedElement> clients = abstraction.getClients();
 				for (NamedElement namedElement : clients) {
 					if (namedElement instanceof Activity) {
-						act = (Activity) namedElement;
+						act = namedElement;
+						break;
+					} else if (namedElement instanceof MergeNode) {
+						act = namedElement;
+						break;
+					} else if (namedElement instanceof ForkNode) {
+						act = namedElement;
 						break;
 					}
 				}
@@ -196,7 +205,7 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 		}
 	}
 
-	public Map<Abstraction, Map<Activity, List<Class>>> getMapAbstractionToActivityToClasses() {
+	public Map<Abstraction, Map<Element, List<Class>>> getMapAbstractionToActivityToClasses() {
 		return _mapAbstractToActivityToClasses;
 	}
 
