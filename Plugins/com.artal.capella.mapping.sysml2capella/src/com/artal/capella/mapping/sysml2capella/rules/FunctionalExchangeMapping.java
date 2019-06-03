@@ -43,6 +43,7 @@ import org.eclipse.uml2.uml.ParameterDirectionKind;
 import org.eclipse.uml2.uml.Pin;
 import org.eclipse.uml2.uml.SendSignalAction;
 import org.eclipse.uml2.uml.Signal;
+import org.polarsys.capella.core.data.cs.Component;
 import org.polarsys.capella.core.data.fa.AbstractFunctionalBlock;
 import org.polarsys.capella.core.data.fa.ComponentExchange;
 import org.polarsys.capella.core.data.fa.ComponentExchangeFunctionalExchangeAllocation;
@@ -53,6 +54,10 @@ import org.polarsys.capella.core.data.fa.FunctionOutputPort;
 import org.polarsys.capella.core.data.fa.FunctionPort;
 import org.polarsys.capella.core.data.fa.FunctionalExchange;
 import org.polarsys.capella.core.data.information.ExchangeItem;
+import org.polarsys.capella.core.data.information.InformationFactory;
+import org.polarsys.capella.core.data.information.Port;
+import org.polarsys.capella.core.data.information.PortAllocation;
+import org.polarsys.capella.core.data.la.LogicalComponent;
 import org.polarsys.capella.core.data.la.LogicalFunction;
 import org.polarsys.capella.core.model.helpers.ComponentExchangeExt;
 
@@ -252,12 +257,22 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 
 											allocation.setSourceElement(ce);
 											allocation.setTargetElement(exchange);
-											ComponentExchangeExt.synchronizePortAllocations(ce, exchange);
+
+											Port sourcePort = ComponentExchangeExt.getSourcePort(ce);
+											allocatePorts(sourcePort, sourceCapPort, targetCapPort, eResource,
+													informationFlow, edge, signal, "_PORTSOURCEALLOCATION");
+
+											Port targetPort = ComponentExchangeExt.getTargetPort(ce);
+
+											allocatePorts(targetPort, sourceCapPort, targetCapPort, eResource,
+													informationFlow, edge, signal, "_PORTTARGETALLOCATION");
+
 											ceAllocation.add(allocation);
 
 											Sysml2CapellaUtils.trace(this, eResource,
 													Sysml2CapellaUtils.getSysMLID(eResource, informationFlow)
-															+ Sysml2CapellaUtils.getSysMLID(eResource, edge),
+															+ Sysml2CapellaUtils.getSysMLID(eResource, edge)
+															+ Sysml2CapellaUtils.getSysMLID(eResource, signal),
 													allocation, "_ALLOCATION");
 										}
 									}
@@ -280,6 +295,34 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 				}
 			}
 		}
+	}
+
+	private void allocatePorts(Port port, FunctionPort sourceCapPort, FunctionPort targetCapPort, Resource eResource,
+			InformationFlow informationFlow, ActivityEdge edge, Signal signal, String prefix) {
+
+		PortAllocation portAllocSource = InformationFactory.eINSTANCE.createPortAllocation();
+		portAllocSource.setSourceElement(port);
+		LogicalComponent block = (LogicalComponent) port.eContainer();
+		if (containsFunctionalExchange(block, (LogicalFunction) sourceCapPort.eContainer())) {
+			portAllocSource.setTargetElement(sourceCapPort);
+		} else if (containsFunctionalExchange(block, (LogicalFunction) targetCapPort.eContainer())) {
+			portAllocSource.setTargetElement(targetCapPort);
+		}
+
+		port.getOwnedPortAllocations().add(portAllocSource);
+		Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, informationFlow)
+				+ Sysml2CapellaUtils.getSysMLID(eResource, edge) + Sysml2CapellaUtils.getSysMLID(eResource, signal),
+				portAllocSource, prefix);
+	}
+
+	private boolean containsFunctionalExchange(Component component, LogicalFunction function) {
+		EList<ComponentFunctionalAllocation> ownedFunctionalAllocation = component.getOwnedFunctionalAllocation();
+		for (ComponentFunctionalAllocation componentFunctionalAllocation : ownedFunctionalAllocation) {
+			if (componentFunctionalAllocation.getFunction().equals(function)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean isLinkable(ActivityNode source, ActivityNode target, FunctionPort sourceCapella,

@@ -50,10 +50,7 @@ import org.polarsys.capella.core.data.fa.FunctionKind;
 import org.polarsys.capella.core.data.fa.FunctionOutputPort;
 import org.polarsys.capella.core.data.fa.FunctionPort;
 import org.polarsys.capella.core.data.fa.FunctionalExchange;
-import org.polarsys.capella.core.data.information.DataPkg;
 import org.polarsys.capella.core.data.information.ExchangeItem;
-import org.polarsys.capella.core.data.information.ExchangeMechanism;
-import org.polarsys.capella.core.data.information.InformationFactory;
 import org.polarsys.capella.core.data.la.LaFactory;
 import org.polarsys.capella.core.data.la.LogicalComponent;
 import org.polarsys.capella.core.data.la.LogicalFunction;
@@ -685,9 +682,7 @@ public class LogicalFunctionMapping extends AbstractMapping {
 		createComponentFunctionalAllocation.setTargetElement(nodeFunction);
 		createComponentFunctionalAllocation.setSourceElement((LogicalComponent) object);
 		((LogicalComponent) object).getOwnedFunctionalAllocation().add(createComponentFunctionalAllocation);
-		Sysml2CapellaUtils.trace(this, eResource,
-				Sysml2CapellaUtils.getSysMLID(eResource, activityPartition)
-						+ Sysml2CapellaUtils.getSysMLID(eResource, activityNode),
+		Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, activityNode),
 				createComponentFunctionalAllocation, prefix);
 	}
 
