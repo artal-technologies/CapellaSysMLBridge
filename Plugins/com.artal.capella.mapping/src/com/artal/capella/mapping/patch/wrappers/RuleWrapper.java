@@ -66,4 +66,8 @@ public class RuleWrapper<S, T> implements IRule<S, T> {
 	public IQuery<?, ? extends S> getInputProvider() {
 		return _realRule.getInputProvider();
 	}
+		
+	public IRule<S, T> getRealRule() {
+		return _realRule;
+	}
 }

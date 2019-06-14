@@ -17,12 +17,20 @@
             class="com.artal.capella.mapping.sysml2capella.actions.ImportSysmlModel"
             commandId="com.artal.capella.mapping.sysml2capella.commandImport">
       </handler>
+      <handler
+            class="com.artal.capella.mapping.capella2sysml.actions.ExportSysmlModel"
+            commandId="com.artal.capella.mapping.sysml2capella.commandExport">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
             id="com.artal.capella.mapping.sysml2capella.commandImport"
             name="Import Sysml">
+      </command>
+      <command
+            id="com.artal.capella.mapping.sysml2capella.commandExport"
+            name="Export Sysml">
       </command>
    </extension>
    <extension
@@ -33,6 +41,20 @@
          <command
                commandId="com.artal.capella.mapping.sysml2capella.commandImport"
                label="Import Sysml"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <iterate
+                     operator="or">
+                  <instanceof
+                        value="org.polarsys.capella.core.data.la.LogicalArchitecture">
+                  </instanceof>
+               </iterate>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="com.artal.capella.mapping.sysml2capella.commandExport"
+               label="Export Sysml"
                style="push">
             <visibleWhen
                   checkEnabled="false">
