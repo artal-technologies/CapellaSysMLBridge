@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:MagicDrawProfile="http://www.omg.org/spec/UML/20131001/MagicDrawProfile" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http://www.omg.org/spec/UML/20131001/MagicDrawProfile UML_Standard_Profile.MagicDraw_Profile.profile.uml#_eoD0eIYQEemKRcPYX95p7g">
+  <uml:Profile xmi:id="_19_0_1_ee009a_1557128942447_942523_55357" name="profile" visibility="public" URI="" metamodelReference="_19_0_1_ee009a_1557128942456_973369_55377">
+    <eAnnotations xmi:id="_eoCmP4YQEemKRcPYX95p7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <contents xmi:type="ecore:EPackage" xmi:id="_eoCmQIYQEemKRcPYX95p7g" name="profile" nsURI="http:///schemas/profile/_eVjrIIYQEemKRcPYX95p7g/0" nsPrefix="profile">
+        <eClassifiers xmi:type="ecore:EClass" xmi:id="_eoCmQYYQEemKRcPYX95p7g" name="SOI">
+          <eAnnotations xmi:id="_eoCmQoYQEemKRcPYX95p7g" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_19_0_1_ee009a_1557128942453_382398_55375"/>
+          <eStructuralFeatures xmi:type="ecore:EReference" xmi:id="_eoCmQ4YQEemKRcPYX95p7g" name="base_Element" ordered="false" lowerBound="1">
+            <eType xmi:type="ecore:EClass" href="http://www.eclipse.org/uml2/5.0.0/UML#//Element"/>
+          </eStructuralFeatures>
+        </eClassifiers>
+      </contents>
+    </eAnnotations>
+    <packageImport xmi:id="_19_0_1_ee009a_1557128942456_973369_55377">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_METAMODELS/UML.metamodel.uml#_0"/>
+    </packageImport>
+    <packageImport xmi:id="_0primitiveTypesprofile">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+    </packageImport>
+    <packageImport xmi:id="_0javaPrimitiveTypesprofile">
+      <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#_0"/>
+    </packageImport>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="_19_0_1_ee009a_1557128942453_382398_55375" name="SOI" visibility="public">
+      <ownedAttribute xmi:id="_19_0_1_ee009a_1557128942838_520026_55804" name="base_Element" visibility="private" association="_19_0_1_ee009a_1557128942455_4747_55376">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Element"/>
+      </ownedAttribute>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Extension" xmi:id="_19_0_1_ee009a_1557128942455_4747_55376" name="" visibility="public" memberEnd="_19_0_1_ee009a_1557128942838_520026_55804 _19_0_1_ee009a_1557128942838_802301_55805" navigableOwnedEnd="_19_0_1_ee009a_1557128942838_802301_55805">
+      <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_19_0_1_ee009a_1557128942838_802301_55805" name="extension_unnamed1" visibility="private" type="_19_0_1_ee009a_1557128942453_382398_55375" aggregation="composite" association="_19_0_1_ee009a_1557128942455_4747_55376">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_19_0_1_ee009a_1557128942976_174591_56126" name="" visibility="public"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_19_0_1_ee009a_1557128942975_489409_56125" name="" visibility="public" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <profileApplication xmi:id="_be00301_1073394351331_445580_2profileApplicationprofile">
+      <eAnnotations xmi:id="_fO2DoIYQEemKRcPYX95p7g" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="UML_Standard_Profile.MagicDraw_Profile.profile.uml#_eoD0eIYQEemKRcPYX95p7g"/>
+      </eAnnotations>
+      <appliedProfile href="UML_Standard_Profile.MagicDraw_Profile.profile.uml#_be00301_1073394351331_445580_2"/>
+    </profileApplication>
+  </uml:Profile>
+  <MagicDrawProfile:additionalPackageImport xmi:id="_fO2DoYYQEemKRcPYX95p7g" base_Element="_19_0_1_ee009a_1557128942456_973369_55377" base_PackageImport="_19_0_1_ee009a_1557128942456_973369_55377"/>
+</xmi:XMI>
