@@ -84,7 +84,6 @@ public class LogicalFunctionActivityMapping extends AbstractMapping {
 			}
 
 		}
-
 		return results;
 	}
 
@@ -97,7 +96,6 @@ public class LogicalFunctionActivityMapping extends AbstractMapping {
 			} else if (parent instanceof org.eclipse.uml2.uml.State) {
 				((org.eclipse.uml2.uml.State) parent).setDoActivity(createActivity(lf));
 			}
-
 		}
 	}
 

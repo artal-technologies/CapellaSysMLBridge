@@ -10,13 +10,18 @@
 package com.artal.capella.mapping.sysml2capella.utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.uml2.uml.Abstraction;
 import org.eclipse.uml2.uml.Activity;
@@ -28,12 +33,18 @@ import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
 import org.eclipse.uml2.uml.PrimitiveType;
 import org.eclipse.uml2.uml.UseCase;
+import org.polarsys.capella.common.helpers.EObjectExt;
 import org.polarsys.capella.core.data.capellacommon.AbstractCapabilityPkg;
 import org.polarsys.capella.core.data.capellacore.ModellingArchitecture;
 import org.polarsys.capella.core.data.capellamodeller.ModelRoot;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.capellamodeller.SystemEngineering;
+import org.polarsys.capella.core.data.cs.Component;
+import org.polarsys.capella.core.data.cs.Part;
 import org.polarsys.capella.core.data.ctx.SystemAnalysis;
+import org.polarsys.capella.core.data.fa.ComponentExchange;
+import org.polarsys.capella.core.data.fa.FaFactory;
+import org.polarsys.capella.core.data.fa.FaPackage;
 import org.polarsys.capella.core.data.fa.FunctionPkg;
 import org.polarsys.capella.core.data.information.DataPkg;
 import org.polarsys.capella.core.data.information.datatype.DataType;
@@ -639,4 +650,73 @@ public class Sysml2CapellaUtils {
 		return null;
 	}
 
+	static public List<ComponentExchange> getAllLogicalComponentExchange(Project project) {
+		List<ComponentExchange> results = new ArrayList<>();
+		LogicalArchitecture logicalArchitecture = getLogicalArchitecture(project);
+		Set<EObject> all = EObjectExt.getAll(logicalArchitecture, FaPackage.Literals.COMPONENT_EXCHANGE);
+		for (EObject eObject : all) {
+			results.add((ComponentExchange) eObject);
+		}
+		return results;
+	}
+
+	static public Part getInversePart(Component component) {
+		Collection<Setting> referencingInverse = getReferencingInverse(component);
+		for (Setting setting : referencingInverse) {
+			EObject eObject = setting.getEObject();
+			if (eObject instanceof Part) {
+				return (Part) eObject;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Check the {@link Component} <code>component</code> is {@link Component}
+	 * <code>parent</code> descendant
+	 * 
+	 * @param component
+	 *            the {@link Component} to check.
+	 * @param parent
+	 *            the {@link Component} parent.
+	 * @return true if <code>component</code> is <code>parent</code> descendant.
+	 */
+	static public boolean isDescendantComponent(Component component, Component parent) {
+		if (parent instanceof LogicalComponent) {
+			EList<LogicalComponent> ownedLogicalComponents = ((LogicalComponent) parent).getOwnedLogicalComponents();
+			for (LogicalComponent logicalComponent : ownedLogicalComponents) {
+				if (logicalComponent.equals(component)) {
+					return true;
+				} else {
+					boolean isDesc = isDescendantComponent(component, logicalComponent);
+					if (isDesc) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	static public Collection<Setting> getReferencingInverse(EObject referenceTarget) {
+		Resource res = referenceTarget.eResource();
+		ResourceSet rs = res.getResourceSet();
+		ECrossReferenceAdapter crossReferencer = null;
+		List<Adapter> adapters = rs.eAdapters();
+		for (Adapter adapter : adapters) {
+			if (adapter instanceof ECrossReferenceAdapter) {
+				crossReferencer = (ECrossReferenceAdapter) adapter;
+				break;
+			}
+		}
+		if (crossReferencer == null) {
+			crossReferencer = new ECrossReferenceAdapter();
+			rs.eAdapters().add(crossReferencer);
+		}
+		Collection<Setting> referencers = crossReferencer.getInverseReferences(referenceTarget, true);
+
+		return referencers;
+
+	}
+	
 }
