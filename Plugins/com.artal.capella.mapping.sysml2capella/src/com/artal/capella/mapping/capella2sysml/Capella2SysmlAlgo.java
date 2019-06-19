@@ -65,11 +65,17 @@ public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
 		if (targetDataSet instanceof IntermediateModelScope) {
 			((IntermediateModelScope) targetDataSet).getTargetDataSet();
 		}
-		SysML2CapellaUMLProfile.initProfiles(rset,getTargetParentFolder());
+		SysML2CapellaUMLProfile.initProfiles(rset, getTargetParentFolder());
 
 		RootInitialMapping componentMapping = new RootInitialMapping(this, source_p, _mappingExecution);
 
 		_managerRules.add(componentMapping.getClass().getName(), componentMapping);
+
+		ClassesMapping classesMapping = new ClassesMapping(this, source_p, _mappingExecution);
+		_managerRules.add(classesMapping.getClass().getName(), classesMapping);
+
+		ExchangeItemMapping exchangeItemMapping = new ExchangeItemMapping(this, source_p, _mappingExecution);
+		_managerRules.add(exchangeItemMapping.getClass().getName(), exchangeItemMapping);
 
 		ActorsMapping actorsMapping = new ActorsMapping(this, source_p, _mappingExecution);
 		_managerRules.add(actorsMapping.getClass().getName(), actorsMapping);
@@ -101,12 +107,6 @@ public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
 		FunctionalExchangesMapping functionalExchangesMapping = new FunctionalExchangesMapping(this, source_p,
 				_mappingExecution);
 		_managerRules.add(functionalExchangesMapping.getClass().getName(), functionalExchangesMapping);
-
-		ClassesMapping classesMapping = new ClassesMapping(this, source_p, _mappingExecution);
-		_managerRules.add(classesMapping.getClass().getName(), classesMapping);
-
-		ExchangeItemMapping exchangeItemMapping = new ExchangeItemMapping(this, source_p, _mappingExecution);
-		_managerRules.add(exchangeItemMapping.getClass().getName(), exchangeItemMapping);
 
 		EPackage ePackage = Registry.INSTANCE.getEPackage("http://www.polarsys.org/capella/requirements");
 		if (ePackage != null) {

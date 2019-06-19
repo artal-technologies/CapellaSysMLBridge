@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.diffmerge.impl.scopes.FragmentedModelScope;
 import org.eclipse.emf.ecore.EObject;
@@ -24,6 +25,7 @@ import org.eclipse.uml2.uml.Port;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.UMLFactory;
+import org.polarsys.capella.common.data.modellingcore.AbstractExchangeItem;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.cs.Component;
 import org.polarsys.capella.core.data.cs.Part;
@@ -110,6 +112,17 @@ public class ComponentExchangesMapping extends AbstractMapping {
 			ConnectorEnd sourceEnd = connector.createEnd();
 			// Sysml2CapellaUtils.trace(this, _source.eResource(), ,
 			// targetElement, prefix);
+
+			EList<AbstractExchangeItem> convoyedInformations = ce.getConvoyedInformations();
+			for (AbstractExchangeItem abstractExchangeItem : convoyedInformations) {
+				Class umlType = (Class) MappingRulesManager.getCapellaObjectFromAllRules(abstractExchangeItem);
+				if (umlType != null) {
+					umlSourcePort.setType(umlType);
+					umlTargetPort.setType(umlType);
+					break;
+				}
+
+			}
 
 			sourceEnd.setRole(umlSourcePort);
 			targetEnd.setRole(umlTargetPort);
