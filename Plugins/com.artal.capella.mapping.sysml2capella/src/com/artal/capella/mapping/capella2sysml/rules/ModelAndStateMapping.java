@@ -11,13 +11,19 @@ package com.artal.capella.mapping.capella2sysml.rules;
 
 import java.util.Set;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Package;
+import org.eclipse.uml2.uml.Transition;
 import org.eclipse.uml2.uml.UMLFactory;
+import org.eclipse.uml2.uml.UMLPackage;
 import org.polarsys.capella.common.helpers.EObjectExt;
+import org.polarsys.capella.core.data.capellacommon.AbstractState;
+import org.polarsys.capella.core.data.capellacommon.CapellacommonFactory;
 import org.polarsys.capella.core.data.capellacommon.CapellacommonPackage;
 import org.polarsys.capella.core.data.capellacommon.StateMachine;
+import org.polarsys.capella.core.data.capellacommon.StateTransition;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.la.LogicalComponent;
 
@@ -60,7 +66,11 @@ public class ModelAndStateMapping extends AbstractMapping {
 			RegionsMapping regionsMapping = new RegionsMapping(getAlgo(), stateMachine, _mappingExecution);
 			_manager.add(regionsMapping.getClass().getName()
 					+ Sysml2CapellaUtils.getSysMLID(_source.eResource(), stateMachine), regionsMapping);
+			TransitionsMapping transitionsMapping = new TransitionsMapping(getAlgo(), stateMachine, _mappingExecution);
+			_manager.add(transitionsMapping.getClass().getName()
+					+ Sysml2CapellaUtils.getSysMLID(_source.eResource(), stateMachine), transitionsMapping);
 		}
+
 		_manager.executeRules();
 
 	}
