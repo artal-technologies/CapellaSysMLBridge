@@ -9,18 +9,28 @@
  *******************************************************************************/
 package com.artal.capella.mapping.capella2sysml.rules;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.diffmerge.impl.scopes.FragmentedModelScope;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Stereotype;
+import org.polarsys.capella.core.data.capellacore.CapellaElement;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.la.LogicalArchitecture;
+import org.polarsys.capella.vp.requirements.CapellaRequirements.CapellaIncomingRelation;
 import org.polarsys.capella.vp.requirements.CapellaRequirements.CapellaModule;
+import org.polarsys.capella.vp.requirements.CapellaRequirements.CapellaOutgoingRelation;
 import org.polarsys.kitalpha.emde.model.ElementExtension;
+import org.polarsys.kitalpha.vp.requirements.Requirements.AbstractRelation;
 import org.polarsys.kitalpha.vp.requirements.Requirements.Requirement;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
@@ -79,6 +89,50 @@ public class RequierementsMapping extends AbstractMapping {
 
 		Sysml2CapellaUtils.trace(this, _source.eResource(), requirement, umlRequirement, "REQUIREMENT_");
 
+		transformSatisfyElement(requirement, umlRequirement, ownedStereotype);
+		transformRefineElement(requirement, umlRequirement, ownedStereotype);
+
+	}
+
+	private void transformRefineElement(Requirement requirement, Class umlRequirement, Stereotype ownedStereotype) {
+
+		Collection<Setting> referencingInverse = Sysml2CapellaUtils.getReferencingInverse(requirement);
+		for (Setting setting : referencingInverse) {
+			EObject eObject = setting.getEObject();
+			if (eObject instanceof CapellaOutgoingRelation) {
+				CapellaElement source = ((CapellaOutgoingRelation) eObject).getSource();
+				Object umlSource = MappingRulesManager.getCapellaObjectFromAllRules(source);
+				if (umlSource instanceof EObject) {
+					List<EObject> value = (List<EObject>) umlRequirement.getValue(ownedStereotype, "RefinedBy");
+					if (value == null) {
+						value = new ArrayList<EObject>();
+						umlRequirement.setValue(ownedStereotype, "RefinedBy", value);
+					}
+					value.add((EObject) umlSource);
+				}
+			}
+
+		}
+
+	}
+
+	private void transformSatisfyElement(Requirement requirement, Class umlRequirement, Stereotype ownedStereotype) {
+		EList<AbstractRelation> ownedRelations = requirement.getOwnedRelations();
+		for (AbstractRelation abstractRelation : ownedRelations) {
+			if (abstractRelation instanceof CapellaIncomingRelation) {
+				Requirement source = ((CapellaIncomingRelation) abstractRelation).getSource();
+				CapellaElement target = ((CapellaIncomingRelation) abstractRelation).getTarget();
+
+				Object umlTarget = MappingRulesManager.getCapellaObjectFromAllRules(target);
+				List<EObject> value = (List<EObject>) umlRequirement.getValue(ownedStereotype, "SatisfiedBy");
+				if (value == null) {
+					value = new ArrayList<EObject>();
+					umlRequirement.setValue(ownedStereotype, "SatisfiedBy", value);
+				}
+				value.add((EObject) umlTarget);
+
+			}
+		}
 	}
 
 	/**
