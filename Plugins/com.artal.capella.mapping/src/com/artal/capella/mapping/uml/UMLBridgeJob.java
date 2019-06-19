@@ -105,4 +105,8 @@ public class UMLBridgeJob<SD> extends BridgeJob<SD> {
 		return result;
 	}
 
+	public CapellaBridgeAlgo<SD> getAlgo() {
+		return _algo;
+	}
+	
 }

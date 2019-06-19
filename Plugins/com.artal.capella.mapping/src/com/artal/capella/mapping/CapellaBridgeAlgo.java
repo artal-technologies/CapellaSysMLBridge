@@ -93,4 +93,6 @@ public abstract class CapellaBridgeAlgo<SD> {
 		return _transientItems;
 	}
 
+	
+
 }

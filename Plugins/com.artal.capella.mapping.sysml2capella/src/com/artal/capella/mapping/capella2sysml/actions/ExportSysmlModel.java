@@ -9,6 +9,7 @@
  *******************************************************************************/
 package com.artal.capella.mapping.capella2sysml.actions;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -66,12 +67,16 @@ public class ExportSysmlModel extends AbstractHandler {
 			filePath = dialog.getUmlPath();
 		}
 
+		String folder = filePath.substring(0, filePath.lastIndexOf(File.separator));
+		
 		// if no model input, stop the mapping.
 		if (filePath == null || filePath.isEmpty()) {
 			return null;
 		}
 		URI targetUri = URI.createFileURI(filePath);
 
+	
+		
 		LogicalArchitecture firstElement = (LogicalArchitecture) currentSelection.getFirstElement();
 		Resource capellaResource = firstElement.eResource();
 		ResourceSet resourceSet = capellaResource.getResourceSet();
@@ -88,6 +93,7 @@ public class ExportSysmlModel extends AbstractHandler {
 		if (context != null) {
 			if (targetUri != null) {
 				Capella2SysmlBridgeJob job = new Capella2SysmlBridgeJob("", context, targetUri);
+				job.setTargetParentFolder(folder);
 				ProgressMonitorDialog pmd = new ProgressMonitorDialog(Display.getCurrent().getActiveShell());
 				try {
 					pmd.run(false, false, new IRunnableWithProgress() {

@@ -28,4 +28,9 @@ public class Capella2SysmlBridgeJob extends UMLBridgeJob<Project> {
 	protected void setupLogger() {
 	}
 
+	public void setTargetParentFolder(String folder) {
+		((Capella2SysmlAlgo)getAlgo()).setTargetParentFolder(folder);
+		
+	}
+
 }

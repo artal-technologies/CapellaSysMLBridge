@@ -78,6 +78,9 @@ public class CapellaSysmlLaunchDialog extends TitleAreaDialog {
 				FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
 				dialog.setFilterExtensions(new String[] { "*.uml" });
 				String filePath = dialog.open();
+				if(!filePath.endsWith(".uml")){
+					filePath+=".uml";
+				}
 				umlText.setText(filePath);
 
 			}

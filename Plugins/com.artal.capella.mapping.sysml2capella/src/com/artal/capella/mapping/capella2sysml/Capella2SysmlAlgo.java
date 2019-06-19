@@ -23,10 +23,13 @@ import com.artal.capella.mapping.capella2sysml.rules.ActorsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.CapabilitiesRealizationsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.ClassesMapping;
 import com.artal.capella.mapping.capella2sysml.rules.ComponentBlockMapping;
+import com.artal.capella.mapping.capella2sysml.rules.ComponentExchangesMapping;
 import com.artal.capella.mapping.capella2sysml.rules.ExchangeItemMapping;
+import com.artal.capella.mapping.capella2sysml.rules.FunctionalExchangesMapping;
 import com.artal.capella.mapping.capella2sysml.rules.LogicalFunctionActivityMapping;
 import com.artal.capella.mapping.capella2sysml.rules.LogicalFunctionCallBehaviorsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.ModelAndStateMapping;
+import com.artal.capella.mapping.capella2sysml.rules.PartsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.RequierementsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.RootInitialMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
@@ -39,6 +42,7 @@ import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile;
 public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
 
 	MappingRulesManager _managerRules = new MappingRulesManager();
+	private String _targetParentFolder;
 
 	public Capella2SysmlAlgo() {
 
@@ -61,7 +65,7 @@ public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
 		if (targetDataSet instanceof IntermediateModelScope) {
 			((IntermediateModelScope) targetDataSet).getTargetDataSet();
 		}
-		SysML2CapellaUMLProfile.initProfiles(rset);
+		SysML2CapellaUMLProfile.initProfiles(rset,getTargetParentFolder());
 
 		RootInitialMapping componentMapping = new RootInitialMapping(this, source_p, _mappingExecution);
 
@@ -77,6 +81,12 @@ public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
 		ComponentBlockMapping blockMapping = new ComponentBlockMapping(this, source_p, _mappingExecution);
 		_managerRules.add(blockMapping.getClass().getName(), blockMapping);
 
+		PartsMapping partsMapping = new PartsMapping(this, source_p, _mappingExecution);
+		_managerRules.add(partsMapping.getClass().getName(), partsMapping);
+
+		ComponentExchangesMapping exchangesMapping = new ComponentExchangesMapping(this, source_p, _mappingExecution);
+		_managerRules.add(exchangesMapping.getClass().getName(), exchangesMapping);
+
 		ModelAndStateMapping modelAndStateMapping = new ModelAndStateMapping(this, source_p, _mappingExecution);
 		_managerRules.add(modelAndStateMapping.getClass().getName(), modelAndStateMapping);
 
@@ -87,6 +97,10 @@ public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
 		LogicalFunctionCallBehaviorsMapping callBehaviorsMapping = new LogicalFunctionCallBehaviorsMapping(this,
 				source_p, _mappingExecution);
 		_managerRules.add(LogicalFunctionCallBehaviorsMapping.class.getName(), callBehaviorsMapping);
+
+		FunctionalExchangesMapping functionalExchangesMapping = new FunctionalExchangesMapping(this, source_p,
+				_mappingExecution);
+		_managerRules.add(functionalExchangesMapping.getClass().getName(), functionalExchangesMapping);
 
 		ClassesMapping classesMapping = new ClassesMapping(this, source_p, _mappingExecution);
 		_managerRules.add(classesMapping.getClass().getName(), classesMapping);
@@ -103,6 +117,15 @@ public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
 		// execute rules
 		_managerRules.executeRules();
 
+	}
+
+	public void setTargetParentFolder(String folder) {
+		_targetParentFolder = folder;
+
+	}
+
+	public String getTargetParentFolder() {
+		return _targetParentFolder;
 	}
 
 }

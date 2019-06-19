@@ -9,6 +9,13 @@
  *******************************************************************************/
 package com.artal.capella.mapping.sysml2capella.utils;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +64,7 @@ public class SysML2CapellaUMLProfile {
 
 	}
 
-	static public void initProfiles(ResourceSet rset) {
+	static public void initProfiles(ResourceSet rset, String targetFolder) {
 		loadProfile(UMLProfile.MD_CUST_REQ_ADD_STEREO_PROFILE, rset);
 		loadProfile(UMLProfile.MD_CUST_SYSML_ADD_STEREO_PROFILE, rset);
 		loadProfile(UMLProfile.MD_CUST_SYSML_CUST_TRACEABILITY_PROFILE, rset);
@@ -73,6 +80,49 @@ public class SysML2CapellaUMLProfile {
 		loadProfile(UMLProfile.UML_STANDARD_PROFILE_MAGIC_DRAW_PROFILE, rset);
 		loadProfile(UMLProfile.UML_STANDARD_PROFILE_MAGIC_DRAW_PROFILE_TRACEABILITY_CUST_PROFILE, rset);
 		loadProfile(UMLProfile.UML_STANDARD_PROFILE_VALIDATION_PROFILE, rset);
+
+		copyFiles(targetFolder);
+
+	}
+
+	static public void copyFiles(String targetFolder) {
+
+		if (targetFolder != null) {
+			File folder = new File(targetFolder);
+			if (folder.exists()) {
+
+				UMLProfile[] values = UMLProfile.values();
+
+				for (UMLProfile umlProfile : values) {
+
+					String path = umlProfile.getPath();
+					String name = path.substring(path.lastIndexOf("/") + 1, path.length());
+					File copied = new File(targetFolder + File.separator + name);
+					if (!copied.exists()) {
+						URL url;
+						try {
+							url = new URL(path);
+
+							InputStream inputStream = url.openConnection().getInputStream();
+
+							OutputStream out = new BufferedOutputStream(new FileOutputStream(copied));
+							byte[] buffer = new byte[1024];
+							int lengthRead;
+							while ((lengthRead = inputStream.read(buffer)) > 0) {
+								out.write(buffer, 0, lengthRead);
+								out.flush();
+							}
+							out.close();
+							inputStream.close();
+
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+					}
+				}
+			}
+		}
 
 	}
 
@@ -104,8 +154,10 @@ public class SysML2CapellaUMLProfile {
 	 */
 	static public Profile getProfile(ResourceSet rset, UMLProfile umlProfile) {
 		String uri = umlProfile.getPath();
+
 		URI pURI = URI.createURI(uri, false);
-		Resource resource = rset.getResource(pURI, false);
+		URI relative = URI.createFileURI(pURI.lastSegment());
+		Resource resource = rset.getResource(relative, false);
 		Profile umlStdProfile = (Profile) resource.getContents().get(0);
 		return umlStdProfile;
 	}
@@ -113,9 +165,10 @@ public class SysML2CapellaUMLProfile {
 	static public void loadProfile(UMLProfile umlProfile, ResourceSet rset) {
 		String path = umlProfile.getPath();
 
-		URI pURI = URI.createURI(path);
-
-		Resource profile = rset.getResource(pURI, true);
+		URI pURI = URI.createURI(path, false);
+		URI relative = URI.createFileURI(pURI.lastSegment());
+		rset.getURIConverter().getURIMap().put(relative, pURI);
+		Resource profile = rset.getResource(relative, true);
 		Profile umlStdProfile = (Profile) EcoreUtil.getObjectByType(profile.getContents(), UMLPackage.Literals.PACKAGE);
 		UMLProfilesUtil.registerProfile(rset, umlStdProfile);
 	}
