@@ -165,18 +165,14 @@ public class VerticesMapping extends AbstractMapping {
 
 			// set the capella doActivity from sysml doActivity
 			Behavior doActivity = ((State) state).getDoActivity();
-			if (doActivity != null) {
-				List<CallBehaviorAction> callBehaviors = LogicalFunctionMapping.getMapActivityToCallBehaviors()
-						.get(doActivity);
-				for (CallBehaviorAction callBehaviorAction : callBehaviors) {
+			manageDoActivity(capellaState, doActivity);
 
-					LogicalFunction lf = (LogicalFunction) MappingRulesManager
-							.getCapellaObjectFromAllRules(callBehaviorAction);
-					if (lf != null) {
-						((Mode) capellaState).getDoActivity().add(lf);
-					}
-				}
-			}
+			Behavior entry = state.getEntry();
+			manageEntry(capellaState, entry);
+
+			Behavior exit = state.getExit();
+			manageExit(capellaState, exit);
+
 		}
 		if (((State) state).getRegions() == null || ((State) state).getRegions().isEmpty()) {
 			createDefaultRegion(eResource, state, capellaState);
@@ -186,6 +182,61 @@ public class VerticesMapping extends AbstractMapping {
 					regionsMapping);
 		}
 		return capellaState;
+	}
+
+	/**
+	 * @param capellaState
+	 * @param exit
+	 */
+	private void manageExit(AbstractState capellaState, Behavior exit) {
+		if (exit != null) {
+			List<CallBehaviorAction> callBehaviors = LogicalFunctionMapping.getMapActivityToCallBehaviors().get(exit);
+			for (CallBehaviorAction callBehaviorAction : callBehaviors) {
+
+				LogicalFunction lf = (LogicalFunction) MappingRulesManager
+						.getCapellaObjectFromAllRules(callBehaviorAction);
+				if (lf != null) {
+					((Mode) capellaState).getExit().add(lf);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param capellaState
+	 * @param entry
+	 */
+	private void manageEntry(AbstractState capellaState, Behavior entry) {
+		if (entry != null) {
+			List<CallBehaviorAction> callBehaviors = LogicalFunctionMapping.getMapActivityToCallBehaviors().get(entry);
+			for (CallBehaviorAction callBehaviorAction : callBehaviors) {
+
+				LogicalFunction lf = (LogicalFunction) MappingRulesManager
+						.getCapellaObjectFromAllRules(callBehaviorAction);
+				if (lf != null) {
+					((Mode) capellaState).getEntry().add(lf);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param capellaState
+	 * @param doActivity
+	 */
+	private void manageDoActivity(AbstractState capellaState, Behavior doActivity) {
+		if (doActivity != null) {
+			List<CallBehaviorAction> callBehaviors = LogicalFunctionMapping.getMapActivityToCallBehaviors()
+					.get(doActivity);
+			for (CallBehaviorAction callBehaviorAction : callBehaviors) {
+
+				LogicalFunction lf = (LogicalFunction) MappingRulesManager
+						.getCapellaObjectFromAllRules(callBehaviorAction);
+				if (lf != null) {
+					((Mode) capellaState).getDoActivity().add(lf);
+				}
+			}
+		}
 	}
 
 	/**
