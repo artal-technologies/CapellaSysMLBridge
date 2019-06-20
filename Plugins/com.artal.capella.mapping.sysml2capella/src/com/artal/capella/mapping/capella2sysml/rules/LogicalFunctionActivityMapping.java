@@ -53,48 +53,77 @@ public class LogicalFunctionActivityMapping extends AbstractMapping {
 	 */
 	@Override
 	public void computeMapping() {
-		List<LogicalFunction> logicalFunctions = getLogicalFunctions();
+		List<LogicalFunction> doActivities = new ArrayList<>();
+		List<LogicalFunction> doEntries = new ArrayList<>();
+		List<LogicalFunction> doExits = new ArrayList<>();
+		fillLogicalFunctions(doActivities, doEntries, doExits);
 		Object parent = MappingRulesManager.getCapellaObjectFromAllRules(_source);
-		for (LogicalFunction lf : logicalFunctions) {
-			transformLogicalFunction(lf, parent);
+		transformLogicalFunctions(doActivities, parent, TypeActivity.DO_ACTIVITY);
+		transformLogicalFunctions(doEntries, parent, TypeActivity.ENTRY);
+		transformLogicalFunctions(doExits, parent, TypeActivity.EXIT);
+		_manager.executeRules();
+	}
+
+	private enum TypeActivity {
+		DO_ACTIVITY, ENTRY, EXIT;
+	}
+
+	/**
+	 * @param activities
+	 * @param parent
+	 */
+	private void transformLogicalFunctions(List<LogicalFunction> activities, Object parent, TypeActivity ta) {
+		for (LogicalFunction lf : activities) {
+			transformLogicalFunction(lf, parent, ta);
 			LogicalFunctionCallBehaviorsMapping behaviorsMapping = new LogicalFunctionCallBehaviorsMapping(getAlgo(),
 					lf, _mappingExecution);
 			_manager.add(behaviorsMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(_source.eResource(), lf),
 					behaviorsMapping);
 		}
-		_manager.executeRules();
 	}
 
-	private List<LogicalFunction> getLogicalFunctions() {
-		List<LogicalFunction> results = new ArrayList<LogicalFunction>();
-		if (_source instanceof State) {
-			EList<AbstractEvent> doActivity = ((State) _source).getDoActivity();
-			for (AbstractEvent abstractEvent : doActivity) {
-				if (abstractEvent instanceof LogicalFunction) {
-					results.add((LogicalFunction) abstractEvent);
-				}
+	private void fillActivitiesList(List<LogicalFunction> listToFill, List<AbstractEvent> toRead) {
+		for (AbstractEvent abstractEvent : toRead) {
+			if (abstractEvent instanceof LogicalFunction) {
+				listToFill.add((LogicalFunction) abstractEvent);
 			}
+		}
+	}
+
+	private void fillLogicalFunctions(List<LogicalFunction> doactivities, List<LogicalFunction> doentries,
+			List<LogicalFunction> doexits) {
+		if (_source instanceof State) {
+			fillActivitiesList(doactivities, ((State) _source).getDoActivity());
+			fillActivitiesList(doentries, ((State) _source).getEntry());
+			fillActivitiesList(doexits, ((State) _source).getExit());
 		} else if (_source instanceof Project) {
 			LogicalFunction rootLogicalFunction = Sysml2CapellaUtils.getLogicalFunctionRoot(_source);
 			List<AbstractFunction> ownedFunctions = rootLogicalFunction.getOwnedFunctions();
 			for (AbstractFunction abstractFunction : ownedFunctions) {
 				if (abstractFunction instanceof LogicalFunction) {
-					results.add((LogicalFunction) abstractFunction);
+					doactivities.add((LogicalFunction) abstractFunction);
 				}
 			}
 
 		}
-		return results;
 	}
 
-	private void transformLogicalFunction(LogicalFunction lf, Object parent) {
+	private void transformLogicalFunction(LogicalFunction lf, Object parent, TypeActivity ta) {
 		if (MappingRulesManager.getCapellaObjectFromAllRules(lf) == null) {
 			if (parent == null && _source instanceof Project) {
 				Package behaviorPkg = (Package) MappingRulesManager
 						.getCapellaObjectFromAllRules(_source + "BEHAVIOR_PKG");
 				behaviorPkg.getPackagedElements().add(createActivity(lf));
 			} else if (parent instanceof org.eclipse.uml2.uml.State) {
-				((org.eclipse.uml2.uml.State) parent).setDoActivity(createActivity(lf));
+				if (ta == TypeActivity.DO_ACTIVITY) {
+					((org.eclipse.uml2.uml.State) parent).setDoActivity(createActivity(lf));
+				}
+				if (ta == TypeActivity.ENTRY) {
+					((org.eclipse.uml2.uml.State) parent).setEntry(createActivity(lf));
+				}
+				if (ta == TypeActivity.EXIT) {
+					((org.eclipse.uml2.uml.State) parent).setExit(createActivity(lf));
+				}
 			}
 		}
 	}
