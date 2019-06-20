@@ -19,10 +19,12 @@ import org.eclipse.emf.diffmerge.impl.scopes.FragmentedModelScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.uml2.uml.Abstraction;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Stereotype;
+import org.eclipse.uml2.uml.UMLFactory;
 import org.polarsys.capella.core.data.capellacore.CapellaElement;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.la.LogicalArchitecture;
@@ -48,6 +50,8 @@ public class RequierementsMapping extends AbstractMapping {
 
 	private Project _source;
 	private IMappingExecution _mappingExecution;
+	private ResourceSet _resourceSet;
+	private Profile _reqProfile;
 
 	public RequierementsMapping(CapellaBridgeAlgo<?> algo, Project source, IMappingExecution mappingExecution) {
 		super(algo);
@@ -75,13 +79,8 @@ public class RequierementsMapping extends AbstractMapping {
 
 	private void transformRequirements(Requirement requirement, Package requierementsPkg) {
 		Class umlRequirement = requierementsPkg.createOwnedClass(requirement.getReqIFLongName(), false);
-		ResourceSet rset = null;
-		Object targetDataSet = _mappingExecution.getTargetDataSet();
-		if (targetDataSet instanceof FragmentedModelScope) {
-			rset = ((FragmentedModelScope) targetDataSet).getResources().get(0).getResourceSet();
-		}
-		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
-		Stereotype ownedStereotype = profile.getNestedPackage("Requirements").getOwnedStereotype("Requirement");
+
+		Stereotype ownedStereotype = getRequirementNestedPkg().getOwnedStereotype("Requirement");
 		umlRequirement.applyStereotype(ownedStereotype);
 
 		umlRequirement.setValue(ownedStereotype, "Text", requirement.getReqIFText());
@@ -92,6 +91,31 @@ public class RequierementsMapping extends AbstractMapping {
 		transformSatisfyElement(requirement, umlRequirement, ownedStereotype);
 		transformRefineElement(requirement, umlRequirement, ownedStereotype);
 
+	}
+
+	/**
+	 * @param profile
+	 * @return
+	 */
+	private Package getRequirementNestedPkg() {
+		if (_reqProfile == null) {
+			_reqProfile = SysML2CapellaUMLProfile.getProfile(getResourceSet(), UMLProfile.SYSML_PROFILE);
+		}
+		return _reqProfile.getNestedPackage("Requirements");
+	}
+
+	/**
+	 * @param rset
+	 * @return
+	 */
+	private ResourceSet getResourceSet() {
+		if (_resourceSet == null) {
+			Object targetDataSet = _mappingExecution.getTargetDataSet();
+			if (targetDataSet instanceof FragmentedModelScope) {
+				_resourceSet = ((FragmentedModelScope) targetDataSet).getResources().get(0).getResourceSet();
+			}
+		}
+		return _resourceSet;
 	}
 
 	private void transformRefineElement(Requirement requirement, Class umlRequirement, Stereotype ownedStereotype) {
@@ -109,6 +133,15 @@ public class RequierementsMapping extends AbstractMapping {
 						umlRequirement.setValue(ownedStereotype, "RefinedBy", value);
 					}
 					value.add((EObject) umlSource);
+					Package firstPackageParent = getFirstPackageParent((EObject) umlSource);
+					Abstraction refineAbs = UMLFactory.eINSTANCE.createAbstraction();
+					firstPackageParent.getPackagedElements().add(refineAbs);
+					Stereotype refineStereoType = getRequirementNestedPkg().getOwnedStereotype("Refine");
+					refineAbs.applyStereotype(refineStereoType);
+					// refineAbs.setValue(refineStereoType,
+					// "base_DirectedRelationship", refineAbs);
+					Sysml2CapellaUtils.trace(this, _source.eResource(), eObject, refineAbs, "REFINE_");
+
 				}
 			}
 
@@ -130,9 +163,30 @@ public class RequierementsMapping extends AbstractMapping {
 					umlRequirement.setValue(ownedStereotype, "SatisfiedBy", value);
 				}
 				value.add((EObject) umlTarget);
+				Package firstPackageParent = getFirstPackageParent((EObject) umlTarget);
+				Abstraction satisfyAbs = UMLFactory.eINSTANCE.createAbstraction();
+				firstPackageParent.getPackagedElements().add(satisfyAbs);
+				Stereotype satisfyStereoType = getRequirementNestedPkg().getOwnedStereotype("Satisfy");
+				satisfyAbs.applyStereotype(satisfyStereoType);
+				// satisfyAbs.setValue(satisfyStereoType,
+				// "base_DirectedRelationship", satisfyAbs);
+				Sysml2CapellaUtils.trace(this, _source.eResource(), abstractRelation, satisfyAbs, "SATISFY_");
 
 			}
 		}
+	}
+
+	private Package getFirstPackageParent(EObject element) {
+		if (element instanceof Package) {
+			return (Package) element;
+		} else {
+			EObject eContainer = element.eContainer();
+			if (eContainer != null) {
+				return getFirstPackageParent(eContainer);
+			}
+		}
+		return null;
+
 	}
 
 	/**

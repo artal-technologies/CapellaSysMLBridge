@@ -65,6 +65,8 @@ public class SysML2CapellaUMLProfile {
 	}
 
 	static public void initProfiles(ResourceSet rset, String targetFolder) {
+		loadProfiles(rset, "pathmap://UML_PROFILES/Ecore.profile.uml");
+		loadProfiles(rset, "pathmap://UML_PROFILES/Standard.profile.uml");
 		loadProfile(UMLProfile.MD_CUST_REQ_ADD_STEREO_PROFILE, rset);
 		loadProfile(UMLProfile.MD_CUST_SYSML_ADD_STEREO_PROFILE, rset);
 		loadProfile(UMLProfile.MD_CUST_SYSML_CUST_TRACEABILITY_PROFILE, rset);
@@ -129,6 +131,8 @@ public class SysML2CapellaUMLProfile {
 	static public List<Profile> getProfiles(ResourceSet rset) {
 		List<Profile> results = new ArrayList<>();
 
+		results.add(getProfile("pathmap://UML_PROFILES/Ecore.profile.uml", rset));
+		results.add(getProfile("pathmap://UML_PROFILES/Standard.profile.uml", rset));
 		results.add(getProfile(rset, UMLProfile.MD_CUST_REQ_ADD_STEREO_PROFILE));
 		results.add(getProfile(rset, UMLProfile.MD_CUST_SYSML_ADD_STEREO_PROFILE));
 		results.add(getProfile(rset, UMLProfile.MD_CUST_SYSML_CUST_TRACEABILITY_PROFILE));
@@ -159,6 +163,27 @@ public class SysML2CapellaUMLProfile {
 		URI relative = URI.createFileURI(pURI.lastSegment());
 		Resource resource = rset.getResource(relative, false);
 		Profile umlStdProfile = (Profile) resource.getContents().get(0);
+		return umlStdProfile;
+	}
+
+	static public Profile getProfile(String uri, ResourceSet rset) {
+		URI pURI = URI.createURI(uri, false);
+		Resource resource = rset.getResource(pURI, false);
+		Profile umlStdProfile = (Profile) resource.getContents().get(0);
+		return umlStdProfile;
+	}
+
+	/**
+	 * @param rset
+	 * @param uri
+	 * @return
+	 */
+	private static Profile loadProfiles(ResourceSet rset, String uri) {
+		URI pURI = URI.createURI(uri, false);
+		// URI relative = URI.createFileURI(pURI.lastSegment());
+		Resource resource = rset.getResource(pURI, true);
+		Profile umlStdProfile = (Profile) resource.getContents().get(0);
+		UMLProfilesUtil.registerProfile(rset, umlStdProfile);
 		return umlStdProfile;
 	}
 

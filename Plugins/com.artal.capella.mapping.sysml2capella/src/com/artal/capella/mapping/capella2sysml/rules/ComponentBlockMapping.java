@@ -75,6 +75,13 @@ public class ComponentBlockMapping extends AbstractMapping {
 	}
 
 	public void transformComponents(LogicalComponent parent, Element pkgParent, Stereotype stereotype) {
+		ResourceSet rset = null;
+		Object targetDataSet = _mappingExecution.getTargetDataSet();
+		if (targetDataSet instanceof FragmentedModelScope) {
+			rset = ((FragmentedModelScope) targetDataSet).getResources().get(0).getResourceSet();
+		}
+		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
+		Stereotype traceStereotype = profile.getNestedPackage("Allocations").getOwnedStereotype("Allocate");
 		EList<LogicalComponent> ownedLogicalComponents = parent.getOwnedLogicalComponents();
 		Package behaviorPkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "BEHAVIOR_PKG");
 		for (LogicalComponent logicalComponent : ownedLogicalComponents) {
@@ -103,6 +110,7 @@ public class ComponentBlockMapping extends AbstractMapping {
 				abstraction.getSuppliers().add(supplier);
 				abstraction.getClients().add(client);
 				behaviorPkg.getPackagedElements().add(abstraction);
+				abstraction.applyStereotype(traceStereotype);
 				Sysml2CapellaUtils.trace(this, _source.eResource(), componentFunctionalAllocation, abstraction,
 						"ABSTRACTION_");
 			}
