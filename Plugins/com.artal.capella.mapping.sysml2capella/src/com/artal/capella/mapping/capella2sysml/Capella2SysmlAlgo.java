@@ -84,15 +84,6 @@ public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
 				source_p, _mappingExecution);
 		_managerRules.add(capabilitiesRealizationsMapping.getClass().getName(), capabilitiesRealizationsMapping);
 
-		ComponentBlockMapping blockMapping = new ComponentBlockMapping(this, source_p, _mappingExecution);
-		_managerRules.add(blockMapping.getClass().getName(), blockMapping);
-
-		PartsMapping partsMapping = new PartsMapping(this, source_p, _mappingExecution);
-		_managerRules.add(partsMapping.getClass().getName(), partsMapping);
-
-		ComponentExchangesMapping exchangesMapping = new ComponentExchangesMapping(this, source_p, _mappingExecution);
-		_managerRules.add(exchangesMapping.getClass().getName(), exchangesMapping);
-
 		ModelAndStateMapping modelAndStateMapping = new ModelAndStateMapping(this, source_p, _mappingExecution);
 		_managerRules.add(modelAndStateMapping.getClass().getName(), modelAndStateMapping);
 
@@ -107,6 +98,15 @@ public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
 		FunctionalExchangesMapping functionalExchangesMapping = new FunctionalExchangesMapping(this, source_p,
 				_mappingExecution);
 		_managerRules.add(functionalExchangesMapping.getClass().getName(), functionalExchangesMapping);
+
+		ComponentBlockMapping blockMapping = new ComponentBlockMapping(this, source_p, _mappingExecution);
+		_managerRules.add(blockMapping.getClass().getName(), blockMapping);
+
+		PartsMapping partsMapping = new PartsMapping(this, source_p, _mappingExecution);
+		_managerRules.add(partsMapping.getClass().getName(), partsMapping);
+
+		ComponentExchangesMapping exchangesMapping = new ComponentExchangesMapping(this, source_p, _mappingExecution);
+		_managerRules.add(exchangesMapping.getClass().getName(), exchangesMapping);
 
 		EPackage ePackage = Registry.INSTANCE.getEPackage("http://www.polarsys.org/capella/requirements");
 		if (ePackage != null) {
