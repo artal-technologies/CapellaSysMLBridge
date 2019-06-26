@@ -60,7 +60,7 @@ public class CapellaSysmlLaunchDialog extends TitleAreaDialog {
 
 		Label label = new Label(selectUMLGroup, SWT.NONE);
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		label.setText("Select an target UML Cameo file");
+		label.setText("Select a target UML Cameo file");
 
 		Text umlText = new Text(selectUMLGroup, SWT.BORDER);
 		umlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
