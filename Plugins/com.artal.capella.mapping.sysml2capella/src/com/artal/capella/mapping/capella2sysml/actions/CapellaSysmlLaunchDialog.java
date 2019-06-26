@@ -18,11 +18,13 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -51,12 +53,16 @@ public class CapellaSysmlLaunchDialog extends TitleAreaDialog {
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
 		setTitle("Select the a target UML file.");
+		Group selectUMLGroup = new Group(container, SWT.NONE);
+		selectUMLGroup.setText("SysML selection");
+		selectUMLGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
+		selectUMLGroup.setLayout(new GridLayout(3, false));
 
-		Label label = new Label(container, SWT.NONE);
+		Label label = new Label(selectUMLGroup, SWT.NONE);
 		label.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		label.setText("Select an target UML Cameo file");
 
-		Text umlText = new Text(container, SWT.BORDER);
+		Text umlText = new Text(selectUMLGroup, SWT.BORDER);
 		umlText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		umlText.addModifyListener(new ModifyListener() {
 
@@ -67,7 +73,7 @@ public class CapellaSysmlLaunchDialog extends TitleAreaDialog {
 
 			}
 		});
-		Button button = new Button(container, SWT.NONE);
+		Button button = new Button(selectUMLGroup, SWT.NONE);
 		button.setLayoutData(new GridData());
 		button.setText("Browse..");
 
@@ -78,8 +84,8 @@ public class CapellaSysmlLaunchDialog extends TitleAreaDialog {
 				FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
 				dialog.setFilterExtensions(new String[] { "*.uml" });
 				String filePath = dialog.open();
-				if(!filePath.endsWith(".uml")){
-					filePath+=".uml";
+				if (!filePath.endsWith(".uml")) {
+					filePath += ".uml";
 				}
 				umlText.setText(filePath);
 
@@ -114,8 +120,9 @@ public class CapellaSysmlLaunchDialog extends TitleAreaDialog {
 			errorMessage = "No input file.";
 		} else {
 			File file = new File(_umlPath);
-			if (!file.exists()) {
-				errorMessage = "Invalid input file.";
+			File parentFile = file.getParentFile();
+			if (!parentFile.exists()) {
+				errorMessage = "Invalid parent folder.";
 			}
 		}
 		setErrorMessage(errorMessage);
