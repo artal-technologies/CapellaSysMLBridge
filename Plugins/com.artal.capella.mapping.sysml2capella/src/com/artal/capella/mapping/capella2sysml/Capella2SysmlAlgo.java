@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
+import com.artal.capella.mapping.capella2sysml.actions.ConstraintsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.ActorsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.CapabilitiesRealizationsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.ClassesMapping;
@@ -113,6 +114,9 @@ public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
 			RequierementsMapping requierementsMapping = new RequierementsMapping(this, source_p, _mappingExecution);
 			_managerRules.add(requierementsMapping.getClass().getName(), requierementsMapping);
 		}
+
+		ConstraintsMapping constraintsMapping = new ConstraintsMapping(this, source_p, _mappingExecution);
+		_managerRules.add(constraintsMapping.getClass().getName(), constraintsMapping);
 
 		// execute rules
 		_managerRules.executeRules();
