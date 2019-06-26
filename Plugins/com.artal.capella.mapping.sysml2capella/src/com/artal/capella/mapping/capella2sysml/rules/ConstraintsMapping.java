@@ -7,7 +7,7 @@
  * Contributors:
  *     Artal Technologies - initial API and implementation
  *******************************************************************************/
-package com.artal.capella.mapping.capella2sysml.actions;
+package com.artal.capella.mapping.capella2sysml.rules;
 
 import java.util.Set;
 

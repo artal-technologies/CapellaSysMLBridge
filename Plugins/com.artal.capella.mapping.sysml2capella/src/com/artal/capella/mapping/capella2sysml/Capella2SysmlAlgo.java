@@ -19,12 +19,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
-import com.artal.capella.mapping.capella2sysml.actions.ConstraintsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.ActorsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.CapabilitiesRealizationsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.ClassesMapping;
 import com.artal.capella.mapping.capella2sysml.rules.ComponentBlockMapping;
 import com.artal.capella.mapping.capella2sysml.rules.ComponentExchangesMapping;
+import com.artal.capella.mapping.capella2sysml.rules.ConstraintsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.ExchangeItemMapping;
 import com.artal.capella.mapping.capella2sysml.rules.FunctionalExchangesMapping;
 import com.artal.capella.mapping.capella2sysml.rules.LogicalFunctionActivityMapping;
