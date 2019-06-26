@@ -13,7 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
+import org.eclipse.emf.diffmerge.impl.scopes.FragmentedModelScope;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Property;
+import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.polarsys.capella.common.data.modellingcore.FinalizableElement;
 import org.polarsys.capella.core.data.capellacore.Feature;
@@ -25,7 +29,9 @@ import org.polarsys.capella.core.data.information.ExchangeItemElement;
 import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
+import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile;
 import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
+import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile.UMLProfile;
 
 /**
  * @author YBI
@@ -82,6 +88,14 @@ public class PropertiesMapping extends AbstractMapping {
 		property.setName(namedElement.getName());
 		classParent.getOwnedAttributes().add(property);
 		Sysml2CapellaUtils.trace(this, _source.eResource(), namedElement, property, "PROPERTY_");
+		ResourceSet rset = null;
+		Object targetDataSet = _mappingExecution.getTargetDataSet();
+		if (targetDataSet instanceof FragmentedModelScope) {
+			rset = ((FragmentedModelScope) targetDataSet).getResources().get(0).getResourceSet();
+		}
+		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.MD_CUST_SYSML_ADD_STEREO_PROFILE);
+		Stereotype ownedStereotype = profile.getOwnedStereotype("ValueProperty");
+		property.applyStereotype(ownedStereotype);
 	}
 
 }

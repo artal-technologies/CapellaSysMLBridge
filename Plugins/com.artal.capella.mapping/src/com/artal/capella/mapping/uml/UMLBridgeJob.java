@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.ui.progress.IProgressConstants;
+import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.eclipse.uml2.uml.resource.UMLResource;
 
@@ -61,12 +62,22 @@ public class UMLBridgeJob<SD> extends BridgeJob<SD> {
 		return resourceSet;
 	}
 
+	protected Profile loadSysMLProfileForBridge() {
+		return null;
+	}
+
 	/**
 	 * @see org.eclipse.emf.diffmerge.bridge.interactive.BridgeJob#getBridge()
 	 */
 	@Override
 	protected EMFInteractiveBridge<SD, IEditableModelScope> getBridge() {
-		UMLBridge<SD, IEditableModelScope> mappingBridge = new UMLBridge<>(_algo);
+		UMLBridge<SD, IEditableModelScope> mappingBridge = new UMLBridge<SD, IEditableModelScope>(_algo) {
+			@Override
+			public Profile loadSysMLProfile() throws Exception {
+				// TODO Auto-generated method stub
+				return loadSysMLProfileForBridge();
+			}
+		};
 		mappingBridge.registerRules();
 		// Make the mapping bridge incremental
 		GMFDiffPolicy diffPolicy = new GMFDiffPolicy();
@@ -108,5 +119,5 @@ public class UMLBridgeJob<SD> extends BridgeJob<SD> {
 	public CapellaBridgeAlgo<SD> getAlgo() {
 		return _algo;
 	}
-	
+
 }

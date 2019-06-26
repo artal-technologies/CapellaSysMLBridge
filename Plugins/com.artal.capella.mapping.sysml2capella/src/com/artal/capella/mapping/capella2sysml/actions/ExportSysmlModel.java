@@ -53,12 +53,6 @@ public class ExportSysmlModel extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		StructuredSelection currentSelection = (StructuredSelection) HandlerUtil.getCurrentSelection(event);
 
-		// try {
-		// LicenseUtils.runWithPrivileges(new Runnable() {
-		//
-		// @Override
-		// public void run() {
-
 		CapellaSysmlLaunchDialog dialog = new CapellaSysmlLaunchDialog(Display.getCurrent().getActiveShell());
 		int status = dialog.open();
 
@@ -67,16 +61,13 @@ public class ExportSysmlModel extends AbstractHandler {
 			filePath = dialog.getUmlPath();
 		}
 
-		String folder = filePath.substring(0, filePath.lastIndexOf(File.separator));
-		
 		// if no model input, stop the mapping.
 		if (filePath == null || filePath.isEmpty()) {
 			return null;
 		}
+		String folder = filePath.substring(0, filePath.lastIndexOf(File.separator));
 		URI targetUri = URI.createFileURI(filePath);
 
-	
-		
 		LogicalArchitecture firstElement = (LogicalArchitecture) currentSelection.getFirstElement();
 		Resource capellaResource = firstElement.eResource();
 		ResourceSet resourceSet = capellaResource.getResourceSet();
@@ -120,19 +111,6 @@ public class ExportSysmlModel extends AbstractHandler {
 		} else {
 			return null;
 		}
-
-		// }
-		// }, new ArtalFeature() {
-		//
-		// @Override
-		// public int getId() {
-		// return 4;
-		// }
-		// });
-		// } catch (InvalidPrivilegeException e1) {
-		// MessageDialog.openError(Display.getCurrent().getActiveShell(),
-		// "Invalid Privilege", e1.getMessage());
-		// }
 
 		return null;
 	}

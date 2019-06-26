@@ -14,6 +14,7 @@ import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdate
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.LiteralInteger;
 import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
 import org.eclipse.uml2.uml.PrimitiveType;
@@ -29,6 +30,7 @@ import org.polarsys.capella.core.data.information.ExchangeItem;
 import org.polarsys.capella.core.data.information.ExchangeItemElement;
 import org.polarsys.capella.core.data.information.InformationFactory;
 import org.polarsys.capella.core.data.information.MultiplicityElement;
+import org.polarsys.capella.core.data.information.ParameterDirection;
 import org.polarsys.capella.core.data.information.datavalue.DatavalueFactory;
 import org.polarsys.capella.core.data.information.datavalue.LiteralNumericValue;
 
@@ -132,6 +134,32 @@ public class PropertyMapping extends AbstractMapping {
 						&& capellaObjectFromAllRules instanceof ExchangeItem) {
 					((ExchangeItem) capellaObjectFromAllRules).getOwnedElements()
 							.add((ExchangeItemElement) capellaProp);
+					Stereotype flowPropertyStereotype = property
+							.getAppliedStereotype("SysML::Ports&Flows::FlowProperty");
+					if (flowPropertyStereotype != null) {
+						Object value = property.getValue(flowPropertyStereotype, "direction");
+						if (value instanceof EnumerationLiteral) {
+							// TODO this implementation seems not valid in case
+							// of Flow ExchangeItem. It's valid for Operation
+							// ExchangeItem
+							String direction = ((EnumerationLiteral) value).getName();
+							if (direction != null) {
+								switch (direction) {
+								case "in":
+									((ExchangeItemElement) capellaProp).setDirection(ParameterDirection.IN);
+									break;
+								case "inout":
+									((ExchangeItemElement) capellaProp).setDirection(ParameterDirection.INOUT);
+									break;
+								case "out":
+									((ExchangeItemElement) capellaProp).setDirection(ParameterDirection.OUT);
+									break;
+								default:
+									break;
+								}
+							}
+						}
+					}
 				}
 
 				if (capellaProp instanceof AbstractTypedElement) {

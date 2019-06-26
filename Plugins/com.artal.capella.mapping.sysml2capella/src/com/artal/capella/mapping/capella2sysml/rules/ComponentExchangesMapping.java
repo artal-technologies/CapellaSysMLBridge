@@ -9,6 +9,7 @@
  *******************************************************************************/
 package com.artal.capella.mapping.capella2sysml.rules;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -21,8 +22,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Connector;
 import org.eclipse.uml2.uml.ConnectorEnd;
+import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Port;
 import org.eclipse.uml2.uml.Profile;
+import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.polarsys.capella.common.data.modellingcore.AbstractExchangeItem;
@@ -85,7 +88,8 @@ public class ComponentExchangesMapping extends AbstractMapping {
 			rset = ((FragmentedModelScope) targetDataSet).getResources().get(0).getResourceSet();
 		}
 		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
-		Stereotype ownedStereotype = profile.getNestedPackage("Ports&Flows").getOwnedStereotype("ProxyPort");
+		Package portAndFlow = profile.getNestedPackage("Ports&Flows");
+		Stereotype ownedStereotype = portAndFlow.getOwnedStereotype("ProxyPort");
 		Port umlSourcePort = transformPort(sourcePort, ownedStereotype);
 		Port umlTargetPort = transformPort(targetPort, ownedStereotype);
 
@@ -94,8 +98,16 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		// LogicalComponent targetParent = (LogicalComponent)
 		// targetPort.eContainer().eContainer();
 
-		Queue<Component> sourceAncestorQueue = getAncestorQueue((LogicalComponent) sourcePort.eContainer());
-		Queue<Component> targetAncestorQueue = getAncestorQueue((LogicalComponent) targetPort.eContainer());
+		LogicalComponent sourceComponent = (LogicalComponent) sourcePort.eContainer();
+		Queue<Component> sourceAncestorQueue = getAncestorQueue(sourceComponent);
+		LogicalComponent targetComponent = (LogicalComponent) targetPort.eContainer();
+		Queue<Component> targetAncestorQueue = getAncestorQueue(targetComponent);
+
+		Part sourcePart = Sysml2CapellaUtils.getInversePart(sourceComponent);
+		Part targetPart = Sysml2CapellaUtils.getInversePart(targetComponent);
+
+		Property sourceProp = (Property) MappingRulesManager.getCapellaObjectFromAllRules(sourcePart);
+		Property targetProp = (Property) MappingRulesManager.getCapellaObjectFromAllRules(targetPart);
 
 		Component sourceParent = sourceAncestorQueue.peek();
 		Component targetParent = targetAncestorQueue.peek();
@@ -105,6 +117,9 @@ public class ComponentExchangesMapping extends AbstractMapping {
 			connector.setName(ce.getName());
 			umlParent.getOwnedConnectors().add(connector);
 			Sysml2CapellaUtils.trace(this, _source.eResource(), ce, connector, "CONNECTOR_");
+			Package blockProfile = profile.getNestedPackage("Blocks");
+			Stereotype bindingConnectorStereo = blockProfile.getOwnedStereotype("BindingConnector");
+			connector.applyStereotype(bindingConnectorStereo);
 
 			ConnectorEnd targetEnd = connector.createEnd();
 			// Sysml2CapellaUtils.trace(this, _source.eResource(), ,
@@ -119,6 +134,19 @@ public class ComponentExchangesMapping extends AbstractMapping {
 				if (umlType != null) {
 					umlSourcePort.setType(umlType);
 					umlTargetPort.setType(umlType);
+
+					Stereotype nestedConnectorEndStereo = blockProfile.getOwnedStereotype("NestedConnectorEnd");
+					if (nestedConnectorEndStereo != null) {
+						List<Property> srcList = new ArrayList<>();
+						srcList.add(sourceProp);
+						List<Property> trgList = new ArrayList<>();
+						trgList.add(targetProp);
+						sourceEnd.applyStereotype(nestedConnectorEndStereo);
+						sourceEnd.setValue(nestedConnectorEndStereo, "propertyPath", srcList);
+
+						targetEnd.applyStereotype(nestedConnectorEndStereo);
+						targetEnd.setValue(nestedConnectorEndStereo, "propertyPath", trgList);
+					}
 					break;
 				}
 

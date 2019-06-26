@@ -10,8 +10,10 @@
 package com.artal.capella.mapping.capella2sysml;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.uml2.uml.Profile;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 
+import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile;
 import com.artal.capella.mapping.uml.UMLBridgeJob;
 
 /**
@@ -29,8 +31,17 @@ public class Capella2SysmlBridgeJob extends UMLBridgeJob<Project> {
 	}
 
 	public void setTargetParentFolder(String folder) {
-		((Capella2SysmlAlgo)getAlgo()).setTargetParentFolder(folder);
-		
+		((Capella2SysmlAlgo) getAlgo()).setTargetParentFolder(folder);
+
+	}
+
+	@Override
+	protected Profile loadSysMLProfileForBridge() {
+		Profile sysMLProfile = SysML2CapellaUMLProfile.getProfile(getTargetResourceSet(),
+				SysML2CapellaUMLProfile.UMLProfile.SYSML_PROFILE);
+
+		return sysMLProfile;
+
 	}
 
 }

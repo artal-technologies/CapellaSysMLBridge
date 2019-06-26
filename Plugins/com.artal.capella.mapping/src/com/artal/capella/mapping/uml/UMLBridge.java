@@ -14,8 +14,8 @@ import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IQueryExecution;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IRule;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.MappingExecution;
-import org.eclipse.emf.diffmerge.bridge.mapping.impl.QueryAndRule;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.MappingExecution.PendingDefinition;
+import org.eclipse.emf.diffmerge.bridge.mapping.impl.QueryAndRule;
 import org.eclipse.emf.diffmerge.bridge.mapping.operations.MappingBridgeOperation;
 import org.eclipse.emf.diffmerge.bridge.uml.mapping.IUMLRule;
 import org.eclipse.emf.diffmerge.bridge.uml.mapping.UMLMappingBridge;
@@ -26,8 +26,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.Profile;
-import org.eclipse.uml2.uml.ProfileApplication;
-import org.eclipse.uml2.uml.UMLFactory;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.CapellaMappingUtil;
@@ -146,7 +144,6 @@ public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope>
 				@Override
 				public Collection<EObject> createProfileApplications(SD source_p, TupleN<TraceCheat<?>> target_p,
 						IQueryExecution queryExecution_p, IMappingExecution mappingExecution_p) {
-					// TODO Auto-generated method stub
 					List<EObject> profs = new ArrayList<EObject>();
 					try {
 						Profile prof = loadSysMLProfile();
@@ -155,7 +152,6 @@ public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope>
 					}
 
 					catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 
