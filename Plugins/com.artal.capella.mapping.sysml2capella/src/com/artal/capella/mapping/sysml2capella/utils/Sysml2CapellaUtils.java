@@ -17,6 +17,9 @@ import java.util.Set;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
+import org.eclipse.emf.diffmerge.bridge.incremental.IntermediateModelScope;
+import org.eclipse.emf.diffmerge.impl.scopes.FragmentedModelScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -32,7 +35,10 @@ import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
 import org.eclipse.uml2.uml.PrimitiveType;
+import org.eclipse.uml2.uml.Profile;
+import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.UseCase;
+import org.polarsys.capella.common.data.modellingcore.AbstractType;
 import org.polarsys.capella.common.helpers.EObjectExt;
 import org.polarsys.capella.core.data.capellacommon.AbstractCapabilityPkg;
 import org.polarsys.capella.core.data.capellacore.ModellingArchitecture;
@@ -43,7 +49,6 @@ import org.polarsys.capella.core.data.cs.Component;
 import org.polarsys.capella.core.data.cs.Part;
 import org.polarsys.capella.core.data.ctx.SystemAnalysis;
 import org.polarsys.capella.core.data.fa.ComponentExchange;
-import org.polarsys.capella.core.data.fa.FaFactory;
 import org.polarsys.capella.core.data.fa.FaPackage;
 import org.polarsys.capella.core.data.fa.FunctionPkg;
 import org.polarsys.capella.core.data.information.DataPkg;
@@ -56,6 +61,7 @@ import org.polarsys.capella.core.data.la.LogicalFunction;
 import org.polarsys.capella.core.data.la.LogicalFunctionPkg;
 
 import com.artal.capella.mapping.rules.AbstractMapping;
+import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile.UMLProfile;
 
 /**
  * {@link Sysml2CapellaUtils} provides methods to manage sysml to capella
@@ -613,6 +619,46 @@ public class Sysml2CapellaUtils {
 		return results;
 	}
 
+	static public boolean isPrimiriveType(AbstractType type) {
+		DataPkg dataPkgPredefinedTypeRoot = getDataPkgPredefinedTypeRoot(type);
+		EList<DataType> ownedDataTypes = dataPkgPredefinedTypeRoot.getOwnedDataTypes();
+		for (DataType dataType : ownedDataTypes) {
+			if (dataType.equals(type)) {
+				return true;
+			}
+		}
+
+		return false;
+
+	}
+
+	static public Type getPrimitiveType(AbstractType type, ResourceSet targetResourceSet) {
+		// PrimitiveType ptype = UMLFactory.eINSTANCE.createPrimitiveType();
+
+		String name = type.getName();
+		String pName = "";
+		switch (name) {
+		case "Boolean":
+			pName = "Boolean";
+			break;
+		case "Integer":
+			pName = "Integer";
+			break;
+		case "Float":
+			pName = "Real";
+			break;
+		case "String":
+			pName = "String";
+			break;
+		default:
+			break;
+		}
+		Profile profile = SysML2CapellaUMLProfile.getProfile(targetResourceSet, UMLProfile.SYSML_PROFILE);
+		Type ownedType = profile.getNestedPackage("Libraries").getNestedPackage("PrimitiveValueTypes")
+				.getOwnedType(pName);
+		return ownedType;
+	}
+
 	static public DataType getPrimitiveType(PrimitiveType primitiveType, Project capella) {
 		String name = primitiveType.getName();
 		String capellaDataTypeName = "";
@@ -718,5 +764,20 @@ public class Sysml2CapellaUtils {
 		return referencers;
 
 	}
-	
+
+	public static ResourceSet getTargetResourceSet(IModelScope scope) {
+
+		if (scope instanceof FragmentedModelScope) {
+			List<Resource> resources = ((FragmentedModelScope) scope).getResources();
+			if (resources != null && !resources.isEmpty()) {
+				return resources.get(0).getResourceSet();
+			}
+
+		} else if (scope instanceof IntermediateModelScope) {
+			return getTargetResourceSet(((IntermediateModelScope) scope).getTargetDataSet());
+		}
+
+		return null;
+	}
+
 }

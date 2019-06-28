@@ -20,7 +20,6 @@ import org.eclipse.uml2.uml.UMLFactory;
 import org.polarsys.capella.common.data.modellingcore.ModelElement;
 import org.polarsys.capella.common.data.modellingcore.ValueSpecification;
 import org.polarsys.capella.common.helpers.EObjectExt;
-import org.polarsys.capella.core.data.capellacore.CapellaElement;
 import org.polarsys.capella.core.data.capellacore.CapellacorePackage;
 import org.polarsys.capella.core.data.capellacore.Constraint;
 import org.polarsys.capella.core.data.capellamodeller.Project;

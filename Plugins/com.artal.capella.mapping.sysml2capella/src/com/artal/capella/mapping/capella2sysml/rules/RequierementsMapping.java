@@ -14,8 +14,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
-import org.eclipse.emf.diffmerge.impl.scopes.FragmentedModelScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -110,12 +110,10 @@ public class RequierementsMapping extends AbstractMapping {
 	 */
 	private ResourceSet getResourceSet() {
 		if (_resourceSet == null) {
-			Object targetDataSet = _mappingExecution.getTargetDataSet();
-			if (targetDataSet instanceof FragmentedModelScope) {
-				_resourceSet = ((FragmentedModelScope) targetDataSet).getResources().get(0).getResourceSet();
-			}
+			IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
+			_resourceSet = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
 		}
-		return _resourceSet;
+		return _resourceSet;	
 	}
 
 	private void transformRefineElement(Requirement requirement, Class umlRequirement, Stereotype ownedStereotype) {
@@ -153,7 +151,6 @@ public class RequierementsMapping extends AbstractMapping {
 		EList<AbstractRelation> ownedRelations = requirement.getOwnedRelations();
 		for (AbstractRelation abstractRelation : ownedRelations) {
 			if (abstractRelation instanceof CapellaIncomingRelation) {
-				Requirement source = ((CapellaIncomingRelation) abstractRelation).getSource();
 				CapellaElement target = ((CapellaIncomingRelation) abstractRelation).getTarget();
 
 				Object umlTarget = MappingRulesManager.getCapellaObjectFromAllRules(target);

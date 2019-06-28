@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Queue;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
-import org.eclipse.emf.diffmerge.impl.scopes.FragmentedModelScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Class;
@@ -40,8 +40,8 @@ import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile;
-import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
 import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile.UMLProfile;
+import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
 
 /**
  * @author YBI
@@ -82,11 +82,8 @@ public class ComponentExchangesMapping extends AbstractMapping {
 			return;
 		}
 
-		ResourceSet rset = null;
-		Object targetDataSet = _mappingExecution.getTargetDataSet();
-		if (targetDataSet instanceof FragmentedModelScope) {
-			rset = ((FragmentedModelScope) targetDataSet).getResources().get(0).getResourceSet();
-		}
+		IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
+		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
 		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
 		Package portAndFlow = profile.getNestedPackage("Ports&Flows");
 		Stereotype ownedStereotype = portAndFlow.getOwnedStereotype("ProxyPort");
@@ -153,7 +150,9 @@ public class ComponentExchangesMapping extends AbstractMapping {
 			}
 
 			sourceEnd.setRole(umlSourcePort);
+			sourceEnd.setPartWithPort(sourceProp);
 			targetEnd.setRole(umlTargetPort);
+			targetEnd.setPartWithPort(targetProp);
 
 		} else {
 			Component commonParent = null;
@@ -182,7 +181,9 @@ public class ComponentExchangesMapping extends AbstractMapping {
 			// targetElement, prefix);
 
 			sourceEnd.setRole(umlSourceIntermediatePort);
+			sourceEnd.setPartWithPort(sourceProp);
 			targetEnd.setRole(umlTargetIntermediatePort);
+			targetEnd.setPartWithPort(targetProp);
 
 		}
 
@@ -191,14 +192,12 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	private Port createIntermediatePort(ComponentPort capellaPort, Port umlPort, Component common,
 			Queue<Component> acestors) {
 		Component parent;
-		Component child = (Component) capellaPort.eContainer();
 		boolean isFoundCommon = false;
 		while ((parent = acestors.poll()) != null && !isFoundCommon) {
 			if (common.equals(parent)) {
 				isFoundCommon = true;
 
 			}
-			Class umlChild = (Class) MappingRulesManager.getCapellaObjectFromAllRules(child);
 			Class umlParent = (Class) MappingRulesManager.getCapellaObjectFromAllRules(parent);
 			if (!isFoundCommon) {
 				Connector connector = UMLFactory.eINSTANCE.createConnector();

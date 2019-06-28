@@ -31,13 +31,11 @@ import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
 public class LogicalFunctionCallBehaviorsMapping extends AbstractMapping {
 
 	private CapellaElement _source;
-	private IMappingExecution _mappingExecution;
 
 	public LogicalFunctionCallBehaviorsMapping(CapellaBridgeAlgo<?> algo, CapellaElement source,
 			IMappingExecution mappingExecution) {
 		super(algo);
 		_source = source;
-		_mappingExecution = mappingExecution;
 	}
 
 	@Override

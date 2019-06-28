@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.Profile;
 
-import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.CapellaMappingUtil;
 import com.artal.capella.mapping.cheat.TraceCheat;
 import com.artal.capella.mapping.patch.CapellaMappingExecution;
@@ -35,9 +34,10 @@ import com.artal.capella.mapping.patch.wrappers.RuleWrapper;
 
 public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope> {
 	private CapellaMappingExecution _capellaMappingExecution;
-	private CapellaBridgeAlgo<SD> _algo;
+	private UMLBridgeAlgo<SD> _algo;
+	UMLRule<SD, TupleN<TraceCheat<?>>> _umlRule;
 
-	public UMLBridge(CapellaBridgeAlgo<SD> algo) {
+	public UMLBridge(UMLBridgeAlgo<SD> algo) {
 		_algo = algo;
 	}
 
@@ -45,6 +45,14 @@ public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope>
 		_capellaMappingExecution = new CapellaMappingExecution(trace_p);
 		return _capellaMappingExecution;
 	};
+
+	// @Override
+	// public IMappingExecution executeOn(SD sourceDataSet_p,
+	// IEditableModelScope targetDataSet_p,
+	// IBridgeExecution execution_p, IProgressMonitor monitor_p) {
+	// return super.executeOn(sourceDataSet_p, targetDataSet_p, null,
+	// monitor_p);
+	// }
 
 	@Override
 	protected MappingBridgeOperation createMappingOperation(SD sourceDataSet_p, IEditableModelScope targetDataSet_p,
@@ -68,13 +76,12 @@ public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope>
 				for (Entry<IRule<?, ?>, PendingDefinition> entry : pendingDefinitions.entrySet()) {
 					IRule<?, ?> rule = entry.getKey();
 					if (phase_p == Phase.PROFILE_APPLICATION) // Registering
-																// targets
 						registerTarget(entry.getValue(), source_p, entry.getKey(), execution_p);
 					if (rule instanceof RuleWrapper) {
-						rule = ((RuleWrapper) rule).getRealRule();
+						rule = ((RuleWrapper<?, ?>) rule).getRealRule();
 					}
 					if (rule instanceof IUMLRule) {
-						handleRuleForProfileApplication((IUMLRule) rule, source_p, entry.getValue(), execution_p,
+						handleRuleForProfileApplication((IUMLRule<?, ?>) rule, source_p, entry.getValue(), execution_p,
 								targetDataSet_p, phase_p);
 					}
 
@@ -122,8 +129,6 @@ public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope>
 
 	public class MainRule extends QueryAndRule<SD, SD, TupleN<TraceCheat<?>>> {
 
-		IUMLRule<SD, TupleN<TraceCheat<?>>> _umlRule;
-
 		public MainRule(UMLBridge<SD, CD> capellaBridge) {
 			super(capellaBridge);
 			_umlRule = new UMLRule<SD, TupleN<TraceCheat<?>>>(this) {
@@ -149,13 +154,20 @@ public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope>
 						Profile prof = loadSysMLProfile();
 
 						profs.addAll(prof.getProfileApplications());
+
 					}
 
 					catch (Exception e) {
 						e.printStackTrace();
 					}
-
+					profs.addAll(_algo.getProfileApplication());
 					return profs;
+				}
+
+				@Override
+				public Collection<EObject> createStereotypeApplications(SD source_p, TupleN<TraceCheat<?>> target_p,
+						IQueryExecution queryExecution_p, IMappingExecution mappingExecution_p) {
+					return _algo.getStereoApplications();
 				}
 			};
 		}
@@ -180,9 +192,9 @@ public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope>
 
 		}
 
-		public IUMLRule<SD, TupleN<TraceCheat<?>>> getUmlRule() {
-			return _umlRule;
-		}
 	}
 
+	public UMLRule<SD, TupleN<TraceCheat<?>>> getUmlRule() {
+		return _umlRule;
+	}
 }

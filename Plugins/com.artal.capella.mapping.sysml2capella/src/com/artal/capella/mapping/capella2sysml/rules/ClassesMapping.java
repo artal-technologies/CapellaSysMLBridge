@@ -10,8 +10,8 @@
 package com.artal.capella.mapping.capella2sysml.rules;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
-import org.eclipse.emf.diffmerge.impl.scopes.FragmentedModelScope;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Profile;
@@ -49,16 +49,17 @@ public class ClassesMapping extends AbstractMapping {
 	 */
 	@Override
 	public void computeMapping() {
+
 		DataPkg dataPkgRoot = Sysml2CapellaUtils.getDataPkgRoot(_source);
 		Package paramPkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "PARAMETRIC_PKG");
-		EList<org.polarsys.capella.core.data.information.Class> ownedClasses = dataPkgRoot.getOwnedClasses();
-		Object targetDataSet = _mappingExecution.getTargetDataSet();
-		ResourceSet rset = null;
-		if (targetDataSet instanceof FragmentedModelScope) {
-			rset = ((FragmentedModelScope) targetDataSet).getResources().get(0).getResourceSet();
-		}
+
+		IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
+		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
 		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
+
 		Stereotype ownedStereotype = profile.getNestedPackage("Blocks").getOwnedStereotype("Block");
+
+		EList<org.polarsys.capella.core.data.information.Class> ownedClasses = dataPkgRoot.getOwnedClasses();
 		for (org.polarsys.capella.core.data.information.Class clazz : ownedClasses) {
 			transformClass(clazz, paramPkg, ownedStereotype);
 			PropertiesMapping propertiesMapping = new PropertiesMapping(getAlgo(), clazz, _mappingExecution);
@@ -72,7 +73,6 @@ public class ClassesMapping extends AbstractMapping {
 
 	private void transformClass(org.polarsys.capella.core.data.information.Class clazz, Package paramPkg,
 			Stereotype ownedStereotype) {
-
 		org.eclipse.uml2.uml.Class umlClass = paramPkg.createOwnedClass(clazz.getName(), false);
 		umlClass.applyStereotype(ownedStereotype);
 		Sysml2CapellaUtils.trace(this, _source.eResource(), clazz, umlClass, "CLASS_");

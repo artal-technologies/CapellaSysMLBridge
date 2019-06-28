@@ -15,7 +15,10 @@ import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingBridge;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IRule;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.MappingExecution;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.QueryExecution;
+import org.eclipse.emf.diffmerge.bridge.mapping.impl.MappingExecution.PendingDefinition;
+import org.eclipse.emf.diffmerge.bridge.uml.mapping.IUMLRule;
 import org.eclipse.emf.diffmerge.bridge.uml.mapping.UMLMappingBridgeOperation;
+import org.eclipse.emf.ecore.EObject;
 
 import com.artal.capella.mapping.patch.CapellaQueryExecution;
 import com.artal.capella.mapping.patch.wrappers.RuleWrapper;
@@ -43,4 +46,11 @@ public class CapellaUMLMappingBridgeOperation extends UMLMappingBridgeOperation 
 
 	}
 
+	@Override
+	protected void registerProfileData(IUMLRule<?, ?> rule_p, Object source_p, PendingDefinition pendingDef_p,
+			MappingExecution execution_p, Object targetDataSet_p, EObject application_p) {
+		if (execution_p.getTrace() != null) {
+			super.registerProfileData(rule_p, source_p, pendingDef_p, execution_p, targetDataSet_p, application_p);
+		}
+	}
 }

@@ -35,7 +35,7 @@ public class CapellaMappingExecution extends MappingExecution {
 	public boolean isTolerantToDuplicates() {
 		return false;
 	}
-
+ 
 	@Override
 	@Deprecated
 	public <S, T> T get(S source_p, IRuleIdentifier<S, T> ruleID_p) {

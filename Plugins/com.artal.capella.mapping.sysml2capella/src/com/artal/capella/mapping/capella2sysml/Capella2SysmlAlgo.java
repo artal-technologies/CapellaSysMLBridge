@@ -10,15 +10,12 @@
 package com.artal.capella.mapping.capella2sysml;
 
 import org.eclipse.emf.diffmerge.api.scopes.IEditableModelScope;
-import org.eclipse.emf.diffmerge.bridge.incremental.IntermediateModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
-import org.eclipse.emf.diffmerge.impl.scopes.FragmentedModelScope;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EPackage.Registry;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 
-import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.capella2sysml.rules.ActorsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.CapabilitiesRealizationsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.ClassesMapping;
@@ -35,15 +32,19 @@ import com.artal.capella.mapping.capella2sysml.rules.RequierementsMapping;
 import com.artal.capella.mapping.capella2sysml.rules.RootInitialMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile;
+import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
+import com.artal.capella.mapping.uml.UMLBridge;
+import com.artal.capella.mapping.uml.UMLBridgeAlgo;
 
 /**
  * @author YBI
  *
  */
-public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
+public class Capella2SysmlAlgo extends UMLBridgeAlgo<Project> {
 
 	MappingRulesManager _managerRules = new MappingRulesManager();
 	private String _targetParentFolder;
+	private UMLBridge<Project, IEditableModelScope> _mappingBridge;
 
 	public Capella2SysmlAlgo() {
 
@@ -59,15 +60,8 @@ public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
 	public void launch(Project source_p, IMappingExecution _mappingExecution) {
 
 		IEditableModelScope targetDataSet = (IEditableModelScope) _mappingExecution.getTargetDataSet();
-		ResourceSet rset = null;
-		if (targetDataSet instanceof FragmentedModelScope) {
-			rset = ((FragmentedModelScope) targetDataSet).getResources().get(0).getResourceSet();
-		}
-		if (targetDataSet instanceof IntermediateModelScope) {
-			((IntermediateModelScope) targetDataSet).getTargetDataSet();
-		}
+		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
 		SysML2CapellaUMLProfile.initProfiles(rset, getTargetParentFolder());
-
 		RootInitialMapping componentMapping = new RootInitialMapping(this, source_p, _mappingExecution);
 
 		_managerRules.add(componentMapping.getClass().getName(), componentMapping);
@@ -130,6 +124,15 @@ public class Capella2SysmlAlgo extends CapellaBridgeAlgo<Project> {
 
 	public String getTargetParentFolder() {
 		return _targetParentFolder;
+	}
+
+	public void setBridge(UMLBridge<Project, IEditableModelScope> mappingBridge) {
+		_mappingBridge = mappingBridge;
+
+	}
+
+	public UMLBridge<Project, IEditableModelScope> getMappingBridge() {
+		return _mappingBridge;
 	}
 
 }

@@ -10,8 +10,9 @@
 package com.artal.capella.mapping.capella2sysml.rules;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
-import org.eclipse.emf.diffmerge.impl.scopes.FragmentedModelScope;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Abstraction;
 import org.eclipse.uml2.uml.Activity;
@@ -27,6 +28,7 @@ import org.polarsys.capella.core.data.fa.ComponentFunctionalAllocation;
 import org.polarsys.capella.core.data.la.LogicalComponent;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
+import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile;
@@ -55,35 +57,35 @@ public class ComponentBlockMapping extends AbstractMapping {
 	 */
 	@Override
 	public void computeMapping() {
-		LogicalComponent logicalContext = Sysml2CapellaUtils.getLogicalSystemRoot(_source);
 
-		Package structurePkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "STRUCTURE_PKG");
-		Package partsPkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "PARTS");
-		Class product = structurePkg.createOwnedClass("Product", false);
-
-		ResourceSet rset = null;
-		Object targetDataSet = _mappingExecution.getTargetDataSet();
-		if (targetDataSet instanceof FragmentedModelScope) {
-			rset = ((FragmentedModelScope) targetDataSet).getResources().get(0).getResourceSet();
-		}
+		IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
+		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
 		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
 		Stereotype ownedStereotype = profile.getNestedPackage("Blocks").getOwnedStereotype("Block");
-		product.applyStereotype(ownedStereotype);
+
+		LogicalComponent logicalContext = Sysml2CapellaUtils.getLogicalSystemRoot(_source);
+		Package structurePkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "STRUCTURE_PKG");
+		Package partsPkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "PARTS");
+
+		Class product = structurePkg.createOwnedClass("Product", false);
 		Sysml2CapellaUtils.trace(this, _source.eResource(), logicalContext, product, "PRODUCT_BLOCK");
 
+		EObject applyStereotype = product.applyStereotype(ownedStereotype);
+		Sysml2CapellaUtils.trace(this, _source.eResource(), logicalContext + "PRODUCT_BLOCK", applyStereotype,
+				"PRODUCT_BLOCK_STEREO");
+
+		// getAlgo().getTransientItems().add(applyStereotype);
 		transformComponents(logicalContext, partsPkg, ownedStereotype);
 	}
 
 	public void transformComponents(LogicalComponent parent, Element pkgParent, Stereotype stereotype) {
-		ResourceSet rset = null;
-		Object targetDataSet = _mappingExecution.getTargetDataSet();
-		if (targetDataSet instanceof FragmentedModelScope) {
-			rset = ((FragmentedModelScope) targetDataSet).getResources().get(0).getResourceSet();
-		}
+		IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
+		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
 		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
 		Stereotype traceStereotype = profile.getNestedPackage("Allocations").getOwnedStereotype("Allocate");
-		EList<LogicalComponent> ownedLogicalComponents = parent.getOwnedLogicalComponents();
+
 		Package behaviorPkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "BEHAVIOR_PKG");
+		EList<LogicalComponent> ownedLogicalComponents = parent.getOwnedLogicalComponents();
 		for (LogicalComponent logicalComponent : ownedLogicalComponents) {
 			Class class1 = UMLFactory.eINSTANCE.createClass();
 			class1.setName(logicalComponent.getName());
@@ -91,8 +93,11 @@ public class ComponentBlockMapping extends AbstractMapping {
 			if (pkgParent instanceof Package) {
 				((Package) pkgParent).getPackagedElements().add(class1);
 			}
-			class1.applyStereotype(stereotype);
+			EObject applyStereotype = class1.applyStereotype(stereotype);
+			Sysml2CapellaUtils.trace(this, _source.eResource(), logicalComponent + "_BLOCK_STEREO", applyStereotype,
+					"_BLOCK_STEREO");
 			Sysml2CapellaUtils.trace(this, _source.eResource(), logicalComponent, class1, "_BLOCK");
+			// getAlgo().getTransientItems().add(applyStereotype);
 
 			EList<ComponentFunctionalAllocation> ownedFunctionalAllocation = logicalComponent
 					.getOwnedFunctionalAllocation();
@@ -118,6 +123,11 @@ public class ComponentBlockMapping extends AbstractMapping {
 			transformComponents(logicalComponent, pkgParent, stereotype);
 
 		}
+	}
+
+	@Override
+	public Capella2SysmlAlgo getAlgo() {
+		return (Capella2SysmlAlgo) super.getAlgo();
 	}
 
 }

@@ -10,8 +10,8 @@
 package com.artal.capella.mapping.capella2sysml.rules;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
-import org.eclipse.emf.diffmerge.impl.scopes.FragmentedModelScope;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Package;
@@ -54,11 +54,8 @@ public class ExchangeItemMapping extends AbstractMapping {
 		DataPkg dataPkgRoot = Sysml2CapellaUtils.getDataPkgRoot(_source);
 		Package paramPkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "PARAMETRIC_PKG");
 		EList<ExchangeItem> ownedExchangeItems = dataPkgRoot.getOwnedExchangeItems();
-		Object targetDataSet = _mappingExecution.getTargetDataSet();
-		ResourceSet rset = null;
-		if (targetDataSet instanceof FragmentedModelScope) {
-			rset = ((FragmentedModelScope) targetDataSet).getResources().get(0).getResourceSet();
-		}
+		IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
+		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
 		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
 		Stereotype ownedStereotype = profile.getNestedPackage("Ports&Flows").getOwnedStereotype("InterfaceBlock");
 		for (ExchangeItem exchangeItem : ownedExchangeItems) {

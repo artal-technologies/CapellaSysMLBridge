@@ -180,7 +180,6 @@ public class SysML2CapellaUMLProfile {
 	 */
 	private static Profile loadProfiles(ResourceSet rset, String uri) {
 		URI pURI = URI.createURI(uri, false);
-		// URI relative = URI.createFileURI(pURI.lastSegment());
 		Resource resource = rset.getResource(pURI, true);
 		Profile umlStdProfile = (Profile) resource.getContents().get(0);
 		UMLProfilesUtil.registerProfile(rset, umlStdProfile);

@@ -21,10 +21,10 @@ import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Activity;
 import org.eclipse.uml2.uml.ActivityEdge;
-import org.eclipse.uml2.uml.ActivityNode;
 import org.eclipse.uml2.uml.ActivityParameterNode;
 import org.eclipse.uml2.uml.Behavior;
 import org.eclipse.uml2.uml.CallBehaviorAction;
+import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
 import org.eclipse.uml2.uml.Pin;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.polarsys.capella.core.data.capellamodeller.Project;
@@ -47,12 +47,10 @@ import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
 public class FunctionalExchangesMapping extends AbstractMapping {
 
 	private Project _source;
-	private IMappingExecution _mappingExecution;
 
 	public FunctionalExchangesMapping(CapellaBridgeAlgo<?> algo, Project source, IMappingExecution mappingExecution) {
 		super(algo);
 		_source = source;
-		_mappingExecution = mappingExecution;
 
 	}
 
@@ -61,7 +59,6 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 		LogicalFunction logicalFunctionRoot = Sysml2CapellaUtils.getLogicalFunctionRoot(_source);
 
 		transformFunctionalExchange(logicalFunctionRoot);
-
 	}
 
 	private void transformFunctionalExchange(LogicalFunction logicalFunction) {
@@ -86,6 +83,12 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 				objectFlow.setSource((Pin) getPort(umlSourcePin, Pin.class));
 				objectFlow.setTarget((Pin) getPort(umlTargetPin, Pin.class));
 
+				LiteralUnlimitedNatural createWeight = (LiteralUnlimitedNatural) objectFlow.createWeight("", null,
+						UMLPackage.Literals.LITERAL_UNLIMITED_NATURAL);
+				createWeight.setValue(1);
+				Sysml2CapellaUtils.trace(this, _source.eResource(),
+						Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT", objectFlow,
+						"WEIGHT_");
 				Sysml2CapellaUtils.trace(this, _source.eResource(), functionalExchange, objectFlow, "OBJECT_FLOW_");
 
 			} else {
@@ -105,7 +108,12 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 				ActivityEdge objectFlow = umlParent.createEdge(functionalExchange.getName(),
 						UMLPackage.Literals.OBJECT_FLOW);
 				Sysml2CapellaUtils.trace(this, _source.eResource(), functionalExchange, objectFlow, "OBJECTFLOW_");
-
+				LiteralUnlimitedNatural createWeight = (LiteralUnlimitedNatural) objectFlow.createWeight("", null,
+						UMLPackage.Literals.LITERAL_UNLIMITED_NATURAL);
+				createWeight.setValue(1);
+				Sysml2CapellaUtils.trace(this, _source.eResource(),
+						Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT", objectFlow,
+						"WEIGHT_");
 				objectFlow.setSource(umlSource);
 				objectFlow.setTarget(umlTarget);
 			}
@@ -123,18 +131,14 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 	private Pin createIntermediatePort(FunctionPort capellaPort, Map<Pin, ActivityParameterNode> map,
 			LogicalFunction common, Queue<LogicalFunction> ancestors) {
 		LogicalFunction parent;
-		LogicalFunction child = (LogicalFunction) capellaPort.eContainer();
 		boolean isFoundCommon = false;
 
 		Pin umlPin = (Pin) getPort(map, Pin.class);
-		ActivityParameterNode umlApn = (ActivityParameterNode) getPort(map, ActivityParameterNode.class);
 
 		while ((parent = ancestors.poll()) != null && !isFoundCommon) {
 			if (common.equals(parent)) {
 				isFoundCommon = true;
 			}
-			CallBehaviorAction callChild = (CallBehaviorAction) MappingRulesManager
-					.getCapellaObjectFromAllRules(Sysml2CapellaUtils.getSysMLID(_source.eResource(), child));
 			CallBehaviorAction callParent = (CallBehaviorAction) MappingRulesManager
 					.getCapellaObjectFromAllRules(Sysml2CapellaUtils.getSysMLID(_source.eResource(), parent));
 			if (!isFoundCommon) {
@@ -143,6 +147,7 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 					ActivityEdge objectFlow = ((Activity) behavior).createEdge("", UMLPackage.Literals.OBJECT_FLOW);
 					// Sysml2CapellaUtils.trace(this, _source.eResource(),
 					// functionalExchange, objectFlow, "OBJECT_FLOW_");
+
 					objectFlow.setSource(umlPin);
 
 					ActivityParameterNode mirrorApn = null;
@@ -159,8 +164,14 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 					}
 					objectFlow.setTarget(mirrorApn);
 
+					LiteralUnlimitedNatural createWeight = (LiteralUnlimitedNatural) objectFlow.createWeight("", null,
+							UMLPackage.Literals.LITERAL_UNLIMITED_NATURAL);
+					createWeight.setValue(1);
+					Sysml2CapellaUtils.trace(this, _source.eResource(),
+							Sysml2CapellaUtils.getSysMLID(_source.eResource(), behavior) + "WEIGHT", objectFlow,
+							"WEIGHT_");
+
 					umlPin = mirrorPin;
-					umlApn = mirrorApn;
 
 				}
 			}

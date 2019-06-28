@@ -21,8 +21,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.UMLPackage;
@@ -37,7 +35,9 @@ import com.artal.capella.mapping.cheat.TraceCheat;
  */
 public class UMLBridgeJob<SD> extends BridgeJob<SD> {
 
-	CapellaBridgeAlgo<SD> _algo;
+	UMLBridgeAlgo<SD> _algo;
+
+	UMLBridge<SD, IEditableModelScope> _mappingBridge;
 
 	/**
 	 * Constructor
@@ -45,7 +45,7 @@ public class UMLBridgeJob<SD> extends BridgeJob<SD> {
 	 * @param context_p
 	 *            a non-null physical architecture
 	 */
-	public UMLBridgeJob(SD context_p, URI targetURI_p, CapellaBridgeAlgo<SD> algo) {
+	public UMLBridgeJob(SD context_p, URI targetURI_p, UMLBridgeAlgo<SD> algo) {
 		super("UML Bridge Job", context_p, targetURI_p);
 		setProperty(IProgressConstants.PROPERTY_IN_DIALOG, true);
 		_algo = algo;
@@ -71,19 +71,17 @@ public class UMLBridgeJob<SD> extends BridgeJob<SD> {
 	 */
 	@Override
 	protected EMFInteractiveBridge<SD, IEditableModelScope> getBridge() {
-		UMLBridge<SD, IEditableModelScope> mappingBridge = new UMLBridge<SD, IEditableModelScope>(_algo) {
-			@Override
-			public Profile loadSysMLProfile() throws Exception {
-				// TODO Auto-generated method stub
-				return loadSysMLProfileForBridge();
-			}
-		};
-		mappingBridge.registerRules();
+		createMappingBridge();
+		_mappingBridge.registerRules();
 		// Make the mapping bridge incremental
-		GMFDiffPolicy diffPolicy = new GMFDiffPolicy();
+		GMFDiffPolicy diffPolicy = new GMFDiffPolicy() {
+			public boolean coverOutOfScopeValue(EObject element_p, org.eclipse.emf.ecore.EReference reference_p) {
+				return false;
+			};
+		};
 		diffPolicy.setIgnoreOrders(true);
 		EMFInteractiveBridge<SD, IEditableModelScope> result = new EMFInteractiveBridge<SD, IEditableModelScope>(
-				mappingBridge, diffPolicy, new UMLMergePolicy(), null) {
+				_mappingBridge, diffPolicy, new UMLMergePolicy(), null) {
 
 			/**
 			 * @see org.eclipse.emf.diffmerge.bridge.incremental.EMFIncrementalBridge#createTrace()
@@ -116,8 +114,22 @@ public class UMLBridgeJob<SD> extends BridgeJob<SD> {
 		return result;
 	}
 
+	public UMLBridge<SD, IEditableModelScope> createMappingBridge() {
+		_mappingBridge = new UMLBridge<SD, IEditableModelScope>(_algo) {
+			@Override
+			public Profile loadSysMLProfile() throws Exception {
+				return loadSysMLProfileForBridge();
+			}
+		};
+		return _mappingBridge;
+	}
+
 	public CapellaBridgeAlgo<SD> getAlgo() {
 		return _algo;
+	}
+
+	public UMLBridge<SD, IEditableModelScope> getMappingBridge() {
+		return _mappingBridge;
 	}
 
 }
