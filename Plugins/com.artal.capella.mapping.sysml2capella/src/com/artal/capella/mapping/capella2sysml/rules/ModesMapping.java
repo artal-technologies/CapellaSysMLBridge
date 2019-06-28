@@ -31,6 +31,7 @@ import org.polarsys.capella.core.data.capellacommon.State;
 import org.polarsys.capella.core.data.capellacommon.TerminatePseudoState;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
+import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
@@ -41,13 +42,29 @@ import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
  */
 public class ModesMapping extends AbstractMapping {
 
+	/**
+	 * The {@link Region} source
+	 */
 	private Region _source;
+	/**
+	 * The {@link IMappingExecution} allows to get the mapping data.
+	 */
 	private IMappingExecution _mappingExecution;
 	/**
 	 * A {@link MappingRulesManager} allowing to manage the sub rules.
 	 */
 	MappingRulesManager _manager = new MappingRulesManager();
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param algo
+	 *            the {@link Capella2SysmlAlgo} algo.
+	 * @param source
+	 *            the {@link Region} source.
+	 * @param mappingExecution
+	 *            the {@link IMappingExecution} allows to get the mapping data.
+	 */
 	public ModesMapping(CapellaBridgeAlgo<?> algo, Region source, IMappingExecution mappingExecution) {
 		super(algo);
 		_source = source;
@@ -68,6 +85,11 @@ public class ModesMapping extends AbstractMapping {
 		_manager.executeRules();
 	}
 
+	/**
+	 * Transform {@link AbstractState} to {@link Vertex}.
+	 * 
+	 * @param abstractState
+	 */
 	private void transformAbstractState(AbstractState abstractState) {
 		Vertex vertex = null;
 		if (abstractState instanceof Pseudostate) {
@@ -96,7 +118,10 @@ public class ModesMapping extends AbstractMapping {
 	}
 
 	/**
+	 * Transform {@link AbstractState} to {@link org.eclipse.uml2.uml.State}.
+	 * 
 	 * @param abstractState
+	 *            the {@link AbstractState} to transform.
 	 */
 	private org.eclipse.uml2.uml.State transformState(AbstractState abstractState) {
 		org.eclipse.uml2.uml.State state = null;
@@ -111,7 +136,11 @@ public class ModesMapping extends AbstractMapping {
 	}
 
 	/**
+	 * Transform the {@link Pseudostate} to
+	 * {@link org.eclipse.uml2.uml.Pseudostate}.
+	 * 
 	 * @param abstractState
+	 *            the {@link Pseudostate} to transform.
 	 */
 	private org.eclipse.uml2.uml.Pseudostate transformPseudostate(Pseudostate abstractState) {
 		org.eclipse.uml2.uml.Pseudostate umlPseudoState = UMLFactory.eINSTANCE.createPseudostate();
@@ -122,8 +151,11 @@ public class ModesMapping extends AbstractMapping {
 	}
 
 	/**
+	 * Get the pseudo kind.
+	 * 
 	 * @param abstractState
-	 * @return
+	 *            the {@link Pseudostate} to check.
+	 * @return the {@link PseudostateKind}.
 	 */
 	private PseudostateKind getPseudoKind(Pseudostate abstractState) {
 		PseudostateKind kind = null;

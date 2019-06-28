@@ -33,9 +33,11 @@ import org.polarsys.capella.core.data.fa.FunctionInputPort;
 import org.polarsys.capella.core.data.fa.FunctionOutputPort;
 import org.polarsys.capella.core.data.fa.FunctionPort;
 import org.polarsys.capella.core.data.fa.FunctionalExchange;
+import org.polarsys.capella.core.data.information.Port;
 import org.polarsys.capella.core.data.la.LogicalFunction;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
+import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
@@ -46,8 +48,21 @@ import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
  */
 public class FunctionalExchangesMapping extends AbstractMapping {
 
+	/**
+	 * The Capella source element.
+	 */
 	private Project _source;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param algo
+	 *            the {@link Capella2SysmlAlgo} algo.
+	 * @param source
+	 *            the Project capella source
+	 * @param mappingExecution
+	 *            the {@link IMappingExecution} allows to get the mapping data.
+	 */
 	public FunctionalExchangesMapping(CapellaBridgeAlgo<?> algo, Project source, IMappingExecution mappingExecution) {
 		super(algo);
 		_source = source;
@@ -57,69 +72,50 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 	@Override
 	public void computeMapping() {
 		LogicalFunction logicalFunctionRoot = Sysml2CapellaUtils.getLogicalFunctionRoot(_source);
-
 		transformFunctionalExchange(logicalFunctionRoot);
 	}
 
+	/**
+	 * Transform all {@link FunctionalExchange} from {@link LogicalFunction} to
+	 * {@link ActivityEdge}.
+	 * 
+	 * @param logicalFunction
+	 *            the container {@link LogicalFunction}.
+	 */
 	private void transformFunctionalExchange(LogicalFunction logicalFunction) {
 		EList<FunctionalExchange> ownedFunctionalExchanges = logicalFunction.getOwnedFunctionalExchanges();
 		for (FunctionalExchange functionalExchange : ownedFunctionalExchanges) {
 
+			// Get the acitivy mapped with the LogicalFunction.
 			Activity activity = (Activity) MappingRulesManager.getCapellaObjectFromAllRules(logicalFunction);
 			if (activity == null) {
 				return;
 			}
+
+			// get the capella source and target FunctionPort.
 			FunctionPort source = (FunctionPort) functionalExchange.getSource();
 			FunctionPort target = (FunctionPort) functionalExchange.getTarget();
 
+			// get the capella source and target parent LogicalFunction.
 			LogicalFunction sourceParent = (LogicalFunction) source.eContainer();
 			LogicalFunction targetParent = (LogicalFunction) target.eContainer();
+
+			// transform the ports and get the mapping between Pin and
+			// ActivityParameterNode.
 			Map<Pin, ActivityParameterNode> umlSourcePin = transformPort(source, sourceParent);
 			Map<Pin, ActivityParameterNode> umlTargetPin = transformPort(target, targetParent);
+			// if parents are same.
 			if (sourceParent.eContainer().equals(targetParent.eContainer())) {
-				ActivityEdge objectFlow = activity.createEdge(functionalExchange.getName(),
-						UMLPackage.Literals.OBJECT_FLOW);
-
-				objectFlow.setSource((Pin) getPort(umlSourcePin, Pin.class));
-				objectFlow.setTarget((Pin) getPort(umlTargetPin, Pin.class));
-
-				LiteralUnlimitedNatural createWeight = (LiteralUnlimitedNatural) objectFlow.createWeight("", null,
-						UMLPackage.Literals.LITERAL_UNLIMITED_NATURAL);
-				createWeight.setValue(1);
-				Sysml2CapellaUtils.trace(this, _source.eResource(),
-						Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT", objectFlow,
-						"WEIGHT_");
-				Sysml2CapellaUtils.trace(this, _source.eResource(), functionalExchange, objectFlow, "OBJECT_FLOW_");
+				transformFunctionalExchangeWithCommonParent(functionalExchange, activity, umlSourcePin, umlTargetPin);
 
 			} else {
-				Queue<LogicalFunction> sourceAncestors = getAncestors(sourceParent);
-				Queue<LogicalFunction> targetAnceestors = getAncestors(targetParent);
-				LogicalFunction common = null;
-				for (LogicalFunction targetAncestor : targetAnceestors) {
-					if (sourceAncestors.contains(targetAncestor)) {
-						common = targetAncestor;
-						break;
-					}
-				}
-				Pin umlSource = createIntermediatePort(source, umlSourcePin, common, sourceAncestors);
-				Pin umlTarget = createIntermediatePort(target, umlTargetPin, common, targetAnceestors);
-
-				Activity umlParent = (Activity) MappingRulesManager.getCapellaObjectFromAllRules(common);
-				ActivityEdge objectFlow = umlParent.createEdge(functionalExchange.getName(),
-						UMLPackage.Literals.OBJECT_FLOW);
-				Sysml2CapellaUtils.trace(this, _source.eResource(), functionalExchange, objectFlow, "OBJECTFLOW_");
-				LiteralUnlimitedNatural createWeight = (LiteralUnlimitedNatural) objectFlow.createWeight("", null,
-						UMLPackage.Literals.LITERAL_UNLIMITED_NATURAL);
-				createWeight.setValue(1);
-				Sysml2CapellaUtils.trace(this, _source.eResource(),
-						Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT", objectFlow,
-						"WEIGHT_");
-				objectFlow.setSource(umlSource);
-				objectFlow.setTarget(umlTarget);
+				transformFunctionalExchangeWithDiffParent(functionalExchange, source, target, sourceParent,
+						targetParent, umlSourcePin, umlTargetPin);
 			}
 		}
-		EList<AbstractFunction> ownedFunctions = logicalFunction.getOwnedFunctions();
 
+		// transfurm sub Logical functions.
+		EList<AbstractFunction> ownedFunctions = logicalFunction.getOwnedFunctions();
 		for (AbstractFunction abstractFunction : ownedFunctions) {
 			if (abstractFunction instanceof LogicalFunction) {
 				transformFunctionalExchange((LogicalFunction) abstractFunction);
@@ -128,6 +124,116 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 
 	}
 
+	/**
+	 * Transform {@link FunctionalExchange} where the ports have not the same
+	 * parent.
+	 * 
+	 * @param functionalExchange
+	 *            the {@link FunctionalExchange} to transform
+	 * @param source
+	 *            the {@link FunctionPort} source.
+	 * @param target
+	 *            the {@link FunctionPort} target.
+	 * @param sourceParent
+	 *            the parent {@link LogicalFunction} source
+	 * @param targetParent
+	 *            the parent {@link LogicalFunction} target
+	 * @param umlSourcePin
+	 *            the uml source {@link Pin}
+	 * @param umlTargetPin
+	 *            the uml target {@link Pin}
+	 */
+	private void transformFunctionalExchangeWithDiffParent(FunctionalExchange functionalExchange, FunctionPort source,
+			FunctionPort target, LogicalFunction sourceParent, LogicalFunction targetParent,
+			Map<Pin, ActivityParameterNode> umlSourcePin, Map<Pin, ActivityParameterNode> umlTargetPin) {
+		// get the ancestors of sourceParent and targetParent LogicalFunctions.
+		Queue<LogicalFunction> sourceAncestors = getAncestors(sourceParent);
+		Queue<LogicalFunction> targetAnceestors = getAncestors(targetParent);
+
+		// get the common parents.
+		LogicalFunction common = getCommonParent(sourceAncestors, targetAnceestors);
+		// create intermerdiate ports.
+		Pin umlSource = createIntermediatePort(source, umlSourcePin, common, sourceAncestors);
+		Pin umlTarget = createIntermediatePort(target, umlTargetPin, common, targetAnceestors);
+
+		Activity umlParent = (Activity) MappingRulesManager.getCapellaObjectFromAllRules(common);
+
+		// create ObjectFlow
+		ActivityEdge objectFlow = umlParent.createEdge(functionalExchange.getName(), UMLPackage.Literals.OBJECT_FLOW);
+		Sysml2CapellaUtils.trace(this, _source.eResource(), functionalExchange, objectFlow, "OBJECTFLOW_");
+		LiteralUnlimitedNatural createWeight = (LiteralUnlimitedNatural) objectFlow.createWeight("", null,
+				UMLPackage.Literals.LITERAL_UNLIMITED_NATURAL);
+		createWeight.setValue(1);
+		Sysml2CapellaUtils.trace(this, _source.eResource(),
+				Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT", objectFlow,
+				"WEIGHT_");
+		objectFlow.setSource(umlSource);
+		objectFlow.setTarget(umlTarget);
+	}
+
+	/**
+	 * Get the common parent {@link LogicalFunction}
+	 * 
+	 * @param sourceAncestors
+	 *            all the ancestors {@link LogicalFunction} of the source port.
+	 * @param targetAnceestors
+	 *            all the ancestors {@link LogicalFunction} of the target port.
+	 * @return
+	 */
+	private LogicalFunction getCommonParent(Queue<LogicalFunction> sourceAncestors,
+			Queue<LogicalFunction> targetAnceestors) {
+		LogicalFunction common = null;
+		for (LogicalFunction targetAncestor : targetAnceestors) {
+			if (sourceAncestors.contains(targetAncestor)) {
+				common = targetAncestor;
+				break;
+			}
+		}
+		return common;
+	}
+
+	/**
+	 * Transform {@link FunctionalExchange} if the ports have the same parent.
+	 * 
+	 * @param functionalExchange
+	 *            the {@link FunctionalExchange} to transform
+	 * @param activity
+	 *            the uml {@link Activity} is mapped with the parent
+	 *            LogicalFunction
+	 * @param umlSourcePin
+	 *            the uml source {@link Pin}
+	 * @param umlTargetPin
+	 *            the uml target {@link Pin}
+	 */
+	private void transformFunctionalExchangeWithCommonParent(FunctionalExchange functionalExchange, Activity activity,
+			Map<Pin, ActivityParameterNode> umlSourcePin, Map<Pin, ActivityParameterNode> umlTargetPin) {
+		ActivityEdge objectFlow = activity.createEdge(functionalExchange.getName(), UMLPackage.Literals.OBJECT_FLOW);
+
+		objectFlow.setSource((Pin) getPort(umlSourcePin, Pin.class));
+		objectFlow.setTarget((Pin) getPort(umlTargetPin, Pin.class));
+
+		LiteralUnlimitedNatural createWeight = (LiteralUnlimitedNatural) objectFlow.createWeight("", null,
+				UMLPackage.Literals.LITERAL_UNLIMITED_NATURAL);
+		createWeight.setValue(1);
+		Sysml2CapellaUtils.trace(this, _source.eResource(),
+				Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT", objectFlow,
+				"WEIGHT_");
+		Sysml2CapellaUtils.trace(this, _source.eResource(), functionalExchange, objectFlow, "OBJECT_FLOW_");
+	}
+
+	/**
+	 * Create the intermediate port and ObjectFlow.
+	 * 
+	 * @param capellaPort
+	 *            the capella reference port.
+	 * @param map
+	 *            the {@link Map} {@link Pin}, {@link ActivityParameterNode}
+	 * @param common
+	 *            the common parent
+	 * @param ancestors
+	 *            the ancestor of the ref {@link FunctionPort}.
+	 * @return the Intermediate {@link Pin}.
+	 */
 	private Pin createIntermediatePort(FunctionPort capellaPort, Map<Pin, ActivityParameterNode> map,
 			LogicalFunction common, Queue<LogicalFunction> ancestors) {
 		LogicalFunction parent;
@@ -135,21 +241,29 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 
 		Pin umlPin = (Pin) getPort(map, Pin.class);
 
+		// while the common parent is not found
 		while ((parent = ancestors.poll()) != null && !isFoundCommon) {
+			// if common parent found, exit of the while loop.
 			if (common.equals(parent)) {
 				isFoundCommon = true;
 			}
+			// get the callbehavior element mapped with the parent
+			// LogicalFunction.
 			CallBehaviorAction callParent = (CallBehaviorAction) MappingRulesManager
 					.getCapellaObjectFromAllRules(Sysml2CapellaUtils.getSysMLID(_source.eResource(), parent));
+			// if the common parent is not found.
 			if (!isFoundCommon) {
+				// get the activity from call behavior.
 				Behavior behavior = callParent.getBehavior();
 				if (behavior instanceof Activity) {
+					// create intermediate ObjecFlow.
 					ActivityEdge objectFlow = ((Activity) behavior).createEdge("", UMLPackage.Literals.OBJECT_FLOW);
 					// Sysml2CapellaUtils.trace(this, _source.eResource(),
 					// functionalExchange, objectFlow, "OBJECT_FLOW_");
 
 					objectFlow.setSource(umlPin);
 
+					// Create intermediate port.
 					ActivityParameterNode mirrorApn = null;
 					Pin mirrorPin = null;
 					if (capellaPort instanceof FunctionOutputPort) {
@@ -162,6 +276,8 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 						mirrorApn = (ActivityParameterNode) ((Activity) behavior).createOwnedNode("",
 								UMLPackage.Literals.ACTIVITY_PARAMETER_NODE);
 					}
+					// connect intermediate port at the intermediate object
+					// flow.
 					objectFlow.setTarget(mirrorApn);
 
 					LiteralUnlimitedNatural createWeight = (LiteralUnlimitedNatural) objectFlow.createWeight("", null,
@@ -180,6 +296,16 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 		return umlPin;
 	}
 
+	/**
+	 * Transform {@link FunctionPort} to {@link ActivityParameterNode}and
+	 * {@link Pin}.
+	 * 
+	 * @param functionPort
+	 *            the {@link FunctionPort} to transform
+	 * @param parent
+	 *            the parent LogicalFunction.
+	 * @return the {@link Map}< {@link Pin}, {@link ActivityParameterNode}>
+	 */
 	private Map<Pin, ActivityParameterNode> transformPort(FunctionPort functionPort, LogicalFunction parent) {
 		CallBehaviorAction umlParent = (CallBehaviorAction) MappingRulesManager
 				.getCapellaObjectFromAllRules(Sysml2CapellaUtils.getSysMLID(_source.eResource(), parent));
@@ -207,6 +333,13 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 		return results;
 	}
 
+	/**
+	 * get all ancestors {@link LogicalFunction} of a LogicalFunction.
+	 * 
+	 * @param lf
+	 *            the child LogicalFunction
+	 * @return {@link Queue} of LogicalFunction.
+	 */
 	private Queue<LogicalFunction> getAncestors(LogicalFunction lf) {
 		Queue<LogicalFunction> queue = new LinkedList<>();
 		EObject parent = lf;
@@ -221,6 +354,16 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 
 	}
 
+	/**
+	 * Get the {@link Pin} or the {@link ActivityParameterNode} from the
+	 * {@link Map}
+	 * 
+	 * @param map
+	 *            {@link Map} of {@link Pin} and {@link ActivityParameterNode}.
+	 * @param clazz
+	 *            the type to get.
+	 * @return {@link Pin} or {@link ActivityParameterNode}.
+	 */
 	private EObject getPort(Map<Pin, ActivityParameterNode> map, Class<?> clazz) {
 		Set<Entry<Pin, ActivityParameterNode>> entrySet = map.entrySet();
 		Entry<Pin, ActivityParameterNode> next = entrySet.iterator().next();

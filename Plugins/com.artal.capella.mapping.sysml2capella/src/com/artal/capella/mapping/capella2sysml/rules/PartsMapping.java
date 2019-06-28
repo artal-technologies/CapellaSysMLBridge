@@ -24,6 +24,7 @@ import org.polarsys.capella.core.data.cs.Part;
 import org.polarsys.capella.core.data.la.LogicalComponent;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
+import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile;
@@ -36,9 +37,25 @@ import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
  */
 public class PartsMapping extends AbstractMapping {
 
+	/**
+	 * The capella element source.
+	 */
 	private Project _source;
+	/**
+	 * The {@link IMappingExecution} allows to get the mapping data.
+	 */
 	private IMappingExecution _mappingExecution;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param algo
+	 *            the {@link Capella2SysmlAlgo} algo.
+	 * @param source
+	 *            the {@link Project} source.
+	 * @param mappingExecution
+	 *            the {@link IMappingExecution} allows to get the mapping data.
+	 */
 	public PartsMapping(CapellaBridgeAlgo<?> algo, Project source, IMappingExecution mappingExecution) {
 		super(algo);
 		_source = source;
@@ -65,8 +82,12 @@ public class PartsMapping extends AbstractMapping {
 	}
 
 	/**
+	 * Transform {@link Part} to {@link Property} with PartProperty stereotype.
+	 * 
 	 * @param lc
+	 *            (the LogicalComponent with part to transform
 	 * @param ownedStereotype
+	 *            the PartProperty stereotype.
 	 */
 	private void transformParts(LogicalComponent lc, Stereotype ownedStereotype) {
 		Class umlParent = (Class) MappingRulesManager.getCapellaObjectFromAllRules(lc);

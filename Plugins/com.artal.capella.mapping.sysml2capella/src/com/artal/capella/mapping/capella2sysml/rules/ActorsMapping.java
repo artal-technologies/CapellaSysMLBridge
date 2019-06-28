@@ -19,6 +19,7 @@ import org.polarsys.capella.core.data.la.LogicalActor;
 import org.polarsys.capella.core.data.la.LogicalActorPkg;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
+import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;;
@@ -29,15 +30,32 @@ import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;;
  */
 public class ActorsMapping extends AbstractMapping {
 
+	/**
+	 * The Capella element source.
+	 */
 	Project _source;
+	/**
+	 * the {@link IMappingExecution} allows to get the mapping data.
+	 */
 	IMappingExecution _mappingExecution;
 
+	/**
+	 * @param algo
+	 *            the {@link Capella2SysmlAlgo}
+	 * @param source_p
+	 *            the capella {@link Project} model.
+	 * @param mappingExecution
+	 *            the {@link IMappingExecution} allows to get the mapping data.
+	 */
 	public ActorsMapping(CapellaBridgeAlgo<?> algo, Project source_p, IMappingExecution mappingExecution) {
 		super(algo);
 		_source = source_p;
 		_mappingExecution = mappingExecution;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.artal.capella.mapping.rules.AbstractMapping#computeMapping()
+	 */
 	@Override
 	public void computeMapping() {
 

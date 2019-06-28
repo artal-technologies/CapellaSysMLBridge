@@ -22,6 +22,7 @@ import org.polarsys.capella.core.data.information.DataPkg;
 import org.polarsys.capella.core.data.information.ExchangeItem;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
+import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile;
@@ -34,10 +35,29 @@ import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
  */
 public class ExchangeItemMapping extends AbstractMapping {
 
+	/**
+	 * The capella source element.
+	 */
 	private Project _source;
+	/**
+	 * The {@link IMappingExecution} allows to get the mapping data.
+	 */
 	private IMappingExecution _mappingExecution;
+	/**
+	 * Allows to manage the sub rules.
+	 */
 	MappingRulesManager _manager = new MappingRulesManager();
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param algo
+	 *            the {@link Capella2SysmlAlgo} algo.
+	 * @param source
+	 *            the Capella source {@link Project}.
+	 * @param mappingExecution
+	 *            the {@link IMappingExecution} allows to get the mapping data.
+	 */
 	public ExchangeItemMapping(CapellaBridgeAlgo<?> algo, Project source, IMappingExecution mappingExecution) {
 		super(algo);
 		_source = source;
@@ -54,6 +74,24 @@ public class ExchangeItemMapping extends AbstractMapping {
 		DataPkg dataPkgRoot = Sysml2CapellaUtils.getDataPkgRoot(_source);
 		Package paramPkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "PARAMETRIC_PKG");
 		EList<ExchangeItem> ownedExchangeItems = dataPkgRoot.getOwnedExchangeItems();
+
+		// transform exchange items.
+		transformExchangeItems(paramPkg, ownedExchangeItems);
+
+		_manager.executeRules();
+
+	}
+
+	/**
+	 * Transform {@link ExchangeItem} to uml {@link Class} with InterfaceBlock
+	 * {@link Stereotype}.
+	 * 
+	 * @param paramPkg
+	 *            the package containing the InterfaceBlock classes.
+	 * @param ownedExchangeItems
+	 *            the {@link ExchangeItem} to transform.
+	 */
+	private void transformExchangeItems(Package paramPkg, EList<ExchangeItem> ownedExchangeItems) {
 		IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
 		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
 		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
@@ -64,13 +102,20 @@ public class ExchangeItemMapping extends AbstractMapping {
 			PropertiesMapping propertiesMapping = new PropertiesMapping(getAlgo(), exchangeItem, _mappingExecution);
 			_manager.add(propertiesMapping.getClass().getName()
 					+ Sysml2CapellaUtils.getSysMLID(_source.eResource(), exchangeItem), propertiesMapping);
-
 		}
-
-		_manager.executeRules();
-
 	}
 
+	/**
+	 * Transform {@link ExchangeItem} to {@link Class} with InterfaceBlock
+	 * {@link Stereotype}.
+	 * 
+	 * @param exchangeItem
+	 *            the {@link ExchangeItem} to transform
+	 * @param paramPkg
+	 *            the parent containing the InterfaceBlock {@link Class}
+	 * @param ownedStereotype
+	 *            the {@link Stereotype} to apply
+	 */
 	private void transformExchangeItem(ExchangeItem exchangeItem, Package paramPkg, Stereotype ownedStereotype) {
 
 		Class umlEI = paramPkg.createOwnedClass(exchangeItem.getName(), false);

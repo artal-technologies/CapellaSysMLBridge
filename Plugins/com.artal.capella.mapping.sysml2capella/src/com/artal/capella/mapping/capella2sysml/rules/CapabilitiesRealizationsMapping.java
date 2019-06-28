@@ -30,6 +30,7 @@ import org.polarsys.capella.core.data.la.CapabilityRealizationPkg;
 import org.polarsys.capella.core.data.la.LogicalActor;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
+import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
@@ -40,9 +41,25 @@ import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
  */
 public class CapabilitiesRealizationsMapping extends AbstractMapping {
 
+	/**
+	 * The capella source element.
+	 */
 	Project _source;
+	/**
+	 * the {@link IMappingExecution} allows to get the mapping data.
+	 */
 	IMappingExecution _mappingExecution;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param algo
+	 *            the {@link Capella2SysmlAlgo} algo.
+	 * @param source_p
+	 *            the capella {@link Project} model.
+	 * @param mappingExecution
+	 *            the {@link IMappingExecution} allows to get the mapping data.
+	 */
 	public CapabilitiesRealizationsMapping(CapellaBridgeAlgo<?> algo, Project source_p,
 			IMappingExecution mappingExecution) {
 		super(algo);
@@ -57,52 +74,79 @@ public class CapabilitiesRealizationsMapping extends AbstractMapping {
 	 */
 	@Override
 	public void computeMapping() {
-
-		CapabilityRealizationPkg capabilityRealizationPkg = (CapabilityRealizationPkg) Sysml2CapellaUtils
-				.getCapabilityRealizationPkg(_source);
-		EList<CapabilityRealization> ownedCapabilityRealizations = capabilityRealizationPkg
-				.getOwnedCapabilityRealizations();
+		// useCase package uml
 		Package useCasePkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "USECASES");
 
+		// list includes to fill
 		List<AbstractCapabilityInclude> includes = new ArrayList<>();
+		// list ActorCapabilityRealizationInvolvement to fill
 		List<ActorCapabilityRealizationInvolvement> acris = new ArrayList<>();
+
+		// get the Capella Capability Realization.
+		CapabilityRealizationPkg capabilityRealizationPkg = (CapabilityRealizationPkg) Sysml2CapellaUtils
+				.getCapabilityRealizationPkg(_source);
+
+		// transform CR and fill includes and acri lists.
+		EList<CapabilityRealization> ownedCapabilityRealizations = capabilityRealizationPkg
+				.getOwnedCapabilityRealizations();
+
 		for (CapabilityRealization capabilityRealization : ownedCapabilityRealizations) {
+			// fill lists
 			includes.addAll(capabilityRealization.getIncludes());
 			acris.addAll(capabilityRealization.getOwnedActorCapabilityRealizations());
 
+			// transform
 			transformCapabilityRealization(capabilityRealization, useCasePkg);
 		}
-		// includes
+
+		// transform includes
 		for (AbstractCapabilityInclude include : includes) {
 			transformIncludes(include);
 		}
 
 		// actor Capability Realization involvements
 		for (ActorCapabilityRealizationInvolvement acri : acris) {
-			CapabilityRealization cr = (CapabilityRealization) acri.eContainer();
-			InvolvedElement involved = acri.getInvolved();
-
-			if (involved instanceof LogicalActor) {
-				UseCase usecase = (UseCase) MappingRulesManager.getCapellaObjectFromAllRules(cr);
-				Actor umlActor = (Actor) MappingRulesManager.getCapellaObjectFromAllRules(involved);
-
-				Association association = UMLFactory.eINSTANCE.createAssociation();
-				useCasePkg.getPackagedElements().add(association);
-				Sysml2CapellaUtils.trace(this, _source.eResource(), acri, association, "_ASSOCIATION");
-
-				Property propertySource = association.createOwnedEnd("", usecase);
-				Property propertyTarget = association.createOwnedEnd("", umlActor);
-
-				Sysml2CapellaUtils.trace(this, _source.eResource(), acri + "SOURCE", propertySource, "SOURCE_END_");
-				Sysml2CapellaUtils.trace(this, _source.eResource(), acri + "TARGET", propertyTarget, "TARGET_END_");
-
-			}
+			transformActorCapabilityRealizationInvolvment(useCasePkg, acri);
 		}
 
 	}
 
 	/**
+	 * Transform {@link ActorCapabilityRealizationInvolvement} to
+	 * {@link Association}
+	 * 
+	 * @param useCasePkg
+	 *            the uml use case paclage container where to add Association.
+	 * @param acri
+	 *            {@link ActorCapabilityRealizationInvolvement} to transform.
+	 */
+	private void transformActorCapabilityRealizationInvolvment(Package useCasePkg,
+			ActorCapabilityRealizationInvolvement acri) {
+		CapabilityRealization cr = (CapabilityRealization) acri.eContainer();
+		InvolvedElement involved = acri.getInvolved();
+
+		if (involved instanceof LogicalActor) {
+			UseCase usecase = (UseCase) MappingRulesManager.getCapellaObjectFromAllRules(cr);
+			Actor umlActor = (Actor) MappingRulesManager.getCapellaObjectFromAllRules(involved);
+
+			Association association = UMLFactory.eINSTANCE.createAssociation();
+			useCasePkg.getPackagedElements().add(association);
+			Sysml2CapellaUtils.trace(this, _source.eResource(), acri, association, "_ASSOCIATION");
+
+			Property propertySource = association.createOwnedEnd("", usecase);
+			Property propertyTarget = association.createOwnedEnd("", umlActor);
+
+			Sysml2CapellaUtils.trace(this, _source.eResource(), acri + "SOURCE", propertySource, "SOURCE_END_");
+			Sysml2CapellaUtils.trace(this, _source.eResource(), acri + "TARGET", propertyTarget, "TARGET_END_");
+
+		}
+	}
+
+	/**
+	 * Transform {@link AbstractCapabilityInclude} to {@link Include}
+	 * 
 	 * @param include
+	 *            the {@link AbstractCapabilityInclude} to transform.
 	 */
 	private void transformIncludes(AbstractCapabilityInclude include) {
 		CapabilityRealization cr = (CapabilityRealization) include.eContainer();
@@ -115,6 +159,14 @@ public class CapabilitiesRealizationsMapping extends AbstractMapping {
 		Sysml2CapellaUtils.trace(this, _source.eResource(), include, umlInclude, "INCLUDE_");
 	}
 
+	/**
+	 * Transform {@link CapabilityRealization} to {@link UseCase}.
+	 * 
+	 * @param capabilityRealization
+	 *            {@link CapabilityRealization} to transform
+	 * @param useCasePkg
+	 *            use case package container where to add {@link UseCase}
+	 */
 	private void transformCapabilityRealization(CapabilityRealization capabilityRealization, Package useCasePkg) {
 		UseCase useCase = UMLFactory.eINSTANCE.createUseCase();
 		useCase.setName(capabilityRealization.getName());

@@ -113,9 +113,19 @@ public class RequierementsMapping extends AbstractMapping {
 			IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
 			_resourceSet = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
 		}
-		return _resourceSet;	
+		return _resourceSet;
 	}
 
+	/**
+	 * Tarnsform Refine element.
+	 * 
+	 * @param requirement
+	 *            the {@link Requirement} to transform
+	 * @param umlRequirement
+	 *            the transformed uml Class. (with Requirement stereotype)
+	 * @param ownedStereotype
+	 *            the refined by stereotype.
+	 */
 	private void transformRefineElement(Requirement requirement, Class umlRequirement, Stereotype ownedStereotype) {
 
 		Collection<Setting> referencingInverse = Sysml2CapellaUtils.getReferencingInverse(requirement);
@@ -147,6 +157,16 @@ public class RequierementsMapping extends AbstractMapping {
 
 	}
 
+	/**
+	 * Tarnsform Satisfy element.
+	 * 
+	 * @param requirement
+	 *            the {@link Requirement} to transform
+	 * @param umlRequirement
+	 *            the transformed uml Class. (with Requirement stereotype)
+	 * @param ownedStereotype
+	 *            the satisfy stereotype.
+	 */
 	private void transformSatisfyElement(Requirement requirement, Class umlRequirement, Stereotype ownedStereotype) {
 		EList<AbstractRelation> ownedRelations = requirement.getOwnedRelations();
 		for (AbstractRelation abstractRelation : ownedRelations) {
@@ -173,6 +193,12 @@ public class RequierementsMapping extends AbstractMapping {
 		}
 	}
 
+	/**
+	 * Get the first package parent.
+	 * 
+	 * @param
+	 * @return
+	 */
 	private Package getFirstPackageParent(EObject element) {
 		if (element instanceof Package) {
 			return (Package) element;
@@ -187,6 +213,8 @@ public class RequierementsMapping extends AbstractMapping {
 	}
 
 	/**
+	 * Get the {@link CapellaModule}
+	 * 
 	 * @return
 	 */
 	private CapellaModule getCapellaModule() {

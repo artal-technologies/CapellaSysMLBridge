@@ -17,9 +17,11 @@ import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Stereotype;
 import org.polarsys.capella.core.data.capellamodeller.Project;
+import org.polarsys.capella.core.data.information.Class;
 import org.polarsys.capella.core.data.information.DataPkg;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
+import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile;
@@ -32,10 +34,31 @@ import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
  */
 public class ClassesMapping extends AbstractMapping {
 
+	/**
+	 * The capella source element.
+	 */
 	private Project _source;
+
+	/**
+	 * The {@link IMappingExecution} allows to get the mapping data.
+	 */
 	private IMappingExecution _mappingExecution;
+
+	/**
+	 * A {@link MappingRulesManager} allowing to manage the sub rules.
+	 */
 	MappingRulesManager _manager = new MappingRulesManager();
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param algo
+	 *            the {@link Capella2SysmlAlgo} algo.
+	 * @param source
+	 *            the source Capella {@link Project}.
+	 * @param mappingExecution
+	 *            the {@link IMappingExecution} allows to get the mapping data.
+	 */
 	public ClassesMapping(CapellaBridgeAlgo<?> algo, Project source, IMappingExecution mappingExecution) {
 		super(algo);
 		_source = source;
@@ -50,9 +73,29 @@ public class ClassesMapping extends AbstractMapping {
 	@Override
 	public void computeMapping() {
 
-		DataPkg dataPkgRoot = Sysml2CapellaUtils.getDataPkgRoot(_source);
+		// the package containing the parametric data.
 		Package paramPkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "PARAMETRIC_PKG");
+		// the capella data package root containing the classes to transform.
+		DataPkg dataPkgRoot = Sysml2CapellaUtils.getDataPkgRoot(_source);
+		// transform.
+		transformClasses(paramPkg, dataPkgRoot);
 
+		// execute the sub rules.
+		_manager.executeRules();
+
+	}
+
+	/**
+	 * Transform {@link Class} to {@link org.eclipse.uml2.uml.Class}
+	 * 
+	 * @param paramPkg
+	 *            the uml package containing the parametric data to fill with
+	 *            transformed classes
+	 * @param dataPkgRoot
+	 *            the source package containing all the {@link Class} to
+	 *            transform.
+	 */
+	private void transformClasses(Package paramPkg, DataPkg dataPkgRoot) {
 		IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
 		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
 		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
@@ -67,10 +110,18 @@ public class ClassesMapping extends AbstractMapping {
 					propertiesMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(_source.eResource(), clazz),
 					propertiesMapping);
 		}
-		_manager.executeRules();
-
 	}
 
+	/**
+	 * Transform {@link Class} to {@link org.eclipse.uml2.uml.Class}.
+	 * 
+	 * @param clazz
+	 *            the Capella {@link Class} to transfom
+	 * @param paramPkg
+	 *            the uml package to fill with transformed classes.
+	 * @param ownedStereotype
+	 *            the stereotype to apply at transformed class.
+	 */
 	private void transformClass(org.polarsys.capella.core.data.information.Class clazz, Package paramPkg,
 			Stereotype ownedStereotype) {
 		org.eclipse.uml2.uml.Class umlClass = paramPkg.createOwnedClass(clazz.getName(), false);

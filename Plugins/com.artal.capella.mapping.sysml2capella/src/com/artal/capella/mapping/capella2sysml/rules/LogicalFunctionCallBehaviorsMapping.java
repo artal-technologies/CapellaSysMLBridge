@@ -20,6 +20,7 @@ import org.polarsys.capella.core.data.fa.AbstractFunction;
 import org.polarsys.capella.core.data.la.LogicalFunction;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
+import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
@@ -30,8 +31,21 @@ import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
  */
 public class LogicalFunctionCallBehaviorsMapping extends AbstractMapping {
 
+	/**
+	 * The {@link CapellaElement} source
+	 */
 	private CapellaElement _source;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param algo
+	 *            the {@link Capella2SysmlAlgo} algo.
+	 * @param source
+	 *            the CapellaElement source.
+	 * @param mappingExecution
+	 *            the {@link IMappingExecution} allows to get the mapping data.
+	 */
 	public LogicalFunctionCallBehaviorsMapping(CapellaBridgeAlgo<?> algo, CapellaElement source,
 			IMappingExecution mappingExecution) {
 		super(algo);
@@ -68,6 +82,14 @@ public class LogicalFunctionCallBehaviorsMapping extends AbstractMapping {
 
 	}
 
+	/**
+	 * Transform {@link LogicalFunction} to {@link CallBehaviorAction}.
+	 * 
+	 * @param lf
+	 *            the {@link LogicalFunction} to transform
+	 * @param functionArchAct
+	 *            the parent {@link Activity}.
+	 */
 	private void transformCallBehaviors(LogicalFunction lf, Activity functionArchAct) {
 		CallBehaviorAction callBehavior = UMLFactory.eINSTANCE.createCallBehaviorAction();
 		Activity activity = (Activity) MappingRulesManager.getCapellaObjectFromAllRules(lf);

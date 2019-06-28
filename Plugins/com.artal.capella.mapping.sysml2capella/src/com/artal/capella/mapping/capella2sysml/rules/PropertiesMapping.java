@@ -34,6 +34,7 @@ import org.polarsys.capella.core.data.information.datavalue.LiteralNumericValue;
 import org.polarsys.capella.core.data.information.datavalue.NumericValue;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
+import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile;
@@ -46,9 +47,26 @@ import com.artal.capella.mapping.sysml2capella.utils.Sysml2CapellaUtils;
  */
 public class PropertiesMapping extends AbstractMapping {
 
+	/**
+	 * The {@link FinalizableElement} source.
+	 */
 	private FinalizableElement _source;
+
+	/**
+	 * The {@link IMappingExecution} allows to get the mapping data.
+	 */
 	private IMappingExecution _mappingExecution;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param algo
+	 *            the {@link Capella2SysmlAlgo} algo.
+	 * @param source
+	 *            the {@link FinalizableElement} source.
+	 * @param mappingExecution
+	 *            the {@link IMappingExecution} allows to get the mapping data.
+	 */
 	public PropertiesMapping(CapellaBridgeAlgo<?> algo, FinalizableElement source, IMappingExecution mappingExecution) {
 		super(algo);
 		_source = source;
@@ -76,7 +94,10 @@ public class PropertiesMapping extends AbstractMapping {
 	}
 
 	/**
-	 * @return
+	 * Get all attributes of the source {@link Class} or source
+	 * {@link ExchangeItem}
+	 * 
+	 * @return list {@link NamedElement}
 	 */
 	private List<NamedElement> getAllAttributes() {
 		List<NamedElement> attributes = new ArrayList<>();
@@ -90,6 +111,12 @@ public class PropertiesMapping extends AbstractMapping {
 		return attributes;
 	}
 
+	/**
+	 * Transform {@link NamedElement} to {@link Property}.
+	 * 
+	 * @param namedElement
+	 * @param classParent
+	 */
 	private void transformProperty(NamedElement namedElement, org.eclipse.uml2.uml.Class classParent) {
 		Property property = UMLFactory.eINSTANCE.createProperty();
 		property.setName(namedElement.getName());
@@ -114,6 +141,12 @@ public class PropertiesMapping extends AbstractMapping {
 
 	}
 
+	/**
+	 * Transform Type.
+	 * 
+	 * @param namedElement
+	 * @param property
+	 */
 	private void transformType(NamedElement namedElement, Property property) {
 		AbstractType abstractType = ((AbstractTypedElement) namedElement).getAbstractType();
 		ResourceSet targetResourceSet = Sysml2CapellaUtils.getTargetResourceSet(_mappingExecution.getTargetDataSet());
@@ -122,7 +155,7 @@ public class PropertiesMapping extends AbstractMapping {
 		if (abstractType != null && Sysml2CapellaUtils.isPrimiriveType(abstractType)) {
 			Type ptype = Sysml2CapellaUtils.getPrimitiveType(abstractType, targetResourceSet);
 			property.setType(ptype);
-			
+
 		} else {
 			Object capellaObjectFromAllRules = MappingRulesManager.getCapellaObjectFromAllRules(abstractType);
 			if (capellaObjectFromAllRules instanceof Type) {
@@ -131,6 +164,10 @@ public class PropertiesMapping extends AbstractMapping {
 		}
 	}
 
+	/**
+	 * @param namedElement
+	 * @param property
+	 */
 	private void transformMultiplicity(NamedElement namedElement, Property property) {
 		NumericValue ownedMinCard = ((MultiplicityElement) namedElement).getOwnedMinCard();
 		if (ownedMinCard instanceof LiteralNumericValue) {
