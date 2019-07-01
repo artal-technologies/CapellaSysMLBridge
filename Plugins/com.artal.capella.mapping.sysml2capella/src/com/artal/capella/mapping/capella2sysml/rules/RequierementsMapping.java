@@ -21,6 +21,8 @@ import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Abstraction;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Stereotype;
@@ -146,6 +148,8 @@ public class RequierementsMapping extends AbstractMapping {
 					firstPackageParent.getPackagedElements().add(refineAbs);
 					Stereotype refineStereoType = getRequirementNestedPkg().getOwnedStereotype("Refine");
 					refineAbs.applyStereotype(refineStereoType);
+					refineAbs.getSuppliers().add(umlRequirement);
+					refineAbs.getClients().add((NamedElement) umlSource);
 					// refineAbs.setValue(refineStereoType,
 					// "base_DirectedRelationship", refineAbs);
 					Sysml2CapellaUtils.trace(this, _source.eResource(), eObject, refineAbs, "REFINE_");
@@ -185,6 +189,8 @@ public class RequierementsMapping extends AbstractMapping {
 				firstPackageParent.getPackagedElements().add(satisfyAbs);
 				Stereotype satisfyStereoType = getRequirementNestedPkg().getOwnedStereotype("Satisfy");
 				satisfyAbs.applyStereotype(satisfyStereoType);
+				satisfyAbs.getSuppliers().add(umlRequirement);
+				satisfyAbs.getClients().add((NamedElement) umlTarget);
 				// satisfyAbs.setValue(satisfyStereoType,
 				// "base_DirectedRelationship", satisfyAbs);
 				Sysml2CapellaUtils.trace(this, _source.eResource(), abstractRelation, satisfyAbs, "SATISFY_");
