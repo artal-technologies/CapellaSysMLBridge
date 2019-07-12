@@ -137,6 +137,7 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
+					<pomDependencies>consider</pomDependencies>
 				</configuration>
 			</plugin>
 		</plugins>
