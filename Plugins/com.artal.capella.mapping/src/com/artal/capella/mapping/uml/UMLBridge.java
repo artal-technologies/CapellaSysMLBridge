@@ -160,7 +160,7 @@ public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope>
 					catch (Exception e) {
 						e.printStackTrace();
 					}
-//					profs.addAll(_algo.getProfileApplication());
+					profs.addAll(_algo.getProfileApplication());
 					return profs;
 				}
 

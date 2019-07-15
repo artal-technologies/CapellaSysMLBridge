@@ -11,9 +11,12 @@ package com.artal.capella.mapping.patch;
 
 import java.util.Map.Entry;
 
+import org.eclipse.emf.diffmerge.bridge.api.ICause;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IRule;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IRuleIdentifier;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.MappingExecution;
+import org.eclipse.emf.diffmerge.bridge.mapping.util.TraceLoggingMessage;
+import org.eclipse.emf.diffmerge.bridge.util.AbstractLoggingMessage;
 
 import com.artal.capella.mapping.patch.wrappers.RuleIdentifierWrapper;
 
@@ -35,7 +38,7 @@ public class CapellaMappingExecution extends MappingExecution {
 	public boolean isTolerantToDuplicates() {
 		return false;
 	}
- 
+
 	@Override
 	@Deprecated
 	public <S, T> T get(S source_p, IRuleIdentifier<S, T> ruleID_p) {
@@ -59,5 +62,18 @@ public class CapellaMappingExecution extends MappingExecution {
 		}
 		return null;
 
+	}
+
+	@Override
+	protected AbstractLoggingMessage createTraceLoggingMessage(Object target_p, ICause<?> cause_p) {
+		return new TraceLoggingMessage(target_p, cause_p) {
+			@Override
+			protected String getObjectLabel(Object object_p) {
+				if (object_p == null) {
+					return "";
+				}
+				return super.getObjectLabel(object_p);
+			}
+		};
 	}
 }
