@@ -12,11 +12,13 @@ package com.artal.capella.mapping.patch;
 import java.util.Map.Entry;
 
 import org.eclipse.emf.diffmerge.bridge.api.ICause;
+import org.eclipse.emf.diffmerge.bridge.impl.emf.EMFSymbolFunction;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IRule;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IRuleIdentifier;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.MappingExecution;
 import org.eclipse.emf.diffmerge.bridge.mapping.util.TraceLoggingMessage;
 import org.eclipse.emf.diffmerge.bridge.util.AbstractLoggingMessage;
+import org.eclipse.emf.ecore.EObject;
 
 import com.artal.capella.mapping.patch.wrappers.RuleIdentifierWrapper;
 
@@ -67,12 +69,31 @@ public class CapellaMappingExecution extends MappingExecution {
 	@Override
 	protected AbstractLoggingMessage createTraceLoggingMessage(Object target_p, ICause<?> cause_p) {
 		return new TraceLoggingMessage(target_p, cause_p) {
+
 			@Override
-			protected String getObjectLabel(Object object_p) {
-				if (object_p == null) {
-					return "";
+			protected String getMessageBody() {
+				StringBuilder builder = new StringBuilder("("); //$NON-NLS-1$
+				builder.append(getTarget().getClass().getSimpleName()).append(" \""); //$NON-NLS-1$
+				builder.append(getObjectLabel(getTarget())).append("\""); //$NON-NLS-1$
+				final EMFSymbolFunction function = EMFSymbolFunction.getInstance();
+				// append the identifier inside the message using symbol
+				// function.
+				builder.append("[").append(function.getSymbol(getTarget())).append("]");//$NON-NLS-1$ //$NON-NLS-2$
+				// source however can be a single object or a tuple
+				builder.append(") From {"); //$NON-NLS-1$
+				for (Object source : getCause().getSourceElements()) {
+					if (source == null) {
+						continue;
+					}
+					String sourceName = getObjectLabel(source);
+					String sourceType = ((EObject) source).eClass().getName();
+					builder.append("("); //$NON-NLS-1$
+					builder.append(sourceType).append(" \""); //$NON-NLS-1$
+					builder.append(sourceName).append("\""); //$NON-NLS-1$
+					builder.append("[").append(function.getSymbol(source)).append("])");//$NON-NLS-1$ //$NON-NLS-2$
 				}
-				return super.getObjectLabel(object_p);
+				builder.append("}"); //$NON-NLS-1$
+				return builder.toString();
 			}
 		};
 	}
