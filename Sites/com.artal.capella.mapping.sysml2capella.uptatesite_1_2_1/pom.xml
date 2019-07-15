@@ -32,11 +32,11 @@
 							<target unless="maven.test.skip">
 								<echo message="Create Dropin from CapellaMapping dropin" />
 
-								<zip destfile="${basedir}/target/CapellaMapping_VP_1_2_1-${project.version}-dropin.zip">
+								<zip destfile="${basedir}/target/CapellaSysMLBridge_VP_1_2_1-${project.version}-dropin.zip">
 									<zipfileset dir="target/repository/features/"
-										prefix="CapellaMapping_VP_1_2_1-${project.version}/features/" />
+										prefix="CapellaSysMLBridge_VP_1_2_1-${project.version}/features/" />
 									<zipfileset dir="target/repository/plugins/"
-										prefix="CapellaMapping_VP_1_2_1-${project.version}/plugins/" />
+										prefix="CapellaSysMLBridge_VP_1_2_1-${project.version}/plugins/" />
 								</zip>
 							</target>
 						</configuration>
