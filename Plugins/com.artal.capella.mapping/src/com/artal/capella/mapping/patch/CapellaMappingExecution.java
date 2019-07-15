@@ -86,7 +86,12 @@ public class CapellaMappingExecution extends MappingExecution {
 						continue;
 					}
 					String sourceName = getObjectLabel(source);
-					String sourceType = ((EObject) source).eClass().getName();
+					String sourceType = "";
+					if (source instanceof EObject) {
+						sourceType = ((EObject) source).eClass().getName();
+					} else {
+						source.getClass().getName();
+					}
 					builder.append("("); //$NON-NLS-1$
 					builder.append(sourceType).append(" \""); //$NON-NLS-1$
 					builder.append(sourceName).append("\""); //$NON-NLS-1$
