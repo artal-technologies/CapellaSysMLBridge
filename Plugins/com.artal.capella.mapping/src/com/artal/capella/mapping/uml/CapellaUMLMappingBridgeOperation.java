@@ -18,7 +18,11 @@ import org.eclipse.emf.diffmerge.bridge.mapping.impl.QueryExecution;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.MappingExecution.PendingDefinition;
 import org.eclipse.emf.diffmerge.bridge.uml.mapping.IUMLRule;
 import org.eclipse.emf.diffmerge.bridge.uml.mapping.UMLMappingBridgeOperation;
+import org.eclipse.emf.ecore.EAnnotation;
+import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.uml2.uml.Profile;
+import org.eclipse.uml2.uml.ProfileApplication;
 
 import com.artal.capella.mapping.patch.CapellaQueryExecution;
 import com.artal.capella.mapping.patch.wrappers.RuleWrapper;
@@ -44,6 +48,35 @@ public class CapellaUMLMappingBridgeOperation extends UMLMappingBridgeOperation 
 		super.handleRuleForTargetCreation(mirrorRule, bridge_p, source_p, targetDataSet_p, queryExecution_p,
 				execution_p);
 
+	}
+
+	/**
+	 * Return an object that discriminates the given profile-related element
+	 * w.r.t. the UML element it characterizes
+	 * 
+	 * @param profileRelatedElement_p
+	 *            a non-null element
+	 * @return a non-null object
+	 */
+	protected Object getProfileDataCauseSuffix(EObject profileRelatedElement_p) {
+		Object result;
+		if (profileRelatedElement_p instanceof EAnnotation) {
+			// The annotation automatically created in Profile applications
+			result = "umlAnnotation"; //$NON-NLS-1$
+			EModelElement annotationTarget = ((EAnnotation) profileRelatedElement_p).getEModelElement();
+			if (annotationTarget instanceof ProfileApplication) {
+				Profile profile = ((ProfileApplication) annotationTarget).getAppliedProfile();
+				if (profile != null)
+					result = profile.getURI() + profile.getName() + '/' + result;
+			}
+		} else if (profileRelatedElement_p instanceof ProfileApplication) {
+			Profile profile = ((ProfileApplication) profileRelatedElement_p).getAppliedProfile();
+			result = profile.getURI() + profile.getName();
+		} else {
+			// Supposedly a Stereotype application
+			result = profileRelatedElement_p.eClass().getName();
+		}
+		return result;
 	}
 
 	@Override

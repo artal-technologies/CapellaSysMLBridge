@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.Profile;
+import org.eclipse.uml2.uml.util.UMLUtil;
 
 import com.artal.capella.mapping.CapellaMappingUtil;
 import com.artal.capella.mapping.cheat.TraceCheat;
@@ -170,6 +171,8 @@ public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope>
 					return _algo.getStereoApplications();
 				}
 			};
+			
+			
 		}
 
 		@Override

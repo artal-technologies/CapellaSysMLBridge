@@ -63,7 +63,7 @@ public class Capella2SysmlAlgo extends UMLBridgeAlgo<Project> {
 		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
 		SysML2CapellaUMLProfile.initProfiles(rset, getTargetParentFolder());
 		RootInitialMapping componentMapping = new RootInitialMapping(this, source_p, _mappingExecution);
-
+		LogicalFunctionActivityMapping._lfs.clear();
 		_managerRules.add(componentMapping.getClass().getName(), componentMapping);
 
 		ClassesMapping classesMapping = new ClassesMapping(this, source_p, _mappingExecution);

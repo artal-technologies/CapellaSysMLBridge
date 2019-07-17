@@ -12,6 +12,7 @@ package com.artal.capella.mapping.capella2sysml.rules;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Package;
@@ -119,9 +120,14 @@ public class ExchangeItemMapping extends AbstractMapping {
 	private void transformExchangeItem(ExchangeItem exchangeItem, Package paramPkg, Stereotype ownedStereotype) {
 
 		Class umlEI = paramPkg.createOwnedClass(exchangeItem.getName(), false);
-		umlEI.applyStereotype(ownedStereotype);
+		EObject applyStereotype = umlEI.applyStereotype(ownedStereotype);
+		getAlgo().getStereoApplications().add(applyStereotype);
 		Sysml2CapellaUtils.trace(this, _source.eResource(), exchangeItem, umlEI, "EI_");
 
+	}
+
+	public Capella2SysmlAlgo getAlgo() {
+		return (Capella2SysmlAlgo) super.getAlgo();
 	}
 
 }

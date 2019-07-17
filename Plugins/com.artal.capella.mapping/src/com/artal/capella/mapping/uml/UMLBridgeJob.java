@@ -74,11 +74,7 @@ public class UMLBridgeJob<SD> extends BridgeJob<SD> {
 		createMappingBridge();
 		_mappingBridge.registerRules();
 		// Make the mapping bridge incremental
-		GMFDiffPolicy diffPolicy = new GMFDiffPolicy() {
-			public boolean coverOutOfScopeValue(EObject element_p, org.eclipse.emf.ecore.EReference reference_p) {
-				return false;
-			};
-		};
+		GMFDiffPolicy diffPolicy = createDiffPolicy();
 		diffPolicy.setIgnoreOrders(true);
 		EMFInteractiveBridge<SD, IEditableModelScope> result = new EMFInteractiveBridge<SD, IEditableModelScope>(
 				_mappingBridge, diffPolicy, new UMLMergePolicy(), null) {
@@ -112,6 +108,15 @@ public class UMLBridgeJob<SD> extends BridgeJob<SD> {
 
 		};
 		return result;
+	}
+
+	protected GMFDiffPolicy createDiffPolicy() {
+		GMFDiffPolicy diffPolicy = new GMFDiffPolicy() {
+			public boolean coverOutOfScopeValue(EObject element_p, org.eclipse.emf.ecore.EReference reference_p) {
+				return false;
+			};
+		};
+		return diffPolicy;
 	}
 
 	public UMLBridge<SD, IEditableModelScope> createMappingBridge() {

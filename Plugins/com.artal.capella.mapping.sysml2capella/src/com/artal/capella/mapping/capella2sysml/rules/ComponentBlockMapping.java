@@ -93,8 +93,10 @@ public class ComponentBlockMapping extends AbstractMapping {
 		Class product = structurePkg.createOwnedClass("Product", false);
 		Sysml2CapellaUtils.trace(this, _source.eResource(), logicalContext, product, "PRODUCT_BLOCK");
 		EObject applyStereotype = product.applyStereotype(ownedStereotype);
-		Sysml2CapellaUtils.trace(this, _source.eResource(), logicalContext + "PRODUCT_BLOCK", applyStereotype,
-				"PRODUCT_BLOCK_STEREO");
+		// Sysml2CapellaUtils.trace(this, _source.eResource(), logicalContext +
+		// "PRODUCT_BLOCK", applyStereotype,
+		// "PRODUCT_BLOCK_STEREO");
+		getAlgo().getStereoApplications().add(applyStereotype);
 
 		// getAlgo().getTransientItems().add(applyStereotype);
 		transformComponents(logicalContext, partsPkg, ownedStereotype);
@@ -166,8 +168,10 @@ public class ComponentBlockMapping extends AbstractMapping {
 			((Package) pkgParent).getPackagedElements().add(class1);
 		}
 		EObject applyStereotype = class1.applyStereotype(stereotype);
-		Sysml2CapellaUtils.trace(this, _source.eResource(), logicalComponent + "_BLOCK_STEREO", applyStereotype,
-				"_BLOCK_STEREO");
+		// Sysml2CapellaUtils.trace(this, _source.eResource(), logicalComponent
+		// + "_BLOCK_STEREO", applyStereotype,
+		// "_BLOCK_STEREO");
+		getAlgo().getStereoApplications().add(applyStereotype);
 		Sysml2CapellaUtils.trace(this, _source.eResource(), logicalComponent, class1, "_BLOCK");
 		// getAlgo().getTransientItems().add(applyStereotype);
 	}
@@ -197,7 +201,8 @@ public class ComponentBlockMapping extends AbstractMapping {
 			abstraction.getSuppliers().add(supplier);
 			abstraction.getClients().add(client);
 			behaviorPkg.getPackagedElements().add(abstraction);
-			abstraction.applyStereotype(traceStereotype);
+			EObject applyStereotype = abstraction.applyStereotype(traceStereotype);
+			getAlgo().getStereoApplications().add(applyStereotype);
 			Sysml2CapellaUtils.trace(this, _source.eResource(), componentFunctionalAllocation, abstraction,
 					"ABSTRACTION_");
 		}

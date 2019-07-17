@@ -12,6 +12,7 @@ package com.artal.capella.mapping.capella2sysml.rules;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Profile;
@@ -125,9 +126,16 @@ public class ClassesMapping extends AbstractMapping {
 	private void transformClass(org.polarsys.capella.core.data.information.Class clazz, Package paramPkg,
 			Stereotype ownedStereotype) {
 		org.eclipse.uml2.uml.Class umlClass = paramPkg.createOwnedClass(clazz.getName(), false);
-		umlClass.applyStereotype(ownedStereotype);
+		EObject applyStereotype = umlClass.applyStereotype(ownedStereotype);
+		getAlgo().getStereoApplications().add(applyStereotype);
 		Sysml2CapellaUtils.trace(this, _source.eResource(), clazz, umlClass, "CLASS_");
 
+	}
+
+	@Override
+	public Capella2SysmlAlgo getAlgo() {
+		// TODO Auto-generated method stub
+		return (Capella2SysmlAlgo) super.getAlgo();
 	}
 
 }

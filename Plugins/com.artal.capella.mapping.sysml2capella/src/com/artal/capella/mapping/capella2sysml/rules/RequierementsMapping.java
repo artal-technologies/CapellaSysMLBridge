@@ -37,6 +37,7 @@ import org.polarsys.kitalpha.vp.requirements.Requirements.AbstractRelation;
 import org.polarsys.kitalpha.vp.requirements.Requirements.Requirement;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
+import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
 import com.artal.capella.mapping.sysml2capella.utils.SysML2CapellaUMLProfile;
@@ -82,7 +83,8 @@ public class RequierementsMapping extends AbstractMapping {
 		Class umlRequirement = requierementsPkg.createOwnedClass(requirement.getReqIFLongName(), false);
 
 		Stereotype ownedStereotype = getRequirementNestedPkg().getOwnedStereotype("Requirement");
-		umlRequirement.applyStereotype(ownedStereotype);
+		EObject applyStereotype = umlRequirement.applyStereotype(ownedStereotype);
+		getAlgo().getStereoApplications().add(applyStereotype);
 
 		umlRequirement.setValue(ownedStereotype, "Text", requirement.getReqIFText());
 		umlRequirement.setValue(ownedStereotype, "Id", requirement.getReqIFIdentifier());
@@ -146,7 +148,8 @@ public class RequierementsMapping extends AbstractMapping {
 					Abstraction refineAbs = UMLFactory.eINSTANCE.createAbstraction();
 					firstPackageParent.getPackagedElements().add(refineAbs);
 					Stereotype refineStereoType = getRequirementNestedPkg().getOwnedStereotype("Refine");
-					refineAbs.applyStereotype(refineStereoType);
+					EObject applyStereotype = refineAbs.applyStereotype(refineStereoType);
+					getAlgo().getStereoApplications().add(applyStereotype);
 					refineAbs.getSuppliers().add(umlRequirement);
 					refineAbs.getClients().add((NamedElement) umlSource);
 					// refineAbs.setValue(refineStereoType,
@@ -187,7 +190,8 @@ public class RequierementsMapping extends AbstractMapping {
 				Abstraction satisfyAbs = UMLFactory.eINSTANCE.createAbstraction();
 				firstPackageParent.getPackagedElements().add(satisfyAbs);
 				Stereotype satisfyStereoType = getRequirementNestedPkg().getOwnedStereotype("Satisfy");
-				satisfyAbs.applyStereotype(satisfyStereoType);
+				EObject applyStereotype = satisfyAbs.applyStereotype(satisfyStereoType);
+				getAlgo().getStereoApplications().add(applyStereotype);
 				satisfyAbs.getSuppliers().add(umlRequirement);
 				satisfyAbs.getClients().add((NamedElement) umlTarget);
 				// satisfyAbs.setValue(satisfyStereoType,
@@ -233,6 +237,11 @@ public class RequierementsMapping extends AbstractMapping {
 			}
 		}
 		return capellaModule;
+	}
+
+	@Override
+	public Capella2SysmlAlgo getAlgo() {
+		return (Capella2SysmlAlgo) super.getAlgo();
 	}
 
 }

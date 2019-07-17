@@ -11,6 +11,10 @@ package com.artal.capella.mapping.capella2sysml;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.diffmerge.api.scopes.IEditableModelScope;
+import org.eclipse.emf.diffmerge.gmf.GMFDiffPolicy;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.uml2.uml.Profile;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 
@@ -51,5 +55,45 @@ public class Capella2SysmlBridgeJob extends UMLBridgeJob<Project> {
 		UMLBridge<Project, IEditableModelScope> mappingBridge = super.createMappingBridge();
 		((Capella2SysmlAlgo) getAlgo()).setBridge(mappingBridge);
 		return mappingBridge;
+	}
+
+	@Override
+	protected GMFDiffPolicy createDiffPolicy() {
+		GMFDiffPolicy diffPolicy = new GMFDiffPolicy() {
+			public boolean coverOutOfScopeValue(EObject element_p, org.eclipse.emf.ecore.EReference reference_p) {
+				return false;
+			};
+
+			@Override
+			public boolean coverValue(Object value_p, EAttribute attribute_p) {
+				return super.coverValue(value_p, attribute_p);
+			}
+
+			@Override
+			public boolean coverFeature(EStructuralFeature feature_p) {
+				if (hasParentProfile(feature_p)) {
+					return false;
+				}
+				return super.coverFeature(feature_p);
+			}
+
+			private boolean hasParentProfile(EObject feature_p) {
+				if (feature_p == null) {
+					return false;
+				}
+				if (feature_p instanceof Profile) {
+					return true;
+				} else {
+					return hasParentProfile(feature_p.eContainer());
+				}
+
+			}
+
+			@Override
+			public boolean considerEqual(Object value1_p, Object value2_p, EAttribute attribute_p) {
+				return super.considerEqual(value1_p, value2_p, attribute_p);
+			}
+		};
+		return diffPolicy;
 	}
 }

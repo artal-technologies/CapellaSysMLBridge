@@ -33,7 +33,6 @@ import org.polarsys.capella.core.data.fa.FunctionInputPort;
 import org.polarsys.capella.core.data.fa.FunctionOutputPort;
 import org.polarsys.capella.core.data.fa.FunctionPort;
 import org.polarsys.capella.core.data.fa.FunctionalExchange;
-import org.polarsys.capella.core.data.information.Port;
 import org.polarsys.capella.core.data.la.LogicalFunction;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
@@ -153,8 +152,8 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 		// get the common parents.
 		LogicalFunction common = getCommonParent(sourceAncestors, targetAnceestors);
 		// create intermerdiate ports.
-		Pin umlSource = createIntermediatePort(source, umlSourcePin, common, sourceAncestors);
-		Pin umlTarget = createIntermediatePort(target, umlTargetPin, common, targetAnceestors);
+		Pin umlSource = createIntermediatePort(functionalExchange, source, umlSourcePin, common, sourceAncestors);
+		Pin umlTarget = createIntermediatePort(functionalExchange, target, umlTargetPin, common, targetAnceestors);
 
 		Activity umlParent = (Activity) MappingRulesManager.getCapellaObjectFromAllRules(common);
 
@@ -165,7 +164,7 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 				UMLPackage.Literals.LITERAL_UNLIMITED_NATURAL);
 		createWeight.setValue(1);
 		Sysml2CapellaUtils.trace(this, _source.eResource(),
-				Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT", objectFlow,
+				Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT", createWeight,
 				"WEIGHT_");
 		objectFlow.setSource(umlSource);
 		objectFlow.setTarget(umlTarget);
@@ -216,13 +215,15 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 				UMLPackage.Literals.LITERAL_UNLIMITED_NATURAL);
 		createWeight.setValue(1);
 		Sysml2CapellaUtils.trace(this, _source.eResource(),
-				Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT", objectFlow,
+				Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT", createWeight,
 				"WEIGHT_");
 		Sysml2CapellaUtils.trace(this, _source.eResource(), functionalExchange, objectFlow, "OBJECT_FLOW_");
 	}
 
 	/**
 	 * Create the intermediate port and ObjectFlow.
+	 * 
+	 * @param functionalExchange
 	 * 
 	 * @param capellaPort
 	 *            the capella reference port.
@@ -234,8 +235,8 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 	 *            the ancestor of the ref {@link FunctionPort}.
 	 * @return the Intermediate {@link Pin}.
 	 */
-	private Pin createIntermediatePort(FunctionPort capellaPort, Map<Pin, ActivityParameterNode> map,
-			LogicalFunction common, Queue<LogicalFunction> ancestors) {
+	private Pin createIntermediatePort(FunctionalExchange functionalExchange, FunctionPort capellaPort,
+			Map<Pin, ActivityParameterNode> map, LogicalFunction common, Queue<LogicalFunction> ancestors) {
 		LogicalFunction parent;
 		boolean isFoundCommon = false;
 
@@ -258,8 +259,10 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 				if (behavior instanceof Activity) {
 					// create intermediate ObjecFlow.
 					ActivityEdge objectFlow = ((Activity) behavior).createEdge("", UMLPackage.Literals.OBJECT_FLOW);
-					// Sysml2CapellaUtils.trace(this, _source.eResource(),
-					// functionalExchange, objectFlow, "OBJECT_FLOW_");
+					Sysml2CapellaUtils.trace(this, _source.eResource(),
+							Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange)
+									+ Sysml2CapellaUtils.getSysMLID(_source.eResource(), parent),
+							objectFlow, "OBJECT_FLOW_");
 
 					objectFlow.setSource(umlPin);
 
@@ -279,12 +282,13 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 					// connect intermediate port at the intermediate object
 					// flow.
 					objectFlow.setTarget(mirrorApn);
-
+					Sysml2CapellaUtils.trace(this, _source.eResource(), capellaPort, mirrorApn, "APN_MIRROR_");
+					Sysml2CapellaUtils.trace(this, _source.eResource(), capellaPort, mirrorPin, "PIN_MIRROR_");
 					LiteralUnlimitedNatural createWeight = (LiteralUnlimitedNatural) objectFlow.createWeight("", null,
 							UMLPackage.Literals.LITERAL_UNLIMITED_NATURAL);
 					createWeight.setValue(1);
 					Sysml2CapellaUtils.trace(this, _source.eResource(),
-							Sysml2CapellaUtils.getSysMLID(_source.eResource(), behavior) + "WEIGHT", objectFlow,
+							Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT_MIRROR_", createWeight,
 							"WEIGHT_");
 
 					umlPin = mirrorPin;
@@ -327,7 +331,7 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 			}
 		}
 		Sysml2CapellaUtils.trace(this, _source.eResource(), functionPort, umlPort, "PIN_");
-		Sysml2CapellaUtils.trace(this, _source.eResource(), functionPort, umlPort, "APN_");
+		Sysml2CapellaUtils.trace(this, _source.eResource(), functionPort, apn, "APN_");
 		Map<Pin, ActivityParameterNode> results = new HashMap<>();
 		results.put(umlPort, apn);
 		return results;

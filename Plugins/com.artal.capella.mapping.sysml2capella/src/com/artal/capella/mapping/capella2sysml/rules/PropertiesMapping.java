@@ -16,11 +16,14 @@ import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.uml2.uml.LiteralInteger;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.UMLFactory;
+import org.eclipse.uml2.uml.UMLPackage;
+import org.eclipse.uml2.uml.ValueSpecification;
 import org.polarsys.capella.common.data.modellingcore.AbstractType;
 import org.polarsys.capella.common.data.modellingcore.AbstractTypedElement;
 import org.polarsys.capella.common.data.modellingcore.FinalizableElement;
@@ -128,9 +131,11 @@ public class PropertiesMapping extends AbstractMapping {
 		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.MD_CUST_SYSML_ADD_STEREO_PROFILE);
 		Stereotype ownedStereotype = profile.getOwnedStereotype("ValueProperty");
 		EObject applyStereotype = property.applyStereotype(ownedStereotype);
-		Sysml2CapellaUtils.trace(this, _source.eResource(), namedElement + "VALUEPARAM_STEREO", applyStereotype,
-				"VALUEPARAM_STEREO_");
-		getAlgo().getTransientItems().add(applyStereotype);
+		// Sysml2CapellaUtils.trace(this, _source.eResource(), namedElement +
+		// "VALUEPARAM_STEREO", applyStereotype,
+		// "VALUEPARAM_STEREO_");
+		// getAlgo().getTransientItems().add(applyStereotype);
+		getAlgo().getStereoApplications().add(applyStereotype);
 
 		if (namedElement instanceof MultiplicityElement) {
 			transformMultiplicity(namedElement, property);
@@ -173,19 +178,34 @@ public class PropertiesMapping extends AbstractMapping {
 		if (ownedMinCard instanceof LiteralNumericValue) {
 			String value = ((LiteralNumericValue) ownedMinCard).getValue();
 			int parseInt = Integer.parseInt(value);
-			property.setLower(parseInt);
+			// property.setLower(parseInt);
+
+			LiteralInteger vs = (LiteralInteger) property.createLowerValue(ownedMinCard.getName(), null,
+					UMLPackage.Literals.LITERAL_INTEGER);
+			vs.setValue(parseInt);
+			Sysml2CapellaUtils.trace(this, _source.eResource(), ownedMinCard, vs, "CARDMIN_");
+
 		}
 
 		NumericValue ownedMaxCard = ((MultiplicityElement) namedElement).getOwnedMaxCard();
 		if (ownedMaxCard instanceof LiteralNumericValue) {
 			String value = ((LiteralNumericValue) ownedMaxCard).getValue();
+
+			LiteralInteger vs = (LiteralInteger) property.createUpperValue(ownedMaxCard.getName(), null,
+					UMLPackage.Literals.LITERAL_INTEGER);
 			if (value.equals("*")) {
-				property.setUpper(-1);
+				vs.setValue(-1);
 			} else {
 				int parseInt = Integer.parseInt(value);
-				property.setUpper(parseInt);
+				vs.setValue(parseInt);
 			}
+			Sysml2CapellaUtils.trace(this, _source.eResource(), ownedMaxCard, vs, "CARDMAX_");
 		}
+	}
+
+	@Override
+	public Capella2SysmlAlgo getAlgo() {
+		return (Capella2SysmlAlgo) super.getAlgo();
 	}
 
 }

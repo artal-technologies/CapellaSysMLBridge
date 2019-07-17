@@ -49,6 +49,8 @@ public class LogicalFunctionActivityMapping extends AbstractMapping {
 	 */
 	private MappingRulesManager _manager = new MappingRulesManager();
 
+	public static List<LogicalFunction> _lfs = new ArrayList<>();
+
 	/**
 	 * Constructor.
 	 * 
@@ -124,11 +126,15 @@ public class LogicalFunctionActivityMapping extends AbstractMapping {
 	 */
 	private void transformLogicalFunctions(List<LogicalFunction> activities, Object parent, TypeActivity ta) {
 		for (LogicalFunction lf : activities) {
-			transformLogicalFunction(lf, parent, ta);
-			LogicalFunctionCallBehaviorsMapping behaviorsMapping = new LogicalFunctionCallBehaviorsMapping(getAlgo(),
-					lf, _mappingExecution);
-			_manager.add(behaviorsMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(_source.eResource(), lf),
-					behaviorsMapping);
+			if (!_lfs.contains(lf)) {
+				_lfs.add(lf);
+				transformLogicalFunction(lf, parent, ta);
+				LogicalFunctionCallBehaviorsMapping behaviorsMapping = new LogicalFunctionCallBehaviorsMapping(
+						getAlgo(), lf, _mappingExecution);
+				_manager.add(
+						behaviorsMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(_source.eResource(), lf),
+						behaviorsMapping);
+			}
 		}
 	}
 

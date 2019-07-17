@@ -276,14 +276,15 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		Sysml2CapellaUtils.trace(this, _source.eResource(), ce, connector, "CONNECTOR_");
 		Package blockProfile = profile.getNestedPackage("Blocks");
 		Stereotype bindingConnectorStereo = blockProfile.getOwnedStereotype("BindingConnector");
-		connector.applyStereotype(bindingConnectorStereo);
+		EObject applyStereotype = connector.applyStereotype(bindingConnectorStereo);
+		getAlgo().getStereoApplications().add(applyStereotype);
 
 		ConnectorEnd targetEnd = connector.createEnd();
-		// Sysml2CapellaUtils.trace(this, _source.eResource(), ,
-		// targetElement, prefix);
+		Sysml2CapellaUtils.trace(this, _source.eResource(),
+				Sysml2CapellaUtils.getSysMLID(_source.eResource(), ce) + "CONNECTORENDTARGET", targetEnd, "TARGETEND_");
 		ConnectorEnd sourceEnd = connector.createEnd();
-		// Sysml2CapellaUtils.trace(this, _source.eResource(), ,
-		// targetElement, prefix);
+		Sysml2CapellaUtils.trace(this, _source.eResource(),
+				Sysml2CapellaUtils.getSysMLID(_source.eResource(), ce) + "CONNECTORENDSOURCE", sourceEnd, "SOURCEEND_");
 
 		EList<AbstractExchangeItem> convoyedInformations = ce.getConvoyedInformations();
 		for (AbstractExchangeItem abstractExchangeItem : convoyedInformations) {
@@ -332,11 +333,15 @@ public class ComponentExchangesMapping extends AbstractMapping {
 				srcList.add(sourceProp);
 				List<Property> trgList = new ArrayList<>();
 				trgList.add(targetProp);
-				sourceEnd.applyStereotype(nestedConnectorEndStereo);
+				
+				EObject applyStereotype = sourceEnd.applyStereotype(nestedConnectorEndStereo);
 				sourceEnd.setValue(nestedConnectorEndStereo, "propertyPath", srcList);
 
-				targetEnd.applyStereotype(nestedConnectorEndStereo);
+				EObject applyStereotype2 = targetEnd.applyStereotype(nestedConnectorEndStereo);
 				targetEnd.setValue(nestedConnectorEndStereo, "propertyPath", trgList);
+
+				getAlgo().getStereoApplications().add(applyStereotype);
+				getAlgo().getStereoApplications().add(applyStereotype2);
 			}
 			return;
 		}
@@ -407,7 +412,8 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		Class blockComp = (Class) MappingRulesManager.getCapellaObjectFromAllRules(parent);
 
 		Port umlPort = blockComp.createOwnedPort(capellaPort.getName(), null);
-		umlPort.applyStereotype(ownedStereotype);
+		EObject applyStereotype = umlPort.applyStereotype(ownedStereotype);
+		getAlgo().getStereoApplications().add(applyStereotype);
 		Sysml2CapellaUtils.trace(this, _source.eResource(), capellaPort, umlPort, "PORT_");
 		return umlPort;
 	}
@@ -443,6 +449,11 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		queue.add(Sysml2CapellaUtils.getLogicalContext(_source));
 		return queue;
 
+	}
+
+	@Override
+	public Capella2SysmlAlgo getAlgo() {
+		return (Capella2SysmlAlgo) super.getAlgo();
 	}
 
 }

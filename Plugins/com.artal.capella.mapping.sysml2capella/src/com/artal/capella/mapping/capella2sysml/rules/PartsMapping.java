@@ -12,6 +12,7 @@ package com.artal.capella.mapping.capella2sysml.rules;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Profile;
@@ -99,7 +100,8 @@ public class PartsMapping extends AbstractMapping {
 
 				Class type = (Class) MappingRulesManager.getCapellaObjectFromAllRules(abstractType);
 				Property partProperty = umlParent.createOwnedAttribute(part.getName(), type);
-				partProperty.applyStereotype(ownedStereotype);
+				EObject applyStereotype = partProperty.applyStereotype(ownedStereotype);
+				getAlgo().getStereoApplications().add(applyStereotype);
 				Sysml2CapellaUtils.trace(this, _source.eResource(), feature, partProperty, "PART_PROP_");
 
 			}
@@ -109,6 +111,11 @@ public class PartsMapping extends AbstractMapping {
 			transformParts(logicalComponent, ownedStereotype);
 		}
 
+	}
+
+	@Override
+	public Capella2SysmlAlgo getAlgo() {
+		return (Capella2SysmlAlgo) super.getAlgo();
 	}
 
 }

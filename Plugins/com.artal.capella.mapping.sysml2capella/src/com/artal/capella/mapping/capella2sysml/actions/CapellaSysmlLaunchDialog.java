@@ -121,7 +121,7 @@ public class CapellaSysmlLaunchDialog extends TitleAreaDialog {
 		} else {
 			File file = new File(_umlPath);
 			File parentFile = file.getParentFile();
-			if (!parentFile.exists()) {
+			if (parentFile==null || !parentFile.exists()) {
 				errorMessage = "Invalid parent folder.";
 			}
 		}
