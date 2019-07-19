@@ -174,13 +174,18 @@ public class LogicalFunctionActivityMapping extends AbstractMapping {
 			fillActivitiesList(doexits, ((State) _source).getExit());
 		} else if (_source instanceof Project) {
 			LogicalFunction rootLogicalFunction = Sysml2CapellaUtils.getLogicalFunctionRoot(_source);
-			List<AbstractFunction> ownedFunctions = rootLogicalFunction.getOwnedFunctions();
-			for (AbstractFunction abstractFunction : ownedFunctions) {
-				if (abstractFunction instanceof LogicalFunction) {
-					doactivities.add((LogicalFunction) abstractFunction);
-				}
-			}
+			fillFunctions(doactivities, rootLogicalFunction);
 
+		}
+	}
+
+	private void fillFunctions(List<LogicalFunction> doactivities, LogicalFunction rootLogicalFunction) {
+		List<AbstractFunction> ownedFunctions = rootLogicalFunction.getOwnedFunctions();
+		for (AbstractFunction abstractFunction : ownedFunctions) {
+			if (abstractFunction instanceof LogicalFunction) {
+				doactivities.add((LogicalFunction) abstractFunction);
+				fillFunctions(doactivities, (LogicalFunction) abstractFunction);
+			}
 		}
 	}
 

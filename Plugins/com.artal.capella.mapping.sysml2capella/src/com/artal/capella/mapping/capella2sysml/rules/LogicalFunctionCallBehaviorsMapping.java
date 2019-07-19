@@ -9,9 +9,6 @@
  *******************************************************************************/
 package com.artal.capella.mapping.capella2sysml.rules;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.uml2.uml.Activity;
