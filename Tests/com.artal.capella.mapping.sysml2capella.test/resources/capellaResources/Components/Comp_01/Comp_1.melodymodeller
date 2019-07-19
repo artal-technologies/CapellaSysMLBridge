@@ -2,8 +2,8 @@
 
 <!--Capella_Version_1.2.0-->
 <org.polarsys.capella.core.data.capellamodeller:Project xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:libraries="http://www.polarsys.org/capella/common/libraries/1.2.0"
-    xmlns:org.polarsys.capella.core.data.capellacommon="http://www.polarsys.org/capella/core/common/1.2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:CapellaRequirements="http://www.polarsys.org/capella/requirements"
+    xmlns:libraries="http://www.polarsys.org/capella/common/libraries/1.2.0" xmlns:org.polarsys.capella.core.data.capellacommon="http://www.polarsys.org/capella/core/common/1.2.0"
     xmlns:org.polarsys.capella.core.data.capellacore="http://www.polarsys.org/capella/core/core/1.2.0"
     xmlns:org.polarsys.capella.core.data.capellamodeller="http://www.polarsys.org/capella/core/modeller/1.2.0"
     xmlns:org.polarsys.capella.core.data.cs="http://www.polarsys.org/capella/core/cs/1.2.0"
@@ -16,293 +16,1518 @@
     xmlns:org.polarsys.capella.core.data.la="http://www.polarsys.org/capella/core/la/1.2.0"
     xmlns:org.polarsys.capella.core.data.oa="http://www.polarsys.org/capella/core/oa/1.2.0"
     xmlns:org.polarsys.capella.core.data.pa="http://www.polarsys.org/capella/core/pa/1.2.0"
-    id="22b2fe39-77ed-4ded-84cd-feef7649684b"
+    id="1d089987-1973-4471-b712-b8d155c754a8"
     name="Comp_1">
-  <ownedExtensions xsi:type="libraries:ModelInformation" id="93f1fbf0-46a6-4882-a853-a3377b822c92"/>
+  <ownedExtensions xsi:type="libraries:ModelInformation" id="b0c2684c-7986-4c08-8cc2-e1157b217d40"/>
   <ownedEnumerationPropertyTypes xsi:type="org.polarsys.capella.core.data.capellacore:EnumerationPropertyType"
-      id="f6d80a61-db4a-4b17-b738-7185de32fc0b" name="ProgressStatus">
+      id="f870279f-667e-43b3-bbbf-c8622eb691fc" name="ProgressStatus">
     <ownedLiterals xsi:type="org.polarsys.capella.core.data.capellacore:EnumerationPropertyLiteral"
-        id="76ae8ee5-52c0-4045-9459-b9051f3646cb" name="DRAFT"/>
+        id="1e936091-18ab-4fb4-8d2b-2576df966949" name="DRAFT"/>
     <ownedLiterals xsi:type="org.polarsys.capella.core.data.capellacore:EnumerationPropertyLiteral"
-        id="18875a68-ca0a-46a7-a50f-d0c4ae4da11c" name="TO_BE_REVIEWED"/>
+        id="6a501da5-40ed-4776-be91-c2f23f5a7ad2" name="TO_BE_REVIEWED"/>
     <ownedLiterals xsi:type="org.polarsys.capella.core.data.capellacore:EnumerationPropertyLiteral"
-        id="1a2488fd-ddc7-4938-98bc-fb7faad4b30d" name="TO_BE_DISCUSSED"/>
+        id="b6947b0c-e80b-4d6b-a0da-80649700bcdd" name="TO_BE_DISCUSSED"/>
     <ownedLiterals xsi:type="org.polarsys.capella.core.data.capellacore:EnumerationPropertyLiteral"
-        id="01f7e41e-4b61-40ce-b1d2-b1bca2d60651" name="REWORK_NECESSARY"/>
+        id="79f76078-ad6d-4c71-a364-aa8ff44678bf" name="REWORK_NECESSARY"/>
     <ownedLiterals xsi:type="org.polarsys.capella.core.data.capellacore:EnumerationPropertyLiteral"
-        id="463568dd-6ac4-483f-9bf7-7e36d6657e26" name="UNDER_REWORK"/>
+        id="8a2f61f1-da4c-48c8-976c-7ff5979e81f5" name="UNDER_REWORK"/>
     <ownedLiterals xsi:type="org.polarsys.capella.core.data.capellacore:EnumerationPropertyLiteral"
-        id="81c00062-dacf-4e94-991e-5dbcbc90f399" name="REVIEWED_OK"/>
+        id="f6d27e72-9f65-46be-a977-b782fc47ffce" name="REVIEWED_OK"/>
   </ownedEnumerationPropertyTypes>
-  <keyValuePairs xsi:type="org.polarsys.capella.core.data.capellacore:KeyValue" id="189d0527-11f4-4d2b-b2c2-685cb28b021e"
+  <keyValuePairs xsi:type="org.polarsys.capella.core.data.capellacore:KeyValue" id="0d7d62e4-cd63-4d01-a539-60d433e48caf"
       key="projectApproach" value="SingletonComponents"/>
   <ownedModelRoots xsi:type="org.polarsys.capella.core.data.capellamodeller:SystemEngineering"
-      id="0769a712-96cc-4925-a0c4-fd5412dd40f3" name="Comp_1">
+      id="f596637b-835e-48e9-8479-ba96de8dfaaa" name="Comp_1">
     <ownedArchitectures xsi:type="org.polarsys.capella.core.data.oa:OperationalAnalysis"
-        id="28d8b781-c48e-4488-be70-659f040064f2" name="Operational Analysis">
+        id="3288ac35-c4e3-489c-b4a4-78614a0662f7" name="Operational Analysis">
       <ownedFunctionPkg xsi:type="org.polarsys.capella.core.data.oa:OperationalActivityPkg"
-          id="61fa27cc-79f9-4ca6-9044-f4d943955e89" name="Operational Activities">
+          id="7089dc08-1e21-45b1-8405-e002c6744755" name="Operational Activities">
         <ownedOperationalActivities xsi:type="org.polarsys.capella.core.data.oa:OperationalActivity"
-            id="ac7d0351-1009-455b-aaf5-a415f355e952" name="Root Operational Activity"/>
+            id="c3bd43d0-6e6c-460e-b33e-e712082ae49d" name="Root Operational Activity"/>
       </ownedFunctionPkg>
       <ownedAbstractCapabilityPkg xsi:type="org.polarsys.capella.core.data.oa:OperationalCapabilityPkg"
-          id="ab75973b-ab7e-48ff-8a8f-888f192c8845" name="Operational Capabilities"/>
+          id="466fcf12-9996-4ee0-8a5d-9cc24f019211" name="Operational Capabilities"/>
       <ownedInterfacePkg xsi:type="org.polarsys.capella.core.data.cs:InterfacePkg"
-          id="879aac1d-3d6c-408b-a024-c816bf19467a" name="Interfaces"/>
+          id="84678f7b-ec53-4ea0-87e4-b9e5debd2941" name="Interfaces"/>
       <ownedDataPkg xsi:type="org.polarsys.capella.core.data.information:DataPkg"
-          id="35cf0fad-c9a6-4ee6-8e7b-c9eab7ee5c4c" name="Data"/>
+          id="e2848203-c944-4790-914a-1bec8a789f4b" name="Data"/>
       <ownedOperationalContext xsi:type="org.polarsys.capella.core.data.oa:OperationalContext"
-          id="c7edea4d-89c0-4b24-ba78-a1b9a96e09c2" name="Operational Context"/>
-      <ownedRolePkg xsi:type="org.polarsys.capella.core.data.oa:RolePkg" id="c286de8b-da2a-4fdc-8474-39af42cba422"
+          id="f6c02763-f40e-4786-8782-298757e2125c" name="Operational Context"/>
+      <ownedRolePkg xsi:type="org.polarsys.capella.core.data.oa:RolePkg" id="006c95d9-ea17-40dd-be34-901ae194af62"
           name="Roles"/>
-      <ownedEntityPkg xsi:type="org.polarsys.capella.core.data.oa:EntityPkg" id="d0b55b5d-1115-4feb-a1bb-7da0fa92c089"
+      <ownedEntityPkg xsi:type="org.polarsys.capella.core.data.oa:EntityPkg" id="de473be0-8d24-474e-a421-816227b35c18"
           name="Operational Entities"/>
     </ownedArchitectures>
     <ownedArchitectures xsi:type="org.polarsys.capella.core.data.ctx:SystemAnalysis"
-        id="b9501e5c-9659-46d9-9f54-4b9e257a2d73" name="System Analysis">
+        id="6a88385a-3218-45db-8fab-0b95499b72a0" name="System Analysis">
       <ownedFunctionPkg xsi:type="org.polarsys.capella.core.data.ctx:SystemFunctionPkg"
-          id="2c59098e-51de-48cf-a62c-00eac1acf66f" name="System Functions">
+          id="bc281488-a2b3-4c68-b1d4-8abd16b9b9d8" name="System Functions">
         <ownedSystemFunctions xsi:type="org.polarsys.capella.core.data.ctx:SystemFunction"
-            id="f8c4ca3d-5803-4113-a059-970353977ab0" name="Root System Function">
+            id="29ccc127-c65f-4c29-b202-1935f27a41e8" name="Root System Function">
           <ownedFunctionRealizations xsi:type="org.polarsys.capella.core.data.fa:FunctionRealization"
-              id="76eacd74-9f14-4ad3-9d2f-4a0bd6a9b8fe" targetElement="#ac7d0351-1009-455b-aaf5-a415f355e952"
-              sourceElement="#f8c4ca3d-5803-4113-a059-970353977ab0"/>
+              id="93b63be5-4908-4408-84f8-671a824bb71b" targetElement="#c3bd43d0-6e6c-460e-b33e-e712082ae49d"
+              sourceElement="#29ccc127-c65f-4c29-b202-1935f27a41e8"/>
         </ownedSystemFunctions>
       </ownedFunctionPkg>
       <ownedAbstractCapabilityPkg xsi:type="org.polarsys.capella.core.data.ctx:CapabilityPkg"
-          id="8cea4bb9-05fb-4f4f-b843-3e5404159556" name="Capabilities"/>
+          id="f7efb6ce-653b-4eaf-9935-ab87ff76217a" name="Capabilities"/>
       <ownedInterfacePkg xsi:type="org.polarsys.capella.core.data.cs:InterfacePkg"
-          id="47df038b-6821-41f5-930b-62d60a70edc9" name="Interfaces"/>
+          id="1c74d54a-3490-4132-bb1a-cf0135c496b3" name="Interfaces"/>
       <ownedDataPkg xsi:type="org.polarsys.capella.core.data.information:DataPkg"
-          id="b9fca49a-a54a-418a-b61d-f979455b82a7" name="Data">
+          id="768cecfb-d3a0-43ac-8bcd-2d7f8a315b39" name="Data">
         <ownedDataPkgs xsi:type="org.polarsys.capella.core.data.information:DataPkg"
-            id="4eadbbc4-cdd6-446d-a539-86441e3fa3ce" name="Predefined Types">
+            id="c14617f3-04cd-4eb8-be68-2bd4ba851ce2" name="Predefined Types">
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:BooleanType"
-              id="e05279b9-dd53-4d47-bceb-3ea4250d32b1" name="Boolean" visibility="PUBLIC">
+              id="274072ae-451f-4e6f-a8bb-2f35f7b63c8e" name="Boolean" visibility="PUBLIC">
             <ownedLiterals xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralBooleanValue"
-                id="410bf614-57e5-4e35-bb60-f7533066a531" name="True" abstractType="#e05279b9-dd53-4d47-bceb-3ea4250d32b1"
+                id="ade88c70-8a86-4a76-8a22-298575f4a504" name="True" abstractType="#274072ae-451f-4e6f-a8bb-2f35f7b63c8e"
                 value="true"/>
             <ownedLiterals xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralBooleanValue"
-                id="d79e5842-3873-4e35-b69c-32a934ef4e0c" name="False" abstractType="#e05279b9-dd53-4d47-bceb-3ea4250d32b1"/>
+                id="67e3ea40-61b2-4e88-a8e6-1aa08c28de4d" name="False" abstractType="#274072ae-451f-4e6f-a8bb-2f35f7b63c8e"/>
           </ownedDataTypes>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:NumericType"
-              id="e64849e4-3394-46c9-ad58-115034d46331" name="Byte" visibility="PUBLIC">
+              id="0b9cfbc7-04fe-4d47-90b4-89ac6dea3db2" name="Byte" visibility="PUBLIC">
             <ownedMinValue xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralNumericValue"
-                id="0dfa8ccd-5bdd-418c-9132-6761e95a6046" name="" abstractType="#e64849e4-3394-46c9-ad58-115034d46331"
+                id="d272e70e-0bba-430a-8295-08b99e822382" name="" abstractType="#0b9cfbc7-04fe-4d47-90b4-89ac6dea3db2"
                 value="0"/>
             <ownedMaxValue xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralNumericValue"
-                id="e9f3fec1-8b12-4bc1-999c-8d320f3ee25e" name="" abstractType="#e64849e4-3394-46c9-ad58-115034d46331"
+                id="16d2b910-9607-4c09-8910-13f086b4642a" name="" abstractType="#0b9cfbc7-04fe-4d47-90b4-89ac6dea3db2"
                 value="255"/>
           </ownedDataTypes>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:StringType"
-              id="733d9743-2895-425e-8a0e-fe760048e9da" name="Char" visibility="PUBLIC">
+              id="08e9016d-4665-4e50-a1d0-22fc1b58562b" name="Char" visibility="PUBLIC">
             <ownedMinLength xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralNumericValue"
-                id="5c9bcc5b-cbd9-4eac-b832-c7cabb790dcc" name="" abstractType="#8a7a7377-1508-4539-9abb-cfc68c372954"
+                id="2b778240-070f-4f8e-a461-ef181a72595d" name="" abstractType="#259fcb79-82a6-4bca-af75-ab647e9d2faf"
                 value="1"/>
             <ownedMaxLength xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralNumericValue"
-                id="10225722-021f-4970-8283-ce7bc1cc6dcc" name="" abstractType="#8a7a7377-1508-4539-9abb-cfc68c372954"
+                id="d291a5e5-2856-4f37-b5ac-ce89295068b0" name="" abstractType="#259fcb79-82a6-4bca-af75-ab647e9d2faf"
                 value="1"/>
           </ownedDataTypes>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:NumericType"
-              id="2f1b53ed-0b59-4d72-81fa-6632becd8338" name="Double" discrete="false"
+              id="771de9d2-b92b-4fcb-9098-fa90dac6b908" name="Double" discrete="false"
               visibility="PUBLIC" kind="FLOAT"/>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:NumericType"
-              id="fdf08c79-33e3-4251-9f84-d4638609134a" name="Float" discrete="false"
+              id="ea6be710-b3f1-4a0b-827f-27e7d43427ea" name="Float" discrete="false"
               visibility="PUBLIC" kind="FLOAT"/>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:NumericType"
-              id="73adaaba-7762-4f3f-bc48-f32de200dbd6" name="Hexadecimal" visibility="PUBLIC">
+              id="cf9d134a-f218-4b47-b97f-067d1750fba4" name="Hexadecimal" visibility="PUBLIC">
             <ownedMinValue xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralNumericValue"
-                id="f4b59c3e-008e-420e-8325-2b7d0b1b42a2" name="" abstractType="#73adaaba-7762-4f3f-bc48-f32de200dbd6"
+                id="6034621c-4413-4edf-b0bf-09549f85cf4c" name="" abstractType="#cf9d134a-f218-4b47-b97f-067d1750fba4"
                 value="0"/>
             <ownedMaxValue xsi:type="org.polarsys.capella.core.data.information.datavalue:BinaryExpression"
-                id="93ceb576-5cf6-4fc3-a69f-d88c8e4c970a" abstractType="#73adaaba-7762-4f3f-bc48-f32de200dbd6"
+                id="43f05593-ecd2-4258-aca5-87a7dbfa141c" abstractType="#cf9d134a-f218-4b47-b97f-067d1750fba4"
                 operator="SUB">
               <ownedLeftOperand xsi:type="org.polarsys.capella.core.data.information.datavalue:BinaryExpression"
-                  id="f358e66c-ea00-4087-9251-5847a9097734" operator="POW">
+                  id="8a14ec74-b997-4eea-84ad-708616e4a873" operator="POW">
                 <ownedLeftOperand xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralNumericValue"
-                    id="e7b622c7-549b-49d2-a71a-ea57b2db1f54" value="2"/>
+                    id="eee85ef3-791d-4401-a99a-5e144021915f" value="2"/>
                 <ownedRightOperand xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralNumericValue"
-                    id="d43e0e93-1127-4be0-9a8e-4b05aeeb7efb" value="64"/>
+                    id="46894d35-84ba-4f96-9a27-495a6d44e051" value="64"/>
               </ownedLeftOperand>
               <ownedRightOperand xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralNumericValue"
-                  id="27a5aa6a-1922-4e30-8256-c2136976bc4e" value="1"/>
+                  id="d3a17e3f-5997-451b-a9d1-6c31c422a4fd" value="1"/>
             </ownedMaxValue>
           </ownedDataTypes>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:NumericType"
-              id="4d016962-8344-4d01-8b84-7f020c37c3bb" name="Integer" visibility="PUBLIC"/>
+              id="ddfa2be1-75a6-4495-91cf-3db45623e5e8" name="Integer" visibility="PUBLIC"/>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:NumericType"
-              id="264355d3-a4f0-4510-ac0f-ea6f9097fe33" name="Long" visibility="PUBLIC"/>
+              id="5060f883-e059-4826-9d46-7fe0c63cdc5b" name="Long" visibility="PUBLIC"/>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:NumericType"
-              id="e1bb4db3-f135-4f1b-903a-d6c351f87220" name="LongLong" visibility="PUBLIC"/>
+              id="206ba402-f485-489e-ad37-9e20795a2309" name="LongLong" visibility="PUBLIC"/>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:NumericType"
-              id="a0336000-c6ca-4603-b995-a1912aab1364" name="Short" visibility="PUBLIC"/>
+              id="9195849d-3748-4026-8161-989263fca521" name="Short" visibility="PUBLIC"/>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:StringType"
-              id="24a18625-e033-4a06-b50d-27fb9a7882c3" name="String" visibility="PUBLIC"/>
+              id="7d876222-73ed-4a9b-a0f7-5b4f870773c9" name="String" visibility="PUBLIC"/>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:NumericType"
-              id="beb24830-8dc5-4d03-9a05-f89472a7cad5" name="UnsignedInteger" maxInclusive="false"
+              id="ffb244ac-9b85-4da4-aee4-dd9bfa2dd360" name="UnsignedInteger" maxInclusive="false"
               visibility="PUBLIC">
             <ownedMinValue xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralNumericValue"
-                id="a3623b8c-e77f-42f1-a638-db14e9e7ec9c" name="" abstractType="#beb24830-8dc5-4d03-9a05-f89472a7cad5"
+                id="bb58db60-c877-431a-acd0-ac30ccbdbbb2" name="" abstractType="#ffb244ac-9b85-4da4-aee4-dd9bfa2dd360"
                 value="0"/>
           </ownedDataTypes>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:NumericType"
-              id="8a7a7377-1508-4539-9abb-cfc68c372954" name="UnsignedShort" maxInclusive="false"
+              id="259fcb79-82a6-4bca-af75-ab647e9d2faf" name="UnsignedShort" maxInclusive="false"
               visibility="PUBLIC">
             <ownedMinValue xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralNumericValue"
-                id="fefe148e-6e3a-424f-9059-4df7029c34d5" name="" abstractType="#8a7a7377-1508-4539-9abb-cfc68c372954"
+                id="5550e582-fd31-43eb-aac3-f8bb979c58d3" name="" abstractType="#259fcb79-82a6-4bca-af75-ab647e9d2faf"
                 value="0"/>
           </ownedDataTypes>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:NumericType"
-              id="6c0d31e7-7e26-4c71-a447-44d08bc4b120" name="UnsignedLong" maxInclusive="false"
+              id="b6ddc8d9-86d3-419d-8bbb-fa254647ba49" name="UnsignedLong" maxInclusive="false"
               visibility="PUBLIC">
             <ownedMinValue xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralNumericValue"
-                id="ae59fa24-2c78-4aec-93c8-464dc362e620" name="" abstractType="#6c0d31e7-7e26-4c71-a447-44d08bc4b120"
+                id="08c7f322-8126-406b-8d27-350468a92532" name="" abstractType="#b6ddc8d9-86d3-419d-8bbb-fa254647ba49"
                 value="0"/>
           </ownedDataTypes>
           <ownedDataTypes xsi:type="org.polarsys.capella.core.data.information.datatype:NumericType"
-              id="c5fdda08-a552-4939-b355-01abacd69149" name="UnsignedLongLong" maxInclusive="false"
+              id="a79911ae-05e4-48a7-af82-40581ba81bdd" name="UnsignedLongLong" maxInclusive="false"
               visibility="PUBLIC">
             <ownedMinValue xsi:type="org.polarsys.capella.core.data.information.datavalue:LiteralNumericValue"
-                id="afe1be49-37b4-417e-b15a-ce61415c0649" name="" abstractType="#c5fdda08-a552-4939-b355-01abacd69149"
+                id="cee410d4-ed3c-4955-92f8-1ffa908ac874" name="" abstractType="#a79911ae-05e4-48a7-af82-40581ba81bdd"
                 value="0"/>
           </ownedDataTypes>
         </ownedDataPkgs>
       </ownedDataPkg>
       <ownedSystemContext xsi:type="org.polarsys.capella.core.data.ctx:SystemContext"
-          id="3a7baed9-b828-4664-b0c1-60aa66d32ad4" name="System Context">
-        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="8aa9aca4-d2ed-43b9-a919-ebc786ad0242"
-            name="System" abstractType="#15668da4-2465-41dc-817a-129651401f32"/>
+          id="2d1ac01b-47d1-423d-b0af-e0640fdb0549" name="System Context">
+        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="996f17a4-335e-4844-8262-c0897f31d3c5"
+            name="System" abstractType="#84fdaefb-4d0c-4b9e-949a-d1804fa89e4a"/>
       </ownedSystemContext>
-      <ownedSystem xsi:type="org.polarsys.capella.core.data.ctx:System" id="15668da4-2465-41dc-817a-129651401f32"
+      <ownedSystem xsi:type="org.polarsys.capella.core.data.ctx:System" id="84fdaefb-4d0c-4b9e-949a-d1804fa89e4a"
           name="System">
         <ownedStateMachines xsi:type="org.polarsys.capella.core.data.capellacommon:StateMachine"
-            id="ec49cfb8-6027-4921-b57a-e7dda69b4cf5" name="System State Machine">
+            id="3d15c773-0814-4e45-8729-264e622179c2" name="System State Machine">
           <ownedRegions xsi:type="org.polarsys.capella.core.data.capellacommon:Region"
-              id="f18fd1b0-9548-43bb-b888-78f0fc39f1e2" name="Default Region"/>
+              id="2d5e5678-02e4-4392-bc86-f111470ea07e" name="Default Region"/>
         </ownedStateMachines>
       </ownedSystem>
-      <ownedActorPkg xsi:type="org.polarsys.capella.core.data.ctx:ActorPkg" id="4b485219-0523-4844-95d0-88de7989b326"
+      <ownedActorPkg xsi:type="org.polarsys.capella.core.data.ctx:ActorPkg" id="999ae0c9-af83-44c3-94d8-e463f4b3f1f5"
           name="Actors"/>
-      <ownedMissionPkg xsi:type="org.polarsys.capella.core.data.ctx:MissionPkg" id="1ddc99c9-031c-4631-9966-25a8df759b43"
+      <ownedMissionPkg xsi:type="org.polarsys.capella.core.data.ctx:MissionPkg" id="9830f634-57a6-417f-a7ef-6bfc72d5c0d9"
           name="Missions"/>
       <ownedOperationalAnalysisRealizations xsi:type="org.polarsys.capella.core.data.ctx:OperationalAnalysisRealization"
-          id="82b2ed4e-04ad-4e9f-a1c6-ec4376fb858a" targetElement="#28d8b781-c48e-4488-be70-659f040064f2"
-          sourceElement="#b9501e5c-9659-46d9-9f54-4b9e257a2d73"/>
+          id="aa3f3a55-1e79-4d0a-90cf-495dc35d9401" targetElement="#3288ac35-c4e3-489c-b4a4-78614a0662f7"
+          sourceElement="#6a88385a-3218-45db-8fab-0b95499b72a0"/>
     </ownedArchitectures>
     <ownedArchitectures xsi:type="org.polarsys.capella.core.data.la:LogicalArchitecture"
-        id="46fbd545-43d6-40f4-99dd-b4074b9ff0d5" name="Logical Architecture">
+        id="31b40e00-6285-495e-a3ad-11a5eb293ee6" name="Logical Architecture">
+      <ownedExtensions xsi:type="CapellaRequirements:CapellaModule" id="c378e84a-c177-42a8-b36e-48bbe4e6d79d"/>
       <ownedFunctionPkg xsi:type="org.polarsys.capella.core.data.la:LogicalFunctionPkg"
-          id="d029185b-4fa4-4ef2-8fd4-78f79e0b7dc4" name="Logical Functions">
+          id="7f08cf08-e07b-431e-ac41-41d2a71ff6ff" name="Logical Functions">
         <ownedLogicalFunctions xsi:type="org.polarsys.capella.core.data.la:LogicalFunction"
-            id="38742e29-20b1-445d-a446-94d33f8bd404" name="Root Logical Function">
+            id="c3f4181c-4367-4e60-aaa5-8731c9010f8d" name="Root Logical Function">
           <ownedFunctions xsi:type="org.polarsys.capella.core.data.la:LogicalFunction"
-              id="563bf4c4-25ed-4f37-8340-e787b8561620" name="Environment"/>
+              id="e6e85958-484c-4dab-be9d-968496c1e18d" name="Environment"/>
           <ownedFunctionRealizations xsi:type="org.polarsys.capella.core.data.fa:FunctionRealization"
-              id="649552c8-143c-40a3-ad37-48fd8fbcf5d9" targetElement="#f8c4ca3d-5803-4113-a059-970353977ab0"
-              sourceElement="#38742e29-20b1-445d-a446-94d33f8bd404"/>
+              id="b39d8194-1f83-44d0-8072-7961bc31ccd8" targetElement="#29ccc127-c65f-4c29-b202-1935f27a41e8"
+              sourceElement="#c3f4181c-4367-4e60-aaa5-8731c9010f8d"/>
         </ownedLogicalFunctions>
       </ownedFunctionPkg>
       <ownedAbstractCapabilityPkg xsi:type="org.polarsys.capella.core.data.la:CapabilityRealizationPkg"
-          id="3a623900-4660-4f42-9a32-7ce02968e539" name="Capabilities"/>
+          id="7f115cdd-f867-44ad-871b-5296af508eb7" name="Capabilities"/>
       <ownedInterfacePkg xsi:type="org.polarsys.capella.core.data.cs:InterfacePkg"
-          id="2abc67e6-84ba-4c4d-9aa9-847a8c23fcd7" name="Interfaces"/>
+          id="26eac9a7-2851-478b-8221-bacdc858e76c" name="Interfaces"/>
       <ownedDataPkg xsi:type="org.polarsys.capella.core.data.information:DataPkg"
-          id="ee739a3e-287b-4e0e-9797-f7ec1a1396ab" name="Data"/>
+          id="69640513-2ad1-4958-9cb6-7d9bcc48d45e" name="Data">
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="e5512c45-6071-41a2-b3aa-cd3ad2a94bba" name="Invalid owned element of View">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="2f19b3bd-c4be-410c-be8a-9c9e64ed305a">
+            <bodies>self.ownedElement->notEmpty() implies 
+self.ownedElement->forAll(pe|
+ pe.oclIsKindOf(UML2_Metamodel::ElementImport) or
+ pe.oclIsKindOf(UML2_Metamodel::PackageImport) or
+ pe.oclIsKindOf(UML2_Metamodel::Comment) or
+ pe.oclIsKindOf(UML2_Metamodel::Constraint) or
+ pe.oclIsKindOf(UML2_Metamodel::Relationship))</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="64470414-a20f-4622-b680-0f640abf0096" name="Invalid Classifier of Instance Specification">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="d25ad13a-34a4-4192-b22b-5de9a855a6d5">
+            <bodies>encoded5FinstanceSpecificationOfClassifier->isEmpty()</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="e1eef816-70bd-4038-bfd7-d1c553ae649e" name="Invalid owned attribute of ViewPoint">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="0f60be7b-078f-47c4-a2c4-543c47359405">
+            <bodies>ownedAttribute->isEmpty()</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="50af025f-5637-4958-94d5-cf3543ae634d" name="Invalid FlowProperty type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="98c1cd7b-63a7-41c5-b410-92e113323db0">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidFlowPropertyType</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="b3abcf7f-387c-4c32-9522-72853bd7f8ad" name="Invalid ownedAttribute of FlowSpecification">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="274ebf47-2b1e-4c94-95e0-e4dfb0f0e89b">
+            <bodies>ownedOperation->isEmpty() and
+ownedReception->isEmpty() and
+(ownedAttribute->notEmpty() implies
+ownedAttribute->forAll(oclIsKindOf(FlowProperty)))</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="dfac054b-6d5b-427f-9176-5b068cc880ab" name="Invalid parameter type [Behavior]">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="90ee69fb-25df-4ac5-bad9-41dfb60efb0b">
+            <bodies>self.oclIsTypeOf(SysML::Activities::ControlOperator) or
+self.ownedParameter->forAll(type.name&lt;>'ControlValue' or type.oclIsUndefined())</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="cfc7e79b-6f45-4deb-af4a-8004814a7f79" name="Invalid parameter type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="984c517c-e430-46bc-8843-46e3b6339fce">
+            <bodies>(self.oclIsKindOf(UML_Standard_Profile::UML2_Metamodel::Behavior) and self.oclAsType(UML_Standard_Profile::UML2_Metamodel::Behavior).ownedParameter->exists(type.name='ControlValue' or type.oclIsUndefined())) or
+(self.oclIsKindOf(UML_Standard_Profile::UML2_Metamodel::Operation) and self.oclAsType(UML_Standard_Profile::UML2_Metamodel::Operation).ownedParameter->exists(type.name='ControlValue' or type.oclIsUndefined()))</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="d1cf9b97-0a08-42e4-9211-3639c17c75c9" name="Invalid parameter type [Operation]">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="3ca26767-7c91-41a1-a4c8-436de533e3b7">
+            <bodies>self.oclIsTypeOf(SysML::Activities::ControlOperator) or
+self.ownedParameter->forAll(type.name&lt;>'ControlValue' or type.oclIsUndefined())</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="5d54bb4c-304f-4e31-a31c-29aa91b3f31a" name="Missing ControlOperator stereotype">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="44215b75-6a75-48cb-86f7-a93a7d201820">
+            <bodies>(self.oclIsKindOf(UML_Standard_Profile::UML2_Metamodel::Operation) and self.oclAsType(UML_Standard_Profile::UML2_Metamodel::Operation).method->notEmpty()) implies self.oclAsType(UML_Standard_Profile::UML2_Metamodel::Operation).method->forAll(oclIsKindOf(SysML::Activities::ControlOperator))</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="110cf6fd-d597-4b1e-8c9e-dd43469d67dc" name="Invalid Optional lower multiplicity">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="c1a0ee33-0be8-4b0e-b516-be1de9cc50c8">
+            <bodies>not lower.oclIsUndefined() and lower = 0</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="02b9eccd-a628-46aa-96a5-acf8f1f02f51" name="Invalid No Optional lower multiplicity">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="24efa1ef-be61-4806-8c47-bd92520ca417">
+            <bodies>(appliedStereotypeInstance.oclIsUndefined() or (not appliedStereotypeInstance.classifier->exists(name='Optional'))) implies ((not lower.oclIsUndefined()) and lower > 0)</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="d002c810-a4e5-44ef-9ef5-97272513007a" name="Invalid Activity Edge source">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="111b4266-0c4d-48db-b046-be3e722bdfae">
+            <bodies>self.oclIsKindOf(UML_Standard_Profile::UML2_Metamodel::ActivityEdge) implies self.oclAsType(UML_Standard_Profile::UML2_Metamodel::ActivityEdge).source.oclIsKindOf(UML_Standard_Profile::UML2_Metamodel::DecisionNode) or self.oclAsType(UML_Standard_Profile::UML2_Metamodel::ActivityEdge).source.oclIsKindOf(UML_Standard_Profile::UML2_Metamodel::ObjectNode) </bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="f367b53b-6e30-40a9-a787-c56685055d06" name="Missing Probability stereotype">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="eebda8cf-29fd-48ea-a7f8-61bda77ccb70">
+            <bodies>self.source.outgoing->exists(oclIsKindOf(SysML::Activities::Probability)) implies self.oclIsKindOf(SysML::Activities::Probability)</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="6ee36a55-479a-4542-81b5-a0304a11743f" name="Invalid isStream tag">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="76f9ae0b-f00b-4472-85ea-c4f9fab4abc1">
+            <bodies>self.oclIsKindOf(UML_Standard_Profile::UML2_Metamodel::Parameter) implies self.oclAsType(UML_Standard_Profile::UML2_Metamodel::Parameter).isStream</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="50724b96-bfb3-4854-94e6-fdafeaa143f8" name="Invalid isControlType tag">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="2dbbd6bc-13bf-41fa-84e7-a287ec695c13">
+            <bodies>(type.name='ControlValue' and not type.name.oclIsUndefined()) implies isControlType</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="7377d97c-3ab3-4279-8133-fefe1e24e099" name="Invalid source or target of DeriveReqt">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="6598cf52-07e2-464c-993e-f62ec66a1c40">
+            <bodies>client->forAll(oclIsKindOf(SysML::Requirements::Requirement)) and supplier->forAll(oclIsKindOf(SysML::Requirements::Requirement))</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="302771fd-b7d8-460c-a0a3-dec0a326fc8c" name="Invalid owned operation of Requirement">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="e9cdd6c6-4e3f-494e-bcd6-7adadde56298">
+            <bodies>ownedOperation->isEmpty()</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="2e4e56e5-16c7-473b-a1ef-929bf4b7ec49" name="Invalid owned attribute of Requirement">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="19c2e36e-8a3c-40e5-ae27-8d6656ce2838">
+            <bodies>ownedAttribute->isEmpty()</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="77b3e5dd-b5df-4037-9307-2d230f38ec52" name="Invalid generalization of Requirement">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="a28c5762-cd43-4e7d-994f-bd5450aef2df">
+            <bodies>(not general.oclIsKindOf(SysML::Requirements::Requirement)) and (not specific.oclIsKindOf(SysML::Requirements::Requirement))</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="d8465dd3-99c6-4b9e-94af-f3f693374942" name="Missing requirement stereotype">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="6a0188a4-d309-4551-9fd4-99e5a1a6b2aa">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.isValidNested</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="61fc8006-629c-4f58-8c39-463069d2ce73" name="Invalid Association ends name">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="19b34ed0-4d3e-464e-a122-557a317635d7">
+            <bodies>type.oclIsKindOf(SysML::Blocks::Block) and (not self.owningAssociation.oclIsUndefined()) implies (name='')</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="7c88ab46-105c-46c4-a936-a9c504286b93" name="No ItemProperty allowed">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="238bd381-0a12-407d-ba36-6b4c53b36bc9">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidItemFlowHasItemPropertyWithoutRealizingConnector</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="7ad36868-de0d-4095-9eca-ec4817dc13c3" name="Invalid Matching Unit and QuantityKind">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="27f53d52-3944-4add-a483-cc1b3fc53002">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.BlockConstraint.validValueTypeQuantityKind</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="67a45242-6ddb-41ac-a070-a448d55be026" name="Invalid ends type compatibility">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="050215b8-e841-47e7-8889-f79f69c2f502">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="99e6cd98-4c14-4312-9e6f-da7719a61919" name="Invalid FlowPorts and matching flow properties">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="1e29fcdd-7ab5-40a8-8905-e70fde25f1b5">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidFlowPortConstraintMatching</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="fc334749-1efa-484a-bbf0-73fcd290819b" name="Atomic FlowPort direction required">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="7b702271-92f5-472a-9026-e93c5a8252b2">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidAtomicFlowPort</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="1cfc34eb-1b8a-41ea-95d2-a1676bca875e" name="Invalid owned element of ConstraintBlock">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="b97d2c56-a5ab-4521-9483-00c93b8503de">
+            <bodies>com.nomagic.magicdraw.sysml.validation.constraintblock.ConstraintBlock.isValidConstraintBlock</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="acad9e1d-8a3e-40a5-af43-d527886e5fc9" name="Encapsulation of the Block">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="0f26feb3-50c8-4549-9aea-e3980f9eb7e7">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.BlockConstraint.validBlockEncapsulated</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="9bd5c3a4-099a-43e2-9a99-06e600fb6749" name="Invalid owner of ConstraintProperty">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="e983cb37-7d7c-46df-bdb9-10848d051340">
+            <bodies>com.nomagic.magicdraw.sysml.validation.constraintblock.ConstraintBlock.validConstraintPropertyOwner</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="b27195c0-406f-4da3-a698-cca88f37bc37" name="No Atomic FlowPort direction">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="b33e25fc-03dc-437d-949d-d00d5c4a7807">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidFlowPortDefaultDirection</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="497256b2-20bd-4c8a-b4be-b3f07a6b0814" name="Invalid Copy of requirement">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="3bb6f415-7c7c-4e9e-aaf0-7613caa2c0df">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.hasSingleCopy</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="ccd61c5a-4997-4ec4-8894-ebd1638b4e08" name="No discrete with continuous [ActivityEdge]">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="518a01cf-8a39-40eb-976e-a1d6a06e8fb1">
+            <bodies>com.nomagic.magicdraw.sysml.validation.activity.ActivityConstraints.isValidContinousAndDiscrete</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="5e321775-fa03-4c41-9e21-c5e3e5fee323" name="No Overwrite with noBuffer">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="e5598940-b049-422f-b61f-f6fb8245d062">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="69132004-78b8-4197-a28c-8bc3ec3e1420" name="Missing Recursive copy of sub-requirement">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="75ed2694-39df-49f0-a304-39f2894682ed">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.isValidCopyRequirement</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="51372129-d7be-42d8-b113-7c4118b44b4b" name="Invalid direction of nonatomic FlowPort">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="ab907080-8a2c-49ee-ae7c-5eda50f855fd">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidFlowPortDirection</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="4d44e511-cc0c-4963-aea1-1388601f247c" name="No Overwrite with noBuffer">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="907fbd90-3d6c-49b0-854a-950d4d082832">
+            <bodies>com.nomagic.magicdraw.sysml.validation.activity.ActivityConstraints.isValidObjectNodeOverwriteAndNoBuffer</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="29662c42-2af4-4048-87a5-53b18c7ede25" name="No FlowProperty direction">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="2ed5da27-4675-4374-926f-fc33d1ec6902">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidDefaultFlowPropertyDirection</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="b4a05312-131b-4a32-9606-49f8f693697a" name="Invalid FlowPort type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="3810f484-6bc7-4928-b1c5-a5b8b805564c">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidType</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="fa94ff79-697b-4d7b-8cea-d70d3630853d" name="FlowSpec should type FlowPort only">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="e859127f-daad-4b5e-9447-e3f6de484ba6">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidFlowSpecificationType</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="e51afd63-136e-4d6d-a4c4-67f047a7ba49" name="No discrete with continuous [ObjectNode]">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="b0745eab-a1e3-457d-9c86-a17c947b3d7d">
+            <bodies>com.nomagic.magicdraw.sysml.validation.activity.ActivityConstraints.isValidContinousAndDiscrete</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="63b1fb1d-21f4-4174-9000-15ce57f3a2ef" name="Invalid return parameter type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="d54a9ac4-85ab-49b0-bf87-8ceda461038f">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.isValidTestCase</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="4fae53f7-a09d-40ec-96b8-ac0e3643b709" name="No discrete with continuous [Parameter]">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="8f5d94b0-2c4a-40ad-b37b-2f9c2d0c2edc">
+            <bodies>com.nomagic.magicdraw.sysml.validation.activity.ActivityConstraints.isValidContinousAndDiscrete</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="53565ff8-1d5a-4eb3-83ac-485ff83edd49" name="Invalid ends type compatibility">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="28ba5ed8-9081-491c-8b29-57bce1a8a5d5">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.BlockConstraint.isCompatibleBindingConnector</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="9fa014bf-d515-4404-a837-11b0d4d78075" name="Invalid ConstraintParameter connector">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="4a2b23e0-c109-4fb4-a1df-81f6f8026aa0">
+            <bodies>com.nomagic.magicdraw.sysml.validation.constraintblock.ConstraintBlock.isParameterHasBindingConnector</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="c2235807-9449-404a-8a49-f93a27dea53d" name="Invalid ItemProperty type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="66ca7e21-5c53-4f34-aa5c-aee58d7d79c2">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidItemFlowPropertyType</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="151b3192-43f4-4c14-bd7d-6450f8dae869" name="Invalid FlowPort owner">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="c1764690-136a-4a67-9edd-c7b053b306de">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidFlowPortOwner</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="83d78487-3a44-45e7-a2ca-cec4069bd49c" name="Invalid ItemProperty">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="9ab569a7-aa8c-4966-9518-b7f794103a81">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidItemFlowPropertyOwningSourceAndTarget</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="8dc2bf9f-7c7b-45ca-8f12-f89063b09f84" name="Invalid Slave Requirement text">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="08d15951-8aea-405a-b13e-e2f9279e947f">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.isValidClientReadOnlyCopySupplier</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="b0108572-ef8f-4a7d-9a31-f3ad1edec561" name="InterfaceRequirement satisfied by an invalid element">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="50737f75-9d3a-4cee-84c3-e0e6494e4810">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="bb8e613c-4d1a-449f-b1e2-a32a317191b9" name="FunctionalRequirement satisfied by an invalid element">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="1f3b5505-4f0d-4df2-b13d-5400856ba58f">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="54195d36-281e-4c8b-8365-9014f504915c" name="InterfaceRequirement satisfied by an invalid element">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="eb29187e-ba62-476b-9bc9-9e87c3099d96">
+            <bodies>com.nomagic.magicdraw.sysml.validation.nonnormative.NonNormativeExtension.isValidInterfaceRequirement</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="0f85d8f9-aef3-4d7a-931d-316e11b2f1c0" name="No streaming with nonStreaming">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="8f140626-8c67-4df4-9736-a1bbb62a5dc2">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="6b4e3c38-ef50-4250-a8ba-290339c95322" name="Invalid streaming parameter">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="9c32dab9-4ac7-4145-b391-c7737e5c1799">
+            <bodies>com.nomagic.magicdraw.sysml.validation.nonnormative.NonNormativeExtension.isValidNonStreamingHasParameter</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="f1f74826-7c63-474d-a966-9478a3c15166" name="Missing streaming parameter">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="18d4560e-df82-425d-ae28-a4ed5abeb7cc">
+            <bodies>com.nomagic.magicdraw.sysml.validation.nonnormative.NonNormativeExtension.isValidStreamingHasParameter</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="779e574b-899e-45c6-9a32-96a85de87e3f" name="No streaming with nonStreaming">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="88230a6d-da04-4497-8c8c-9552d1d5b25c">
+            <bodies>com.nomagic.magicdraw.sysml.validation.nonnormative.NonNormativeExtension.isValidStreamingAndNonStreaming</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="a6e82916-cec6-4b9f-82c8-1ca02fd329e3" name="DesignConstraint satisfied by an invalid element">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="bade72c3-582b-45a4-920f-d4a244a1e3ce">
+            <bodies>com.nomagic.magicdraw.sysml.validation.nonnormative.NonNormativeExtension.isValidDesignConstraint</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="a729d714-66ca-4f73-a2b4-246ffbd9b09c" name="PerformanceRequirement satisfied by an invalid element">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="7680c4a8-beed-4f66-a71d-03ad267502dc">
+            <bodies>com.nomagic.magicdraw.sysml.validation.nonnormative.NonNormativeExtension.isValidPerFormanceRequirement</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="47f2f460-4285-4aa8-8f61-cd081972dbe0" name="PerformanceRequirement satisfied by an invalid element">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="dbe7b505-aaa3-4791-9b88-46f52e631f5d">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="da1e53b7-166c-4782-8e15-117d41d4a8e0" name="FunctionalRequirement satisfied by an invalid element">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="832c94de-19cd-4e1b-840d-90b8ca98e5e4">
+            <bodies>com.nomagic.magicdraw.sysml.validation.nonnormative.NonNormativeExtension.isValidFunctionalRequirement</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="fef17d5d-fd78-4530-bc80-6e896a894325" name="DesignConstraint satisfied by an invalid element">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="22828e1d-f02d-4b8f-914c-9163d34c1f48">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="5637b97e-3adf-4eee-9756-80a277c84514" name="No discrete with continuous [ObjectNode]">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="43ef9a19-e423-4d62-83f0-e033f9c4ddf8">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="857db5a8-112f-4a55-92f1-243d4b8f1db2" name="No discrete with continuous [ActivityEdge]">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="2bc00c25-532d-46f2-966b-a0337ccf621d">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="d632c758-acf2-4809-8b70-2f678535d0c5" name="No discrete with continuous [Parameter]">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="8ea48e57-2f8b-4ff4-8660-ee632d4dd953">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="61688956-2506-47c0-8e5a-d94942d891a7" name="Missing streaming parameter">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="c3cb04b5-ac45-4249-9799-9edecb553421">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="3c69aead-d5b5-4480-9863-c4b79bc41c4e" name="Invalid streaming parameter">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="1dc8b595-36c7-457b-960f-e3feb7b03e3b">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="b60b7474-c540-4de2-b8ba-96fd51b0ba9d" name="Missing requirement stereotype">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="3e6c5480-b299-4939-ad84-255fa3113a3a">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="d89869c1-f387-4bfa-a40a-0cc11e5b189e" name="Invalid ValueProperty type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="6e03cbd6-ee87-4d2f-a36c-56904b55ff5b">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.BlockConstraint.validValuePropertyType</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="705df312-70e3-4196-a702-45d8fa16a686" name="Invalid PartProperty type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="ae52d67a-83ad-466f-b064-2508c3f3cab4">
+            <bodies>self.oclIsTypeOf(MD_Customization_for_SysML::additional_stereotypes::PartProperty) and (not self.type.oclIsUndefined()) implies self.type.oclIsKindOf(SysML::Blocks::Block)</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="b9f231cc-3dc3-452a-b961-3ed9a8371fab" name="Invalid ReferenceProperty type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="dd51145e-37ab-4ead-9f51-577fa785a7cf">
+            <bodies>self.oclIsTypeOf(MD_Customization_for_SysML::additional_stereotypes::ReferenceProperty) and (not self.type.oclIsUndefined()) implies self.type.oclIsKindOf(SysML::Blocks::Block)</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="14578f68-5cb7-42aa-a475-b8d391c47727" name="Invalid SharedProperty type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="11fa98e5-b5b8-4495-b2a3-449aa6c5b973">
+            <bodies>self.oclIsTypeOf(MD_Customization_for_SysML::additional_stereotypes::SharedProperty) and (not self.type.oclIsUndefined()) implies self.type.oclIsKindOf(SysML::Blocks::Block)</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="d9cb28f3-9ed7-4de4-b0ba-a0495f13b032" name="No FlowProperty direction">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="2b1cd426-105d-4dbc-b7cf-b34b9900466f">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="6ac6ae80-eef3-480a-a688-4db2f102d228" name="Invalid ItemProperty type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="558e8a32-7ebf-436a-81ac-8aaae0892b21">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="b51e3639-00ed-48e4-8859-75486d4a2576" name="Invalid ItemProperty">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="1b5af8e1-ebce-49b0-a1a6-116420159a8a">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="c4be1c59-1b69-45d5-973f-07a6cd76dfcc" name="Invalid ConstraintParameter connector">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="f54222ff-2036-43f5-ad13-675b2a3aee34">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="f7d72034-1468-45f1-9a0f-1fe1ab289983" name="Invalid owned element of ConstraintBlock">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="6df86701-dd2e-4a5f-891e-eca1a9bd4c84">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="ff6def02-b52b-423c-abe2-ece2fa5d1a9c" name="Invalid owner of DistributedProperty">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="11fd7be0-cf22-47ab-9fb0-818e9d562214">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="aabdee6d-aac8-4f5f-8e74-bd3624f51c56" name="Invalid owner of DistributedProperty">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="48afa218-e594-4397-8372-1c1afcfe4710">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.BlockConstraint.validDistributedProperty</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="04a3d57a-a6b1-443a-980e-746da1008bd8" name="No ItemProperty allowed">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="c109c009-6e52-4b11-adb1-83e2c420257d">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="4ee5091d-e48f-4883-bc53-44d2a46abbb9" name="Invalid FlowProperty type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="bfdc15c4-8eab-424a-ade8-e99aea264c45">
+            <bodies></bodies>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="bcc979ea-f6d1-477c-8e6f-b90289331aa2" name="Invalid Matching Unit and QuantityKind">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="b03fd57b-a587-4541-b121-2e8d9eeccdaa">
+            <bodies></bodies>
+            <languages>English</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="6faf5cca-6a11-4518-838a-132a966e4e59" name="Recursive loop of Copy dependencies">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="4ad919d4-034e-477c-be69-e897fafe2164">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.hasNoRecursiveCopy</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="c5ae4550-3545-42e8-8f38-5f815705ae90" name="Missing Block stereotype(s)">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="5294983b-d32c-4535-979d-a30889e7b3c7">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.BlockConstraint.validSpecializedBlockStereotype</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="1a1bf3e7-1ba0-4968-a796-5bebb9277242" name="Missing Block stereotype(s)">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="5e7841be-f9f5-47ed-920b-ddec1bb4180b">
+            <bodies></bodies>
+            <languages>English</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="a389f53c-bed4-4089-8d3a-abeb7f0fad21" name="Missing Constraint Block stereotype(s)">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="2ea6a638-be70-41cf-be9f-e1934af0877f">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.BlockConstraint.validSpecializedConstraintBlockStereotype</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="bb9715f0-5ca9-4b34-92be-1efc058f2671" name="Missing Constraint Block stereotype(s)">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="b971ce54-cadc-44ec-8289-fef117098b17">
+            <bodies></bodies>
+            <languages>English</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="45c5c270-6150-4188-9b79-3ed55e1cb22f" name="Missing Value Type stereotype(s)">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="4f613552-8507-4f23-9389-b26c7fac681f">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.BlockConstraint.validSpecializedValueTypeStereotype</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="b3725761-ed1f-490e-bc3d-a4df89003eff" name="Missing Value Type stereotype(s)">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="68dc012d-c297-4d12-aa13-66f89f793c2c">
+            <bodies></bodies>
+            <languages>English</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="fcde8d5e-e5bf-42ab-96e8-58fb49766aa1" name="Invalid stereotype(s) of client/supplier of Copy">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="08067df2-cc4e-4c38-b1e3-b481e57991d4">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.isRequirementBetweenCopy</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="956597b1-ef03-433d-94ee-4be37ee8b264" name="Missing allocation dependency">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="ff009219-29e0-4cbd-b53e-c9ffc8959fc1"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="586226c7-5a65-47f8-b6fe-a7cfc997b475" name="Invalid represented element of the activity partition">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="23bf23fd-144c-499d-8bf7-2c2378aa858f"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="c064932a-496b-48e8-a294-afc501631555" name="Invalid ValueProperty type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="890df43c-4fc2-49a9-b173-8a80f7f35193"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="4c522989-128d-49f0-8c3c-d6af2cb4df96" name="Invalid Owner Type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="ba63cd83-c4e8-4d36-bea4-3633ce41d7bc">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.ValidOwnerType.isValidOwnerType</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="262c410f-401a-4b1c-ad75-3a060db531e7" name="Invalid PropertySpecificType Name">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="05ccb73d-0c97-4b84-9c81-5fb1fa80c4d6">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.ValidPropertySpecificTypeName.isEmptyName</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="6e4934ac-4687-414d-b04e-576c1a1c2b4f" name="Invalid PropertySpecificType Owner">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="110d08ec-da1c-42a9-949c-ebe18bdff035">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.ValidPropertySpecificTypeOwner.isValidOwner</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="6d913120-9ac6-46d5-b14c-d9c71b680a6a" name="Invalid typed properties size">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="74d619b2-a168-45a1-a50d-b6bfb8b3bb60">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.ValidTypedPropertiesSize.isValidPropertiesSize</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="10a500b2-60a5-42f1-aabd-fcd7ecd3bae2" name="Invalid ConveyedClassifier with RelationEnds ">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="be6c2dc0-a8ff-416b-bdb7-11285125b219">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.ValidConveyedClassifierWithRelationEnds.isValidConveyedClassifierWithRelationEnds</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="85c32dab-54b2-42ed-8664-79b0b3e5654e" name="Incompatible ItemFlow name">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="3b716e37-dff5-400c-bf8c-28c466beec33">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.IncompatibleItemFlowName.isCompatibleItemFlowName</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="3ebcf23f-1fb5-4b89-9e7e-dc06590cfb8a" name="Invalid ConveyedClassifier with RelationEnds ">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="fc3250c9-0714-4e97-8d68-ec438cddcc91"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="e9106643-273c-42f9-b946-06571424ae7c" name="Incompatible ItemFlow name">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="14a9f777-60a7-4532-9113-5475fb748546"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="11732b9d-fdda-46e8-a514-060084eb9642" name="Invalid represented element of the activity partition">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="6e46e65a-ceb9-40bb-bf81-076d800549aa">
+            <bodies>com.nomagic.magicdraw.sysml.validation.allocation.ValidRepresentElementOfActivityPartition.isValidPartition</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="eb524c22-efa3-471c-bd26-649197b6fd53" name="Missing allocation dependency">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="af5dcfa9-d774-4e27-b563-0c446c5ebb43">
+            <bodies>com.nomagic.magicdraw.sysml.validation.allocation.ValidAllocatedSupplier.isValidAction</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="af77ccdf-b955-40ba-baf5-4bd6fe23c145" name="Proxy port cannot also be full port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="1f2aaabd-f722-4f8f-981a-5b244e75dd2c"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="d1b66449-3cd0-4593-a0d6-82c42e8b3362" name="Invalid Type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="79e94c36-eb48-4fe5-88d1-c166ba909210"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="c5466d70-8635-4412-8c1f-fc4f27d28bf9" name="Invalid ports owned by the type of a proxy port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="b74352eb-e246-4bec-9860-0c07f20e8515"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="3dab64b7-0c8d-46c8-a4cf-fce379d097c0" name="Invalid Trigger">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="25780a4a-f68b-4dd1-9aeb-a9c42b78ba47"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="660ce708-6c62-49c3-82c0-013502ddc064" name="Deprecated FlowSpecification">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="0d16f939-3cea-4059-a29e-2022371165c3"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="105a83ac-3d63-47ad-8a42-3115684855e2" name="Deprecated FlowPort">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="f009bfa4-1e5c-42ee-ba67-cbd9a5729e5b"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="d0a191af-7c15-4aac-8e11-9bccc0fce01b" name="Full port cannot also be proxy port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="cbf39311-2a0c-4888-8ed3-9f423de05af7"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="da310f8e-c301-451e-9623-5821b9796d7f" name="Invalid binding connector for full port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="fa8aa6c1-24d8-445e-9c4c-1eac8c4675f7"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="a3197ee3-9d1c-4561-b048-54b0e6a44bee" name="Full port cannot be behavioral">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="7e6ccd64-d465-4ed3-9b3f-d33547ce9a05"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="3e6ccbe2-dd51-44a2-94f3-2882968974fa" name="Full port cannot be conjugated">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="fc942a6f-4641-4e42-bb89-1a9acb064de2"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="78a87004-dccb-4399-b1a2-220257035b00" name="Obsolete Unit for QUDV">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="254e31b8-5b52-411a-b118-a6e2d5ad1350"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="1838263a-735b-4a9a-920d-6aa04bf837ea" name="Obsolete Quantity Kind for QUDV">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="6f5d52fe-a18d-478e-a2ae-5fbc6b3fdc5b"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="831f746c-8c75-41db-a4d9-3b76c3ec149e" name="Obsolete Unit used in Value Type for QUDV">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="77cf0c11-40df-4f1b-80fc-49e602d73ca4"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="ded045ba-6f6e-4a40-893f-813972c7000e" name="Obsolete Quantity Kind used in Value Type for QUDV">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="21ecff53-51f2-42d1-901c-87f40c903690"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="46cbeab2-93c2-4855-8894-ac9539601a55" name="Invalid Structural Feature">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="25c021b8-7e1f-44d0-b913-df5f81d561f7"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="88056878-60eb-46f6-a013-2be44b2e14ec" name="Invalid Featuring Classifier of the Structural Feature">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="fc303ee6-4f51-4c29-aa54-083895078762"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="ee1b2a22-ef6d-42df-8397-4126b610c9f3" name="Invalid Owned Behavior, General Classifiers, or Classifier Behavior">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="4e1a8a29-0678-4033-a3ba-356a139a1d6f"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="9535c3f0-1fc4-48c6-862c-32ffbfa84fee" name="Invalid type of ports">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="296ce7f3-41b0-4601-895f-d165fc3701e3"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="e75d3703-0c93-455b-9aeb-9052b6c8573c" name="Invalid Applied Stereotype, Subsetted, or Redefined">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="e73c6188-adc1-4d90-9eb8-acc17008f2fb"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="421815f7-f834-40e4-80a6-acf2cfe98016" name="Invalid Feature Direction">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="929ad449-839c-47d0-b8ea-39a18efea2fb"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="5c03855e-241b-4a1d-a32a-aef7cb476f8e" name="Invalid ports in the On Port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="3623eed4-e679-404d-90b5-38e4fb1597e1"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="b1864c55-c228-4ca0-aa27-13d93d0a409f" name="Invalid Visibility of the Structural Feature">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="2b02217f-f5a9-49d2-b288-6b50006554c9">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidAcceptChangeStructuralFeatureEventActionStructuralFeatureVisibility</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="9332ccc2-a02d-4827-9cfe-a9572415f2a5" name="Invalid result pins">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="cae31f6c-037d-4184-8d14-eb164cd3f1a5">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidAcceptChangeStructuralFeatureEventActionPins</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="85dbd1e5-0694-4e08-b377-14b88f1acf83" name="Invalid Owner of the Structural Feature">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="2d01d059-28eb-477e-9791-eed43c4e5ace">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidAcceptChangeStructuralFeatureEventActionStructuralFeature</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="59cb71c6-848e-4da6-928e-23282507d951" name="Invalid ports in the Port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="932c124a-10f8-46de-a367-3d4980940f05"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="87144458-e7da-47fb-a6fb-756c28445212" name="Invalid ports in the On Nested Port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="9a790e63-c8dc-4378-9216-06217ed47b68"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="438d4b89-3c36-48b7-9e2e-df0e6414d6c2" name="Invalid first port in the On Nested Port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="4b16de65-072e-4890-91f4-af00a64bd837"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="1a41f2d7-0cba-4c48-9b5b-5b8c4a2e2bc3" name="Invalid type of ports in the On Nested Port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="33086ae2-7a7c-4cbd-842c-5d9538e1c241"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="d4e2721a-2a23-4d0a-8360-d665a64f2f12" name="Invalid last port in the On Nested Port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="05185ca2-522d-476d-a3e2-9d6de9b52f77"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="f3afebce-417c-4cc5-b17a-89a0cab30d9b" name="Invalid first port in the On Nested Port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="e418552f-d5f8-4d22-97c2-5808e00f4d8f"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="1690675e-677d-4ccb-99d0-ca0a1ff29cf9" name="Invalid types of ports in the On Nested Port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="c7cacb64-616f-4268-9faf-c3fa3d166b7e"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="73d0bd35-25c1-4691-9b79-a084aced1e9c" name="Invalid last port in the On Nested Port">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="d1b3fa4b-0bb0-4c65-9659-0023cd3fc080"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="31e463a3-57d0-428e-a371-599a11e76b0c" name="Obsolete Quantity Kind used in Unit for QUDV">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="e5c026ba-66d7-4757-bcf8-fb3e556d5136"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="1c527de5-2ffa-4eea-8f0f-065f2b58c3ec" name="Inappropriate owner of Constraint Property">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="648bd568-b825-4118-a8ef-9db37093597f"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="93734e9a-496f-4bc1-9978-f4ea85f92821" name="Inappropriate Block Property stereotype(s) for Block Property that is typed by ConstraintBlock">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="834dce25-25ca-4a9b-bb34-689224da2f2d"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="c8ff46d1-4733-47eb-a260-fcd9616afa8e" name="Invalid Aggregation">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="4aee8c52-4722-45ee-b4d1-97d034c4ede8"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="fa71e61d-76cc-4dd8-83da-c2cdd1516c37" name="Invalid Owner">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="1f6ebcf9-74a5-423e-8d80-a2c8ef14f3e4">
+            <bodies>com.nomagic.magicdraw.sysml.validation.block.ValidParticipantProperty.isValidOwnerType</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="6ecddb32-7ed0-43a5-bdb3-ae22743ed456" name="Invalid interface block inheritance">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="132c66e2-b6f5-42d3-a68a-beea3d13524a">
+            <bodies>self.generalization->forAll(i | i.general.oclIsKindOf(InterfaceBlock))</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="2d474f01-b19d-4c13-b7c0-c3b3b6b25a5f" name="Invalid properties">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="8791d79a-7a75-41c1-9086-d7ac068d8cf9">
+            <bodies>com.nomagic.magicdraw.sysml.validation.portandflow.PortAndFlow.isValidInterfaceBlockProperties</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="08293836-627c-4748-8a76-b90ae480b58e" name="Unused Constraint Parameter">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="8a61d45c-9f49-4678-8277-049632dffe9f"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="2569508d-6923-4e56-aae3-90c6fd070958" name="Action Behavior is not allocated">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="c93d91df-999a-4731-a9cc-a97a628fbd26"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="40e68e28-f50c-4b3d-9da6-e8c61e1e1072" name="AdjunctProperty">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="bedd2675-c443-4264-8ecf-978550dcd05a"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="5c3fed17-f2b3-4778-b3ee-19b70d3a86b3" name="BoundReference">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="c78ecb52-dbaf-4ff0-b736-f64b188b9e1f"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="2668028c-29b5-4243-b649-422a4c2a078b" name="ClassifierBehavior">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="4a583d1a-74b4-4ac0-b8d1-5e4c743f4245"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="02c2e561-54e9-46d3-a7e1-9bfdcf66d83f" name="Invalid source or target of DeriveReqt">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="3c996a84-686d-4d02-b784-896f67ec8aa6">
+            <bodies>client->forAll(oclIsKindOf(SysML::Requirements::Requirement)) and supplier->forAll(oclIsKindOf(SysML::Requirements::Requirement))</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="b3c84973-19ef-491c-ba43-b31b08b14812" name="Invalid owned operation of Requirement">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="0c06a3e0-6e48-4df1-b755-8b3c285e466f">
+            <bodies>ownedOperation->isEmpty()</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="f113a3bb-ad30-4066-8917-9fee1b8bcbbf" name="Invalid stereotype(s) of client/supplier of Copy">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="0b77953c-c832-4d06-818a-cd2353109c8b">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.isRequirementBetweenCopy</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="1d985649-037c-49bc-97a6-d8cbb2feeb20" name="Invalid owned attribute of Requirement">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="3a0ea7c0-525e-4ebd-806a-7e4f88dfc716">
+            <bodies>ownedAttribute->isEmpty()</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="4a272f97-80fd-4693-92ee-47bbad282359" name="Invalid return parameter type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="07a5a0bf-5300-440d-bcd6-ef0bbd1a4190">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="8e33deb9-4b6e-478c-afa3-415299b99bde" name="Recursive loop of Copy dependencies">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="8f3778ad-3de2-43c5-bccf-c2486c39869e">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.hasNoRecursiveCopy</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="86c81f5b-c22e-4f7e-bad4-ff189bf30545" name="Invalid Copy of requirement">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="37ee84a2-2125-4397-ae72-8898314efaa9">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.hasSingleCopy</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="59b8b876-7b82-4aa2-90c4-8f2eeca2e986" name="Missing Recursive copy of sub-requirement">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="f78742ac-3278-4a0c-b504-a28dc798ad08">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.isValidCopyRequirement</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="1c418c43-0bb4-4c00-83cb-5a32c0c0953a" name="Invalid Slave Requirement text">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="2010972c-ead1-4e00-a31e-aecb05f82312">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="aa8ab7c5-0467-4e4b-b4ca-4c793bb15a01" name="Invalid Copy of requirement">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="60781bf0-45ba-4bcc-b153-edd7c385c63a">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="49821a25-9488-48cd-b883-495834b25b08" name="Invalid Slave Requirement text">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="b438f71a-e88a-4706-a800-d553a634be3c">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.isValidClientReadOnlyCopySupplier</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="bb56c70f-4ecd-4530-b7f9-e1765560a18f" name="Invalid return parameter type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="62583f98-e6d6-49bd-bea2-9317d2a44a54">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.isValidTestCase</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="dc79287c-764c-4f59-8103-fce595cd7194" name="Missing requirement stereotype">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="2b9d3f3d-53b3-4cf9-8be1-2aa6c41b13ab">
+            <bodies>com.nomagic.requirements.validation.requirement.Requirement.isValidNested</bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="d324db0d-28f4-4023-9d0c-0fafc4ffbbd1" name="Invalid stereotype(s) of client/supplier of Copy">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="a10d4a51-2bd4-4957-bf30-21e73128dd34">
+            <bodies></bodies>
+            <languages>English</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="6a1a5f1b-6b43-48e8-aaa5-681eda270b03" name="Invalid generalization of Requirement">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="f017cd1e-1ed3-41ea-86f9-f2c308932b36">
+            <bodies>(not general.oclIsKindOf(SysML::Requirements::Requirement)) and (not specific.oclIsKindOf(SysML::Requirements::Requirement))</bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="9bd9b91c-2496-4f97-b413-c18fbbfc5ca2" name="Testcase Verdict">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="f5f61375-6f4b-478f-8d06-7b303a75c5fa"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="107c61fc-0c3d-4367-8180-0f4d2952c476" name="Incompatible flow">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="cf942847-a8f5-4303-bc70-936114dccd38"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="1788ad7e-2872-45e2-8616-8657af968618" name="Incompatible flow directions">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="b991d587-e9c6-4901-b0eb-478369ee9fef"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="5074e02c-5fc6-4617-aaed-3c891622ae14" name="Confirm AutoWiring Connector">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="c2549b98-1bd8-496d-bee8-0416b657227f"/>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="361fe519-09d8-466c-8191-7056d5113c66" name="total">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="5b9811ae-e788-41ef-8f1a-2f24aff2c189">
+            <bodies>total = parent + sum(child)</bodies>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="1a1b36ca-ba05-4b7f-a710-c9cd704626be" name="Suspect Unlinked Requirement">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="1642f840-bd63-417a-a72d-863abaf54ee5">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="ceb16954-ae76-4bb3-af73-1343a1113d28" name="Invalid Connector">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="473e2d08-57d8-4473-9955-e2709329ac79">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="78454e5a-df84-45df-b25b-0dc8de5cf36d" name="Value Specification Type">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="ebb268da-a8b8-4743-857b-5aad85f2c638">
+            <bodies></bodies>
+            <languages>OCL2.0</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+        <ownedConstraints xsi:type="org.polarsys.capella.core.data.capellacore:Constraint"
+            id="f9beaa8b-7897-4ffc-add7-6c2c9e8c063a" name="ConnectorProperty">
+          <ownedSpecification xsi:type="org.polarsys.capella.core.data.information.datavalue:OpaqueExpression"
+              id="02203395-7f54-4dfb-aecc-c9759513b032">
+            <bodies></bodies>
+            <languages>Binary</languages>
+          </ownedSpecification>
+        </ownedConstraints>
+      </ownedDataPkg>
       <ownedLogicalContext xsi:type="org.polarsys.capella.core.data.la:LogicalContext"
-          id="f32f16e6-d4aa-40d5-b10d-b7ee7c7b631c" name="Logical Context">
-        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="b15b4c2e-e81c-4249-934a-d3cbbba4a0ed"
-            name="Logical System" abstractType="#08f8a6b4-4792-4636-bd1a-7e81f89f1db4"/>
-        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="db7a2e18-850a-4c69-b112-58ddf52ba577"
-            name="Generic Actor" abstractType="#f30736fc-bb04-4680-9da8-e8a2de7330b4"/>
+          id="892c5bbb-21a5-4912-9604-50b636b19d64" name="Logical Context">
+        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="dde0152a-31c8-4a8f-8428-7f1fb24940be"
+            name="Logical System" abstractType="#2632bf23-e3ae-4a0a-8ea6-19ed283f2dd7"/>
+        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="24f88c18-97b8-4e8f-8305-4758b352fb3e"
+            name="Generic Actor" abstractType="#e0945adb-4ab2-44e6-a68b-baaf25b3e7d0"/>
       </ownedLogicalContext>
       <ownedLogicalComponent xsi:type="org.polarsys.capella.core.data.la:LogicalComponent"
-          id="08f8a6b4-4792-4636-bd1a-7e81f89f1db4" name="Logical System">
-        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="00597d1c-5237-496c-96c3-3150c63bd611"
-            name="Comp_A" abstractType="#addc583d-5819-4861-b9ae-4caa1c2efcd6"/>
-        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="0d2b96cf-6f3a-47d5-b8bf-fc15b505917c"
-            name="Comp_B" abstractType="#409f7ae2-8383-449f-9bf9-e2a515fd06b7"/>
-        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="2bfcba56-682f-471b-9e10-9332fd81ed51"
-            name="Comp_B1" abstractType="#86d130ba-23c0-4e94-8a43-87ff271a8aca"/>
+          id="2632bf23-e3ae-4a0a-8ea6-19ed283f2dd7" name="Logical System">
+        <ownedStateMachines xsi:type="org.polarsys.capella.core.data.capellacommon:StateMachine"
+            id="60876612-7d18-4afa-adfe-8fe7860177df" name="02 State Definition"/>
+        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="91d9949b-e90b-4b44-9a94-87ab20bb2b77"
+            name="Comp_A" abstractType="#875f2779-f7ec-4e45-958b-1ac3faa7e5c6"/>
+        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="75c314ab-6cea-40ee-9524-b7a00a686425"
+            name="Comp_B" abstractType="#14d549f4-8b98-4b50-a4d0-834dd9a9d5e3"/>
+        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="307d8099-7974-4731-b88c-143d72327393"
+            name="Comp_B1" abstractType="#a299ce5e-cf31-4ad3-8263-abe78c70b361"/>
         <ownedLogicalComponents xsi:type="org.polarsys.capella.core.data.la:LogicalComponent"
-            id="addc583d-5819-4861-b9ae-4caa1c2efcd6" name="Comp_A" description="Wed Mar 20 13:35:59 CET 2019"/>
+            id="875f2779-f7ec-4e45-958b-1ac3faa7e5c6" name="Comp_A"/>
         <ownedLogicalComponents xsi:type="org.polarsys.capella.core.data.la:LogicalComponent"
-            id="409f7ae2-8383-449f-9bf9-e2a515fd06b7" name="Comp_B" description="Wed Mar 20 13:35:59 CET 2019">
-          <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="669ad639-e92d-4a55-acce-3c858753df8c"
-              name="Comp_C" abstractType="#0ee67e7e-f420-4eb7-9d4c-9ee80418d8b6"/>
+            id="14d549f4-8b98-4b50-a4d0-834dd9a9d5e3" name="Comp_B">
+          <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="41025123-ea79-403e-a301-eefd7fb36da3"
+              name="Comp_C" abstractType="#0fdbd336-2379-4f91-bc1c-27dac117df50"/>
           <ownedLogicalComponents xsi:type="org.polarsys.capella.core.data.la:LogicalComponent"
-              id="86d130ba-23c0-4e94-8a43-87ff271a8aca" name="Comp_B1" description="Wed Mar 20 13:35:59 CET 2019"/>
+              id="a299ce5e-cf31-4ad3-8263-abe78c70b361" name="Comp_B1"/>
         </ownedLogicalComponents>
         <ownedLogicalComponents xsi:type="org.polarsys.capella.core.data.la:LogicalComponent"
-            id="0ee67e7e-f420-4eb7-9d4c-9ee80418d8b6" name="Comp_C" description="Wed Mar 20 13:35:59 CET 2019"/>
+            id="0fdbd336-2379-4f91-bc1c-27dac117df50" name="Comp_C"/>
         <ownedSystemRealizations xsi:type="org.polarsys.capella.core.data.la:SystemRealization"
-            id="bb4f35d5-e97a-4cf9-977f-222cc095953a" targetElement="#15668da4-2465-41dc-817a-129651401f32"
-            sourceElement="#08f8a6b4-4792-4636-bd1a-7e81f89f1db4"/>
+            id="2f655413-4f82-4383-a64b-560a50a0cde8" targetElement="#84fdaefb-4d0c-4b9e-949a-d1804fa89e4a"
+            sourceElement="#2632bf23-e3ae-4a0a-8ea6-19ed283f2dd7"/>
       </ownedLogicalComponent>
       <ownedLogicalActorPkg xsi:type="org.polarsys.capella.core.data.la:LogicalActorPkg"
-          id="9d188619-21f3-48bf-8d31-d9b8d8edc8c2" name="Logical Actors">
+          id="4fa933de-7ae5-4be5-bf16-dbaf1c3dd9c8" name="Logical Actors">
         <ownedLogicalActors xsi:type="org.polarsys.capella.core.data.la:LogicalActor"
-            id="f30736fc-bb04-4680-9da8-e8a2de7330b4" name="Generic Actor">
+            id="e0945adb-4ab2-44e6-a68b-baaf25b3e7d0" name="Generic Actor">
           <ownedFunctionalAllocation xsi:type="org.polarsys.capella.core.data.fa:ComponentFunctionalAllocation"
-              id="e88a49a1-19f7-448f-961b-d7933334dded" targetElement="#563bf4c4-25ed-4f37-8340-e787b8561620"
-              sourceElement="#f30736fc-bb04-4680-9da8-e8a2de7330b4"/>
+              id="7f603b58-a41a-4067-999f-3a9e6b05cf2b" targetElement="#e6e85958-484c-4dab-be9d-968496c1e18d"
+              sourceElement="#e0945adb-4ab2-44e6-a68b-baaf25b3e7d0"/>
         </ownedLogicalActors>
       </ownedLogicalActorPkg>
       <ownedSystemAnalysisRealizations xsi:type="org.polarsys.capella.core.data.la:SystemAnalysisRealization"
-          id="40853155-f7f7-471c-b1b7-1c5e2cb50650" targetElement="#b9501e5c-9659-46d9-9f54-4b9e257a2d73"
-          sourceElement="#46fbd545-43d6-40f4-99dd-b4074b9ff0d5"/>
+          id="a93841d9-421b-4c2b-bcd2-2333daa5323f" targetElement="#6a88385a-3218-45db-8fab-0b95499b72a0"
+          sourceElement="#31b40e00-6285-495e-a3ad-11a5eb293ee6"/>
     </ownedArchitectures>
     <ownedArchitectures xsi:type="org.polarsys.capella.core.data.pa:PhysicalArchitecture"
-        id="e692b7ee-ec24-4ee8-9f04-7cf8e19db045" name="Physical Architecture">
+        id="1fc32ec3-3fe1-4c45-87d0-add44642723b" name="Physical Architecture">
       <ownedFunctionPkg xsi:type="org.polarsys.capella.core.data.pa:PhysicalFunctionPkg"
-          id="b1b07af1-ce98-451d-a82f-ab05cf8380e3" name="Physical Functions">
+          id="b0f78fb4-2227-43a9-942c-4b34933a2521" name="Physical Functions">
         <ownedPhysicalFunctions xsi:type="org.polarsys.capella.core.data.pa:PhysicalFunction"
-            id="76d10eb9-4079-4fe5-b819-03517791320f" name="Root Physical Function">
+            id="fe33c344-f41f-417e-9997-5fff474f00c1" name="Root Physical Function">
           <ownedFunctionRealizations xsi:type="org.polarsys.capella.core.data.fa:FunctionRealization"
-              id="d9e4ecae-e897-4216-9721-c8b29ce3c35b" targetElement="#38742e29-20b1-445d-a446-94d33f8bd404"
-              sourceElement="#76d10eb9-4079-4fe5-b819-03517791320f"/>
+              id="a9024f9c-f912-4906-82c7-506c3a100d34" targetElement="#c3f4181c-4367-4e60-aaa5-8731c9010f8d"
+              sourceElement="#fe33c344-f41f-417e-9997-5fff474f00c1"/>
         </ownedPhysicalFunctions>
       </ownedFunctionPkg>
       <ownedAbstractCapabilityPkg xsi:type="org.polarsys.capella.core.data.la:CapabilityRealizationPkg"
-          id="73a03dd6-9448-49d1-bac3-afaa09fa830d" name="Capabilities"/>
+          id="5167d2c3-3c31-4ccb-bca9-9fb61d6784b7" name="Capabilities"/>
       <ownedInterfacePkg xsi:type="org.polarsys.capella.core.data.cs:InterfacePkg"
-          id="cbdbd8e2-ee59-4735-aa85-109a2180104c" name="Interfaces"/>
+          id="b4f692be-c617-4f3f-b9b6-daf5ed7b25f6" name="Interfaces"/>
       <ownedDataPkg xsi:type="org.polarsys.capella.core.data.information:DataPkg"
-          id="d6a361c9-9207-41dd-aea0-c56653070908" name="Data"/>
+          id="16d2c434-4b3c-4795-a777-7739f4270064" name="Data"/>
       <ownedPhysicalContext xsi:type="org.polarsys.capella.core.data.pa:PhysicalContext"
-          id="81d4c42e-c94d-4044-bfe4-6412dd493db1" name="Physical Context">
-        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="cec6eea9-14c7-4174-8d58-051abdbcefd1"
-            name="Physical System" abstractType="#fb0588ec-0014-4ca4-9135-7efa0e82a4f5"/>
+          id="a2c9d883-a068-4af4-a76d-cdbaf6db35d9" name="Physical Context">
+        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="5a2469b5-ee27-44da-abde-9088d2e9f053"
+            name="Physical System" abstractType="#a588cdd0-6518-4fa4-a208-dcc0c2e12d6f"/>
       </ownedPhysicalContext>
       <ownedPhysicalComponent xsi:type="org.polarsys.capella.core.data.pa:PhysicalComponent"
-          id="fb0588ec-0014-4ca4-9135-7efa0e82a4f5" name="Physical System">
+          id="a588cdd0-6518-4fa4-a208-dcc0c2e12d6f" name="Physical System">
         <ownedLogicalComponentRealizations xsi:type="org.polarsys.capella.core.data.pa:LogicalComponentRealization"
-            id="19b4a926-d8a0-4df0-8214-a98cc910b612" targetElement="#08f8a6b4-4792-4636-bd1a-7e81f89f1db4"
-            sourceElement="#fb0588ec-0014-4ca4-9135-7efa0e82a4f5"/>
+            id="0f55fb85-8432-4785-8a17-13d102c1c437" targetElement="#2632bf23-e3ae-4a0a-8ea6-19ed283f2dd7"
+            sourceElement="#a588cdd0-6518-4fa4-a208-dcc0c2e12d6f"/>
       </ownedPhysicalComponent>
       <ownedPhysicalActorPkg xsi:type="org.polarsys.capella.core.data.pa:PhysicalActorPkg"
-          id="5412a4db-1208-439e-b8a0-367b9cdb8718" name="Physical Actors"/>
+          id="3b42e679-087d-4dcc-a278-2ea8638f6f31" name="Physical Actors"/>
       <ownedLogicalArchitectureRealizations xsi:type="org.polarsys.capella.core.data.pa:LogicalArchitectureRealization"
-          id="0064a7e2-b959-4e3a-9eb2-7eb4d0757114" targetElement="#46fbd545-43d6-40f4-99dd-b4074b9ff0d5"
-          sourceElement="#e692b7ee-ec24-4ee8-9f04-7cf8e19db045"/>
+          id="54b96c95-7f96-467d-903e-ffe5524b2653" targetElement="#31b40e00-6285-495e-a3ad-11a5eb293ee6"
+          sourceElement="#1fc32ec3-3fe1-4c45-87d0-add44642723b"/>
     </ownedArchitectures>
     <ownedArchitectures xsi:type="org.polarsys.capella.core.data.epbs:EPBSArchitecture"
-        id="14420d72-56f8-408d-abdf-116aceff3290" name="EPBS Architecture">
+        id="4107917a-6f39-43e1-8488-456382d96d1f" name="EPBS Architecture">
       <ownedAbstractCapabilityPkg xsi:type="org.polarsys.capella.core.data.la:CapabilityRealizationPkg"
-          id="6725c3db-10eb-4943-a2ae-9f67c5c29531" name="Capabilities"/>
+          id="0215b01e-cd27-4f79-b618-f05cc84642e8" name="Capabilities"/>
       <ownedEPBSContext xsi:type="org.polarsys.capella.core.data.epbs:EPBSContext"
-          id="c15d3ada-8e33-4cec-86f0-eb71358b6cd5" name="EPBS Context">
-        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="715cd7fc-98dd-449c-a166-a8047269ee1f"
-            name="System" abstractType="#9dfa050e-ef27-4e98-9dce-4242640076c7"/>
+          id="b2e5efa1-0c34-4c32-8a6a-239454b15bbd" name="EPBS Context">
+        <ownedFeatures xsi:type="org.polarsys.capella.core.data.cs:Part" id="83742eae-cea6-4255-8b1b-881425d97d2e"
+            name="System" abstractType="#d2dc3045-b5bd-4041-b061-07b1acbed4ca"/>
       </ownedEPBSContext>
       <ownedConfigurationItem xsi:type="org.polarsys.capella.core.data.epbs:ConfigurationItem"
-          id="9dfa050e-ef27-4e98-9dce-4242640076c7" name="System" kind="SystemCI">
+          id="d2dc3045-b5bd-4041-b061-07b1acbed4ca" name="System" kind="SystemCI">
         <ownedPhysicalArtifactRealizations xsi:type="org.polarsys.capella.core.data.epbs:PhysicalArtifactRealization"
-            id="6ec35cad-1fed-40cb-8871-b110f7fae31d" targetElement="#fb0588ec-0014-4ca4-9135-7efa0e82a4f5"
-            sourceElement="#9dfa050e-ef27-4e98-9dce-4242640076c7"/>
+            id="c93ebae7-79fb-4a8b-8ec6-37b13ad44428" targetElement="#a588cdd0-6518-4fa4-a208-dcc0c2e12d6f"
+            sourceElement="#d2dc3045-b5bd-4041-b061-07b1acbed4ca"/>
       </ownedConfigurationItem>
       <ownedPhysicalArchitectureRealizations xsi:type="org.polarsys.capella.core.data.epbs:PhysicalArchitectureRealization"
-          id="97b4e7b1-f4f0-460e-8046-1d62fe5f35b8" targetElement="#e692b7ee-ec24-4ee8-9f04-7cf8e19db045"
-          sourceElement="#14420d72-56f8-408d-abdf-116aceff3290"/>
+          id="288bdb7a-55ba-4e3e-b0a3-1f2a97b0af5c" targetElement="#1fc32ec3-3fe1-4c45-87d0-add44642723b"
+          sourceElement="#4107917a-6f39-43e1-8488-456382d96d1f"/>
     </ownedArchitectures>
   </ownedModelRoots>
 </org.polarsys.capella.core.data.capellamodeller:Project>

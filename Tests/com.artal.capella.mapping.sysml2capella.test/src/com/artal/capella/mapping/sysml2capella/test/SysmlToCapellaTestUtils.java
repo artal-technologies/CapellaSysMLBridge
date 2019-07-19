@@ -30,6 +30,7 @@ import org.eclipse.emf.diffmerge.bridge.api.IBridgeTrace;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.policies.DelegatingTraceBasedMatchPolicy;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.interactive.util.ResourceUtil;
+import org.eclipse.emf.diffmerge.bridge.traces.gen.bridgetraces.BridgetracesPackage;
 import org.eclipse.emf.diffmerge.diffdata.impl.EComparisonImpl;
 import org.eclipse.emf.diffmerge.impl.policies.ConfigurableDiffPolicy;
 import org.eclipse.emf.ecore.EAttribute;
@@ -160,6 +161,10 @@ public class SysmlToCapellaTestUtils {
 	 */
 	private static Resource getTraceResource(URI bridgeTrace) {
 		ResourceSetImpl rs = new ResourceSetImpl();
+		
+		
+		
+		
 		Resource traceResource = ResourceUtil.getCreateResourceForUri(bridgeTrace, rs);
 		ResourceUtil.ensureLoaded(traceResource);
 		return traceResource;

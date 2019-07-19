@@ -61,10 +61,10 @@ public class Sysml2CapellaMappingTest {
 	public void classesToComponentsTest() throws IOException {
 		// load uml source project.
 		String pathUmlModel = "resources/cameoResources/CameoToCapella.uml";
-		String pathReferenceModel = "resources/capellaResources/referenceProject/CapellaProjectReference.melodymodeller";
-		String pathRefBridgeTrace = "resources/capellaResources/referenceProject/test.bridgetraces";
-		String bridgeTraceName = "test";
-		String pathEmptyProject = "resources/capellaResources/emptyproject/CapellaProjectEmpty.melodymodeller";
+		String pathReferenceModel = "resources/capellaResources/coffeedispense/CoffeeDispense.melodymodeller";
+		String pathRefBridgeTrace = "resources/capellaResources/coffeedispense/CoffeeDispense.melodymodeller.bridgetraces";
+		String bridgeTraceName = "CoffeeDispense.melodymodeller";
+		String pathEmptyProject = "resources/capellaResources/coffeedispense/CoffeeDispense_empty.melodymodeller";
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "", pathEmptyProject);
 	}
 
@@ -78,7 +78,7 @@ public class Sysml2CapellaMappingTest {
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "comp01Test",
 				pathEmptyProject);
 	}
-	
+
 	@Test
 	public void comp02Test() throws IOException {
 		String pathUmlModel = "resources/capellaResources/Components/Comp_02/ComponentCameo02.uml";
@@ -89,7 +89,7 @@ public class Sysml2CapellaMappingTest {
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "comp02Test",
 				pathEmptyProject);
 	}
-	
+
 	@Test
 	public void comp03Test() throws IOException {
 		String pathUmlModel = "resources/capellaResources/Components/Comp_03/ComponentCameo03.uml";
@@ -100,7 +100,7 @@ public class Sysml2CapellaMappingTest {
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "comp03Test",
 				pathEmptyProject);
 	}
-	
+
 	@Test
 	public void capa04Test() throws IOException {
 		String pathUmlModel = "resources/capellaResources/Capabilities/Capa_04/CapabilitiesCameo04.uml";
@@ -111,7 +111,7 @@ public class Sysml2CapellaMappingTest {
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "capa04Test",
 				pathEmptyProject);
 	}
-	
+
 	@Test
 	public void funct05Test() throws IOException {
 		String pathUmlModel = "resources/capellaResources/Functions/Funct_05/FunctionCameo05.uml";
@@ -148,7 +148,6 @@ public class Sysml2CapellaMappingTest {
 		// create the trace file
 
 		File createdTrace = new File(fileTemp.getAbsolutePath() + "/" + bridgeTraceName + ".bridgetraces");
-
 		// launch the sysml to capella mapping.
 		SysmlToCapellaTestUtils.launchSysml2Capella(model, tmpFile, createdTrace.getAbsolutePath());
 		// load the created and filled capella project.
