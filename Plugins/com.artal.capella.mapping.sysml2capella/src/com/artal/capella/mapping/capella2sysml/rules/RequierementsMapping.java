@@ -72,10 +72,12 @@ public class RequierementsMapping extends AbstractMapping {
 				.getCapellaObjectFromAllRules(_source + "TEXTUALREQUIREMENT");
 
 		CapellaModule capellaModule = getCapellaModule();
+		if (capellaModule != null) {
 
-		EList<Requirement> ownedRequirements = capellaModule.getOwnedRequirements();
-		for (Requirement requirement : ownedRequirements) {
-			transformRequirements(requirement, requierementsPkg);
+			EList<Requirement> ownedRequirements = capellaModule.getOwnedRequirements();
+			for (Requirement requirement : ownedRequirements) {
+				transformRequirements(requirement, requierementsPkg);
+			}
 		}
 	}
 

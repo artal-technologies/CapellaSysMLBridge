@@ -10,6 +10,7 @@
 package com.artal.capella.mapping.capella2sysml.rules;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -254,7 +255,7 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 			CallBehaviorAction callParent = (CallBehaviorAction) MappingRulesManager
 					.getCapellaObjectFromAllRules(Sysml2CapellaUtils.getSysMLID(_source.eResource(), parent));
 			// if the common parent is not found.
-			if (!isFoundCommon) {
+			if (!isFoundCommon && callParent!=null) {
 				// get the activity from call behavior.
 				Behavior behavior = callParent.getBehavior();
 				if (behavior instanceof Activity) {
@@ -327,6 +328,10 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 		Pin umlPort = null;
 		ActivityParameterNode apn = null;
 		Parameter createOwnedParameter = null;
+		Map<Pin, ActivityParameterNode> results = new HashMap<>();
+		if (umlParent == null) {
+			return results;
+		}
 		if (functionPort instanceof FunctionInputPort) {
 			umlPort = umlParent.createArgument(functionPort.getName(), null);
 			Activity activity = (Activity) umlParent.getBehavior();
@@ -349,7 +354,7 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 		Sysml2CapellaUtils.trace(this, _source.eResource(), functionPort, umlPort, "PIN_");
 		Sysml2CapellaUtils.trace(this, _source.eResource(), functionPort, apn, "APN_");
 		Sysml2CapellaUtils.trace(this, _source.eResource(), functionPort, createOwnedParameter, "PARAM_");
-		Map<Pin, ActivityParameterNode> results = new HashMap<>();
+
 		results.put(umlPort, apn);
 		return results;
 	}
@@ -387,11 +392,14 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 	 */
 	private EObject getPort(Map<Pin, ActivityParameterNode> map, Class<?> clazz) {
 		Set<Entry<Pin, ActivityParameterNode>> entrySet = map.entrySet();
-		Entry<Pin, ActivityParameterNode> next = entrySet.iterator().next();
-		if (Pin.class.isAssignableFrom(clazz)) {
-			return next.getKey();
-		} else if (ActivityParameterNode.class.isAssignableFrom(clazz)) {
-			return next.getValue();
+		Iterator<Entry<Pin, ActivityParameterNode>> iterator = entrySet.iterator();
+		if (iterator.hasNext()) {
+			Entry<Pin, ActivityParameterNode> next = iterator.next();
+			if (Pin.class.isAssignableFrom(clazz)) {
+				return next.getKey();
+			} else if (ActivityParameterNode.class.isAssignableFrom(clazz)) {
+				return next.getValue();
+			}
 		}
 		return null;
 	}

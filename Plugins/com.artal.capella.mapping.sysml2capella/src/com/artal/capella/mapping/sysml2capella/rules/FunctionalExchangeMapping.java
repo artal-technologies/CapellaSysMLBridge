@@ -241,12 +241,12 @@ public class FunctionalExchangeMapping extends AbstractMapping {
 					ActivityNode s = activityEdge.getSource();
 					ActivityNode t = activityEdge.getTarget();
 					boolean inDir = an.getParameter().getDirection() == ParameterDirectionKind.IN_LITERAL;
-					if (s.equals(an)) {
+					if (s!=null && s.equals(an)) {
 
 						return getCapellaFunctionPort(eResource, t, mapPinToParam, inDir, true,
 								(ObjectFlow) activityEdge);
 					}
-					if (t.equals(an)) {
+					if (t!=null && t.equals(an)) {
 						return getCapellaFunctionPort(eResource, s, mapPinToParam, inDir, true,
 								(ObjectFlow) activityEdge);
 					}

@@ -100,7 +100,7 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		org.polarsys.capella.core.data.information.Port targetPort = ce.getTargetPort();
 
 		// the ComponentExchange is connected at both source and target ports.
-		if (sourcePort == null || targetPort == null) {
+		if (sourcePort == null || targetPort == null || !(sourcePort.eContainer() instanceof LogicalComponent)||!(targetPort.eContainer() instanceof LogicalComponent)) {
 			return;
 		}
 
@@ -333,7 +333,7 @@ public class ComponentExchangesMapping extends AbstractMapping {
 				srcList.add(sourceProp);
 				List<Property> trgList = new ArrayList<>();
 				trgList.add(targetProp);
-				
+
 				EObject applyStereotype = sourceEnd.applyStereotype(nestedConnectorEndStereo);
 				sourceEnd.setValue(nestedConnectorEndStereo, "propertyPath", srcList);
 
@@ -409,13 +409,16 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	private Port transformPort(org.polarsys.capella.core.data.information.Port capellaPort,
 			Stereotype ownedStereotype) {
 		EObject parent = capellaPort.eContainer();
-		Class blockComp = (Class) MappingRulesManager.getCapellaObjectFromAllRules(parent);
+		if (parent instanceof LogicalComponent) {
+			Class blockComp = (Class) MappingRulesManager.getCapellaObjectFromAllRules(parent);
 
-		Port umlPort = blockComp.createOwnedPort(capellaPort.getName(), null);
-		EObject applyStereotype = umlPort.applyStereotype(ownedStereotype);
-		getAlgo().getStereoApplications().add(applyStereotype);
-		Sysml2CapellaUtils.trace(this, _source.eResource(), capellaPort, umlPort, "PORT_");
-		return umlPort;
+			Port umlPort = blockComp.createOwnedPort(capellaPort.getName(), null);
+			EObject applyStereotype = umlPort.applyStereotype(ownedStereotype);
+			getAlgo().getStereoApplications().add(applyStereotype);
+			Sysml2CapellaUtils.trace(this, _source.eResource(), capellaPort, umlPort, "PORT_");
+			return umlPort;
+		}
+		return null;
 	}
 
 	/**
