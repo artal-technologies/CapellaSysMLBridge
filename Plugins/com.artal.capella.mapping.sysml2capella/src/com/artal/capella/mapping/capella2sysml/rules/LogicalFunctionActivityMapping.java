@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.uml2.uml.Activity;
+import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.polarsys.capella.common.data.behavior.AbstractEvent;
@@ -195,7 +196,7 @@ public class LogicalFunctionActivityMapping extends AbstractMapping {
 	 */
 	private void transformLogicalFunction(LogicalFunction lf, Object parent, TypeActivity ta) {
 		if (MappingRulesManager.getCapellaObjectFromAllRules(lf) == null) {
-			if (parent == null && _source instanceof Project) {
+			if ((parent == null || parent instanceof Model) && _source instanceof Project) {
 				Package behaviorPkg = (Package) MappingRulesManager
 						.getCapellaObjectFromAllRules(_source + "BEHAVIOR_PKG");
 				behaviorPkg.getPackagedElements().add(createActivity(lf));
