@@ -16,7 +16,9 @@ import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.LiteralInteger;
+import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Stereotype;
@@ -142,6 +144,17 @@ public class PropertiesMapping extends AbstractMapping {
 		}
 		if (namedElement instanceof AbstractTypedElement) {
 			transformType(namedElement, property);
+		}
+
+		if (_source instanceof ExchangeItem) {
+			Profile profileSysML = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
+			Package portAndFlow = profileSysML.getNestedPackage("Ports&Flows");
+			Stereotype fpStereotype = portAndFlow.getOwnedStereotype("FlowProperty");
+			EObject applyStereotype2 = property.applyStereotype(fpStereotype);
+			getAlgo().getStereoApplications().add(applyStereotype2);
+			EnumerationLiteral el = UMLFactory.eINSTANCE.createEnumerationLiteral();
+			el.setName("out");
+			property.setValue(fpStereotype, "direction", el);
 		}
 
 	}

@@ -34,6 +34,7 @@ import org.polarsys.capella.core.data.cs.Component;
 import org.polarsys.capella.core.data.cs.Part;
 import org.polarsys.capella.core.data.fa.ComponentExchange;
 import org.polarsys.capella.core.data.fa.ComponentPort;
+import org.polarsys.capella.core.data.fa.OrientationPortKind;
 import org.polarsys.capella.core.data.la.LogicalComponent;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
@@ -100,7 +101,8 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		org.polarsys.capella.core.data.information.Port targetPort = ce.getTargetPort();
 
 		// the ComponentExchange is connected at both source and target ports.
-		if (sourcePort == null || targetPort == null || !(sourcePort.eContainer() instanceof LogicalComponent)||!(targetPort.eContainer() instanceof LogicalComponent)) {
+		if (sourcePort == null || targetPort == null || !(sourcePort.eContainer() instanceof LogicalComponent)
+				|| !(targetPort.eContainer() instanceof LogicalComponent)) {
 			return;
 		}
 
@@ -134,8 +136,8 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		Component sourceParent = sourceAncestorQueue.peek();
 		Component targetParent = targetAncestorQueue.peek();
 		if (sourceParent.equals(targetParent)) {
-			transformConnectorWithCommonParent(ce, profile, umlSourcePort, umlTargetPort, sourceProp, targetProp,
-					targetParent);
+			transformConnectorWithCommonParent(ce, (ComponentPort) sourcePort, (ComponentPort) targetPort, profile,
+					umlSourcePort, umlTargetPort, sourceProp, targetProp, targetParent);
 
 		} else {
 			transformConnectorWithDiffParent(ce, sourcePort, targetPort, umlSourcePort, umlTargetPort,
@@ -254,6 +256,8 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	 * 
 	 * @param ce
 	 *            the {@link ComponentExchange} to tranform
+	 * @param targetPort
+	 * @param sourcePort
 	 * @param profile
 	 *            the SysML profile
 	 * @param umlSourcePort
@@ -267,8 +271,9 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	 * @param commonParent
 	 *            the parent.
 	 */
-	private void transformConnectorWithCommonParent(ComponentExchange ce, Profile profile, Port umlSourcePort,
-			Port umlTargetPort, Property sourceProp, Property targetProp, Component commonParent) {
+	private void transformConnectorWithCommonParent(ComponentExchange ce, ComponentPort sourcePort,
+			ComponentPort targetPort, Profile profile, Port umlSourcePort, Port umlTargetPort, Property sourceProp,
+			Property targetProp, Component commonParent) {
 		Class umlParent = (Class) MappingRulesManager.getCapellaObjectFromAllRules(commonParent);
 		Connector connector = UMLFactory.eINSTANCE.createConnector();
 		connector.setName(ce.getName());
@@ -288,8 +293,8 @@ public class ComponentExchangesMapping extends AbstractMapping {
 
 		EList<AbstractExchangeItem> convoyedInformations = ce.getConvoyedInformations();
 		for (AbstractExchangeItem abstractExchangeItem : convoyedInformations) {
-			transformConvoyedInformation(umlSourcePort, umlTargetPort, sourceProp, targetProp, blockProfile, targetEnd,
-					sourceEnd, abstractExchangeItem);
+			transformConvoyedInformation(sourcePort, targetPort, umlSourcePort, umlTargetPort, sourceProp, targetProp,
+					blockProfile, targetEnd, sourceEnd, abstractExchangeItem, profile);
 
 		}
 
@@ -301,6 +306,9 @@ public class ComponentExchangesMapping extends AbstractMapping {
 
 	/**
 	 * Transform the Convoyed information
+	 * 
+	 * @param targetPort
+	 * @param sourcePort
 	 * 
 	 * @param umlSourcePort
 	 *            the uml source {@link Port}
@@ -318,14 +326,19 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	 *            the source ConnectorEnd
 	 * @param abstractExchangeItem
 	 *            the convoyed information
+	 * @param profile
 	 */
-	private void transformConvoyedInformation(Port umlSourcePort, Port umlTargetPort, Property sourceProp,
-			Property targetProp, Package blockProfile, ConnectorEnd targetEnd, ConnectorEnd sourceEnd,
-			AbstractExchangeItem abstractExchangeItem) {
+	private void transformConvoyedInformation(ComponentPort sourcePort, ComponentPort targetPort, Port umlSourcePort,
+			Port umlTargetPort, Property sourceProp, Property targetProp, Package blockProfile, ConnectorEnd targetEnd,
+			ConnectorEnd sourceEnd, AbstractExchangeItem abstractExchangeItem, Profile profile) {
 		Class umlType = (Class) MappingRulesManager.getCapellaObjectFromAllRules(abstractExchangeItem);
 		if (umlType != null) {
 			umlSourcePort.setType(umlType);
 			umlTargetPort.setType(umlType);
+
+			// manage direction
+			manageOrientation(sourcePort, umlSourcePort);
+			manageOrientation(targetPort, umlTargetPort);
 
 			Stereotype nestedConnectorEndStereo = blockProfile.getOwnedStereotype("NestedConnectorEnd");
 			if (nestedConnectorEndStereo != null) {
@@ -394,6 +407,15 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		}
 		// return the port under the common parent.
 		return umlPort;
+	}
+
+	private void manageOrientation(ComponentPort port, Port umlPort) {
+		OrientationPortKind orientationSrc = port.getOrientation();
+		if (orientationSrc == OrientationPortKind.IN) {
+			umlPort.setIsConjugated(true);
+		} else if (orientationSrc == OrientationPortKind.OUT) {
+			umlPort.setIsConjugated(false);
+		}
 	}
 
 	/**
