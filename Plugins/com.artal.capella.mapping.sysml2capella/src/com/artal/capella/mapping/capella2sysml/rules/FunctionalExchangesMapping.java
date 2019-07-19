@@ -25,6 +25,7 @@ import org.eclipse.uml2.uml.ActivityParameterNode;
 import org.eclipse.uml2.uml.Behavior;
 import org.eclipse.uml2.uml.CallBehaviorAction;
 import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
+import org.eclipse.uml2.uml.Parameter;
 import org.eclipse.uml2.uml.Pin;
 import org.eclipse.uml2.uml.UMLPackage;
 import org.polarsys.capella.core.data.capellamodeller.Project;
@@ -258,7 +259,8 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 				Behavior behavior = callParent.getBehavior();
 				if (behavior instanceof Activity) {
 					// create intermediate ObjecFlow.
-					ActivityEdge objectFlow = ((Activity) behavior).createEdge("", UMLPackage.Literals.OBJECT_FLOW);
+					ActivityEdge objectFlow = ((Activity) behavior).createEdge(functionalExchange.getName(),
+							UMLPackage.Literals.OBJECT_FLOW);
 					Sysml2CapellaUtils.trace(this, _source.eResource(),
 							Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange)
 									+ Sysml2CapellaUtils.getSysMLID(_source.eResource(), parent),
@@ -269,27 +271,36 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 					// Create intermediate port.
 					ActivityParameterNode mirrorApn = null;
 					Pin mirrorPin = null;
+					Parameter createOwnedParameter = null;
 					if (capellaPort instanceof FunctionOutputPort) {
-						mirrorPin = callParent.createResult("", null);
-						mirrorApn = (ActivityParameterNode) ((Activity) behavior).createOwnedNode("",
-								UMLPackage.Literals.ACTIVITY_PARAMETER_NODE);
+						mirrorPin = callParent.createResult(functionalExchange.getName(), null);
+						mirrorApn = (ActivityParameterNode) ((Activity) behavior).createOwnedNode(
+								functionalExchange.getName(), UMLPackage.Literals.ACTIVITY_PARAMETER_NODE);
+						createOwnedParameter = ((Activity) behavior).createOwnedParameter(functionalExchange.getName(),
+								null);
+						mirrorApn.setParameter(createOwnedParameter);
 					}
 					if (capellaPort instanceof FunctionInputPort) {
-						mirrorPin = callParent.createArgument("", null);
-						mirrorApn = (ActivityParameterNode) ((Activity) behavior).createOwnedNode("",
-								UMLPackage.Literals.ACTIVITY_PARAMETER_NODE);
+						mirrorPin = callParent.createArgument(functionalExchange.getName(), null);
+						mirrorApn = (ActivityParameterNode) ((Activity) behavior).createOwnedNode(
+								functionalExchange.getName(), UMLPackage.Literals.ACTIVITY_PARAMETER_NODE);
+						createOwnedParameter = ((Activity) behavior).createOwnedParameter(functionalExchange.getName(),
+								null);
+						mirrorApn.setParameter(createOwnedParameter);
 					}
 					// connect intermediate port at the intermediate object
 					// flow.
 					objectFlow.setTarget(mirrorApn);
 					Sysml2CapellaUtils.trace(this, _source.eResource(), capellaPort, mirrorApn, "APN_MIRROR_");
 					Sysml2CapellaUtils.trace(this, _source.eResource(), capellaPort, mirrorPin, "PIN_MIRROR_");
+					Sysml2CapellaUtils.trace(this, _source.eResource(), capellaPort, createOwnedParameter,
+							"PARAM_MIRROR_");
 					LiteralUnlimitedNatural createWeight = (LiteralUnlimitedNatural) objectFlow.createWeight("", null,
 							UMLPackage.Literals.LITERAL_UNLIMITED_NATURAL);
 					createWeight.setValue(1);
 					Sysml2CapellaUtils.trace(this, _source.eResource(),
-							Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT_MIRROR_", createWeight,
-							"WEIGHT_");
+							Sysml2CapellaUtils.getSysMLID(_source.eResource(), functionalExchange) + "WEIGHT_MIRROR_",
+							createWeight, "WEIGHT_");
 
 					umlPin = mirrorPin;
 
@@ -315,12 +326,15 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 				.getCapellaObjectFromAllRules(Sysml2CapellaUtils.getSysMLID(_source.eResource(), parent));
 		Pin umlPort = null;
 		ActivityParameterNode apn = null;
+		Parameter createOwnedParameter = null;
 		if (functionPort instanceof FunctionInputPort) {
 			umlPort = umlParent.createArgument(functionPort.getName(), null);
 			Activity activity = (Activity) umlParent.getBehavior();
 			if (activity != null) {
 				apn = (ActivityParameterNode) activity.createOwnedNode(functionPort.getName(),
 						UMLPackage.Literals.ACTIVITY_PARAMETER_NODE);
+				createOwnedParameter = activity.createOwnedParameter(functionPort.getName(), null);
+				apn.setParameter(createOwnedParameter);
 			}
 		} else if (functionPort instanceof FunctionOutputPort) {
 			umlPort = umlParent.createResult(functionPort.getName(), null);
@@ -328,10 +342,13 @@ public class FunctionalExchangesMapping extends AbstractMapping {
 			if (activity != null) {
 				apn = (ActivityParameterNode) activity.createOwnedNode(functionPort.getName(),
 						UMLPackage.Literals.ACTIVITY_PARAMETER_NODE);
+				createOwnedParameter = activity.createOwnedParameter(functionPort.getName(), null);
+				apn.setParameter(createOwnedParameter);
 			}
 		}
 		Sysml2CapellaUtils.trace(this, _source.eResource(), functionPort, umlPort, "PIN_");
 		Sysml2CapellaUtils.trace(this, _source.eResource(), functionPort, apn, "APN_");
+		Sysml2CapellaUtils.trace(this, _source.eResource(), functionPort, createOwnedParameter, "PARAM_");
 		Map<Pin, ActivityParameterNode> results = new HashMap<>();
 		results.put(umlPort, apn);
 		return results;
