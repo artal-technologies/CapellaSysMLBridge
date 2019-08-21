@@ -52,7 +52,7 @@ public class CapellaSysmlLaunchDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		Composite container = (Composite) super.createDialogArea(parent);
-		setTitle("Select the a target UML file.");
+		setTitle("Select a target UML file.");
 		Group selectUMLGroup = new Group(container, SWT.NONE);
 		selectUMLGroup.setText("SysML selection");
 		selectUMLGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
