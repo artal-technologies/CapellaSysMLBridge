@@ -130,15 +130,19 @@ public class PropertiesMapping extends AbstractMapping {
 
 		IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
 		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
-		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.MD_CUST_SYSML_ADD_STEREO_PROFILE);
-		Stereotype ownedStereotype = profile.getOwnedStereotype("ValueProperty");
-		EObject applyStereotype = property.applyStereotype(ownedStereotype);
-		// Sysml2CapellaUtils.trace(this, _source.eResource(), namedElement +
-		// "VALUEPARAM_STEREO", applyStereotype,
-		// "VALUEPARAM_STEREO_");
-		// getAlgo().getTransientItems().add(applyStereotype);
-		getAlgo().getStereoApplications().add(applyStereotype);
 
+		if (namedElement instanceof Feature) {
+
+			Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.MD_CUST_SYSML_ADD_STEREO_PROFILE);
+			Stereotype ownedStereotype = profile.getOwnedStereotype("ValueProperty");
+			EObject applyStereotype = property.applyStereotype(ownedStereotype);
+			// Sysml2CapellaUtils.trace(this, _source.eResource(), namedElement
+			// +
+			// "VALUEPARAM_STEREO", applyStereotype,
+			// "VALUEPARAM_STEREO_");
+			// getAlgo().getTransientItems().add(applyStereotype);
+			getAlgo().getStereoApplications().add(applyStereotype);
+		}
 		if (namedElement instanceof MultiplicityElement) {
 			transformMultiplicity(namedElement, property);
 		}

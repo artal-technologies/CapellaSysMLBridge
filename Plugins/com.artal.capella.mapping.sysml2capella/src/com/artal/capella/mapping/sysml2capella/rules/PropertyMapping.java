@@ -9,13 +9,20 @@
  *******************************************************************************/
 package com.artal.capella.mapping.sysml2capella.rules;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.EnumerationLiteral;
+import org.eclipse.uml2.uml.LiteralBoolean;
 import org.eclipse.uml2.uml.LiteralInteger;
+import org.eclipse.uml2.uml.LiteralReal;
+import org.eclipse.uml2.uml.LiteralSpecification;
+import org.eclipse.uml2.uml.LiteralString;
 import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
 import org.eclipse.uml2.uml.PrimitiveType;
 import org.eclipse.uml2.uml.Property;
@@ -24,6 +31,7 @@ import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.ValueSpecification;
 import org.polarsys.capella.common.data.modellingcore.AbstractType;
 import org.polarsys.capella.common.data.modellingcore.AbstractTypedElement;
+import org.polarsys.capella.core.data.capellacore.Classifier;
 import org.polarsys.capella.core.data.capellacore.Feature;
 import org.polarsys.capella.core.data.capellacore.NamedElement;
 import org.polarsys.capella.core.data.information.ExchangeItem;
@@ -31,8 +39,12 @@ import org.polarsys.capella.core.data.information.ExchangeItemElement;
 import org.polarsys.capella.core.data.information.InformationFactory;
 import org.polarsys.capella.core.data.information.MultiplicityElement;
 import org.polarsys.capella.core.data.information.ParameterDirection;
+import org.polarsys.capella.core.data.information.datavalue.DataValue;
 import org.polarsys.capella.core.data.information.datavalue.DatavalueFactory;
+import org.polarsys.capella.core.data.information.datavalue.LiteralBooleanValue;
 import org.polarsys.capella.core.data.information.datavalue.LiteralNumericValue;
+import org.polarsys.capella.core.data.information.datavalue.LiteralStringValue;
+import org.polarsys.capella.core.data.la.LogicalComponent;
 
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
@@ -59,6 +71,8 @@ public class PropertyMapping extends AbstractMapping {
 	 * A {@link MappingRulesManager} allowing to manage the sub rules.
 	 */
 	MappingRulesManager _manager = new MappingRulesManager();
+
+	public static List<Property> contraintsProperties = new ArrayList<>();
 
 	/**
 	 * Constructor.
@@ -102,8 +116,16 @@ public class PropertyMapping extends AbstractMapping {
 	private void transformProperties(Resource eResource, EList<Property> allAttributes) {
 		CapellaUpdateScope scope = _mappingExecution.getTargetDataSet();
 		for (Property property : allAttributes) {
-			Stereotype valuePropStereotype = property.getApplicableStereotype("additional_stereotypes::ValueProperty");
-			if (valuePropStereotype != null) {
+			Stereotype constraintPropStereotype = property
+					.getAppliedStereotype("additional_stereotypes::deprecated elements::ConstraintProperty");
+			if (constraintPropStereotype != null) {
+				contraintsProperties.add(property);
+				continue;
+			}
+
+			Stereotype valuePropStereotype = property.getAppliedStereotype("additional_stereotypes::ValueProperty");
+			Stereotype flowStereotype = property.getAppliedStereotype("SysML::Ports&Flows::FlowProperty");
+			if (valuePropStereotype != null || flowStereotype != null) {
 				NamedElement capellaObjectFromAllRules = (NamedElement) MappingRulesManager
 						.getCapellaObjectFromAllRules(_source);
 				NamedElement capellaProp = null;
@@ -111,6 +133,8 @@ public class PropertyMapping extends AbstractMapping {
 					capellaProp = InformationFactory.eINSTANCE.createProperty();
 				} else if (capellaObjectFromAllRules instanceof ExchangeItem) {
 					capellaProp = InformationFactory.eINSTANCE.createExchangeItemElement();
+				} else if (capellaObjectFromAllRules instanceof LogicalComponent) {
+					capellaProp = InformationFactory.eINSTANCE.createProperty();
 				}
 
 				if (capellaProp != null) {
@@ -123,13 +147,16 @@ public class PropertyMapping extends AbstractMapping {
 
 						ValueSpecification upperValue = property.getUpperValue();
 						transformMaxCard(eResource, property, (MultiplicityElement) capellaProp, upperValue);
+
+						ValueSpecification defaultValue = property.getDefaultValue();
+						if (defaultValue != null) {
+							transformDefault(eResource, property, (MultiplicityElement) capellaProp, defaultValue);
+						}
 					}
 				}
 
-				if (capellaProp instanceof Feature
-						&& capellaObjectFromAllRules instanceof org.polarsys.capella.core.data.information.Class) {
-					((org.polarsys.capella.core.data.information.Class) capellaObjectFromAllRules).getOwnedFeatures()
-							.add((Feature) capellaProp);
+				if (capellaProp instanceof Feature && capellaObjectFromAllRules instanceof Classifier) {
+					((Classifier) capellaObjectFromAllRules).getOwnedFeatures().add((Feature) capellaProp);
 				} else if (capellaProp instanceof ExchangeItemElement
 						&& capellaObjectFromAllRules instanceof ExchangeItem) {
 					((ExchangeItem) capellaObjectFromAllRules).getOwnedElements()
@@ -231,6 +258,81 @@ public class PropertyMapping extends AbstractMapping {
 			Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, property) + "MAXCARD",
 					capellaMaxCard, "MAXCARD_");
 		}
+	}
+
+	/**
+	 * Transform the default value.
+	 * 
+	 * @param eResource
+	 *            the sysml resource
+	 * @param property
+	 *            the sysml property
+	 * @param capellaProp
+	 *            the capella property
+	 * @param defaultValue
+	 *            the default value to transform
+	 */
+	private void transformDefault(Resource eResource, Property property, MultiplicityElement capellaProp,
+			ValueSpecification defaultValue) {
+		if (defaultValue != null) {
+			if (defaultValue instanceof LiteralSpecification) {
+				DataValue capellaDefault = createCapellaDataValue((LiteralSpecification) defaultValue, capellaProp,
+						defaultValue);
+				Sysml2CapellaUtils.trace(this, eResource, defaultValue, capellaDefault, "DEFAULTCARD_");
+			}
+		}
+	}
+
+	/**
+	 * Create new Capella {@link DataValue}
+	 * 
+	 * @param ls
+	 * @param capellaProp
+	 * @param defaultValue
+	 * @return
+	 */
+	private DataValue createCapellaDataValue(LiteralSpecification ls, MultiplicityElement capellaProp,
+			ValueSpecification defaultValue) {
+		if (ls instanceof LiteralUnlimitedNatural) {
+			LiteralNumericValue capellaDefault = DatavalueFactory.eINSTANCE.createLiteralNumericValue();
+			capellaDefault.setName(defaultValue.getName());
+			capellaDefault.setValue(((LiteralUnlimitedNatural) ls).getValue() + "");
+			capellaProp.setOwnedDefaultValue(capellaDefault);
+
+			return capellaDefault;
+		}
+		if (ls instanceof LiteralBoolean) {
+
+			LiteralBooleanValue capellaDefault = DatavalueFactory.eINSTANCE.createLiteralBooleanValue();
+			capellaDefault.setName(defaultValue.getName());
+			capellaDefault.setValue(((LiteralBoolean) ls).isValue());
+			capellaProp.setOwnedDefaultValue(capellaDefault);
+
+			return capellaDefault;
+
+		}
+		if (ls instanceof LiteralInteger) {
+			LiteralNumericValue capellaDefault = DatavalueFactory.eINSTANCE.createLiteralNumericValue();
+			capellaDefault.setName(defaultValue.getName());
+			capellaDefault.setValue(((LiteralInteger) ls).getValue() + "");
+			capellaProp.setOwnedDefaultValue(capellaDefault);
+			return capellaDefault;
+		}
+		if (ls instanceof LiteralReal) {
+			LiteralNumericValue capellaDefault = DatavalueFactory.eINSTANCE.createLiteralNumericValue();
+			capellaDefault.setName(defaultValue.getName());
+			capellaDefault.setValue(((LiteralReal) ls).getValue() + "");
+			capellaProp.setOwnedDefaultValue(capellaDefault);
+			return capellaDefault;
+		}
+		if (ls instanceof LiteralString) {
+			LiteralStringValue capellaDefault = DatavalueFactory.eINSTANCE.createLiteralStringValue();
+			capellaDefault.setName(defaultValue.getName());
+			capellaDefault.setValue(((LiteralString) ls).getValue() + "");
+			capellaProp.setOwnedDefaultValue(capellaDefault);
+			return capellaDefault;
+		}
+		return null;
 	}
 
 	/**

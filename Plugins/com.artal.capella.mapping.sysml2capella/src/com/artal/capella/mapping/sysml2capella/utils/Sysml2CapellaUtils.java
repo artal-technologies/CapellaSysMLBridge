@@ -46,6 +46,7 @@ import org.polarsys.capella.core.data.capellamodeller.ModelRoot;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.capellamodeller.SystemEngineering;
 import org.polarsys.capella.core.data.cs.Component;
+import org.polarsys.capella.core.data.cs.InterfacePkg;
 import org.polarsys.capella.core.data.cs.Part;
 import org.polarsys.capella.core.data.ctx.SystemAnalysis;
 import org.polarsys.capella.core.data.fa.ComponentExchange;
@@ -515,6 +516,37 @@ public class Sysml2CapellaUtils {
 	}
 
 	/**
+	 * Returns the interface package given a semantic object
+	 * 
+	 * @param source_p
+	 *            the semantic object
+	 * @return the data pkg root
+	 */
+	public static InterfacePkg getInterfacePkgRoot(EObject source_p) {
+		ResourceSet resourceSet = source_p.eResource().getResourceSet();
+		URI semanticResourceURI = source_p.eResource().getURI().trimFileExtension()
+				.appendFileExtension("melodymodeller");
+		Resource semanticResource = resourceSet.getResource(semanticResourceURI, false);
+		if (semanticResource != null) {
+			EObject root = semanticResource.getContents().get(0);
+			if (root instanceof Project) {
+				EList<ModelRoot> ownedModelRoots = ((Project) root).getOwnedModelRoots();
+				for (ModelRoot modelRoot : ownedModelRoots) {
+					if (modelRoot instanceof SystemEngineering) {
+						EList<ModellingArchitecture> containedLogicalArchitecture = ((SystemEngineering) modelRoot)
+								.getOwnedArchitectures();
+						for (ModellingArchitecture arch : containedLogicalArchitecture) {
+							if (arch instanceof LogicalArchitecture)
+								return ((LogicalArchitecture) arch).getOwnedInterfacePkg();
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Returns the logical function root of a Capella model
 	 * 
 	 * @param source_p
@@ -621,13 +653,14 @@ public class Sysml2CapellaUtils {
 
 	static public boolean isPrimiriveType(AbstractType type) {
 		DataPkg dataPkgPredefinedTypeRoot = getDataPkgPredefinedTypeRoot(type);
-		EList<DataType> ownedDataTypes = dataPkgPredefinedTypeRoot.getOwnedDataTypes();
-		for (DataType dataType : ownedDataTypes) {
-			if (dataType.equals(type)) {
-				return true;
+		if (dataPkgPredefinedTypeRoot != null) {
+			EList<DataType> ownedDataTypes = dataPkgPredefinedTypeRoot.getOwnedDataTypes();
+			for (DataType dataType : ownedDataTypes) {
+				if (dataType.equals(type)) {
+					return true;
+				}
 			}
 		}
-
 		return false;
 
 	}

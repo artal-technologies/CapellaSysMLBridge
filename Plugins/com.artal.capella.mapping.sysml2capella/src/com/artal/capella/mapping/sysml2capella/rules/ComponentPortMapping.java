@@ -26,6 +26,7 @@ import org.eclipse.uml2.uml.Port;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.Type;
+import org.polarsys.capella.core.data.cs.Interface;
 import org.polarsys.capella.core.data.fa.ComponentPort;
 import org.polarsys.capella.core.data.fa.ComponentPortKind;
 import org.polarsys.capella.core.data.fa.FaFactory;
@@ -113,6 +114,21 @@ public class ComponentPortMapping extends AbstractMapping {
 				cport.setOrientation(directionPort);
 				cport.setKind(ComponentPortKind.FLOW);
 				cport.setName(port.getName());
+
+				Type type = port.getType();
+				Interface inter = (Interface) MappingRulesManager.getCapellaObjectFromAllRules(
+						Sysml2CapellaUtils.getSysMLID(_source.eResource(), type) + "INTERFACE");
+
+				if (inter != null) {
+					if (directionPort == OrientationPortKind.IN) {
+						cport.getRequiredInterfaces().add(inter);
+					} else if (directionPort == OrientationPortKind.OUT) {
+						cport.getProvidedInterfaces().add(inter);
+					} else {
+						cport.getRequiredInterfaces().add(inter);
+						cport.getProvidedInterfaces().add(inter);
+					}
+				}
 
 				Sysml2CapellaUtils.trace(this, eResource, port, cport, "Port_");
 

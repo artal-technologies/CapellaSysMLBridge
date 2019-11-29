@@ -108,7 +108,9 @@ public class ComponentMapping extends AbstractMapping {
 
 			List<Class> subClasses = Sysml2CapellaUtils.getSubClasses(class1);
 			fillBreakdownLogicalComponent(lComponent, subClasses, eResource);
-
+			PropertyMapping primitiveTypesMapping = new PropertyMapping(getAlgo(), class1, _mappingExecution);
+			_manager.add(primitiveTypesMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(eResource, class1),
+					primitiveTypesMapping);
 		}
 	}
 

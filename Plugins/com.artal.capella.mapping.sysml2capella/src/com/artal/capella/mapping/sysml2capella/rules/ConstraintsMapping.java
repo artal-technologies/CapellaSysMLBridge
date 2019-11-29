@@ -17,10 +17,14 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.OpaqueExpression;
+import org.eclipse.uml2.uml.Property;
+import org.eclipse.uml2.uml.Stereotype;
 import org.eclipse.uml2.uml.ValueSpecification;
 import org.polarsys.capella.common.data.modellingcore.AbstractConstraint;
 import org.polarsys.capella.common.data.modellingcore.ModelElement;
@@ -54,7 +58,6 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 	 * the {@link IMappingExecution} allows to get the mapping data.
 	 */
 	IMappingExecution _mappingExecution;
-
 
 	/**
 	 * Constructor.
@@ -96,9 +99,12 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 		});
 
 		for (org.eclipse.uml2.uml.Constraint sysMLConstraint : sysMLConstraints) {
+
+			EObject sysmlObject = getSysmlObjectContainer(sysMLConstraint);
+
 			// get the container capella element from the container sysml
 			// element.
-			Object capellaObject = getCapellaConstraintContainer(sysMLConstraint);
+			Object capellaObject = getCapellaConstraintContainer(sysmlObject);
 
 			// create the capella constraint
 			Constraint constraintCapella = CapellacoreFactory.eINSTANCE.createConstraint();
@@ -108,22 +114,60 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 			// the new capella constraint.
 			EList<Element> constrainedElements = sysMLConstraint.getConstrainedElements();
 			fillConstrainedElements(constraintCapella, constrainedElements);
+
 			// get the SysML OpaqueExpression and transform in Capella
 			// OpaqueExpression.
 			ValueSpecification specification = sysMLConstraint.getSpecification();
 			if (specification instanceof OpaqueExpression) {
 				transformValueSpecification(eResource, constraintCapella, specification);
 			}
+
 			// add the capella constraint to capella container.
 			if (capellaObject instanceof ModelElement) {
 				List<AbstractConstraint> ownedConstraints = ((ModelElement) capellaObject).getOwnedConstraints();
 				ownedConstraints.add(constraintCapella);
 				Sysml2CapellaUtils.trace(this, eResource, sysMLConstraint, constraintCapella, "Constraint_");
 			}
-
 		}
 
 	}
+
+	/**
+	 * Get the object that references the constraint.
+	 * @param sysMLConstraint
+	 * @return
+	 */
+	private EObject getSysmlObjectContainer(org.eclipse.uml2.uml.Constraint sysMLConstraint) {
+		EObject sysmlObject = null;
+		EObject eContainer = sysMLConstraint.eContainer();
+		Class constraintBlock = null;
+		if (eContainer instanceof Class) {
+			Class clazz = (Class) eContainer;
+			Stereotype blockStereotype = clazz.getApplicableStereotype("SysML::Blocks::Block");
+			if (blockStereotype != null) {
+				Stereotype stereoConstraintBlock = clazz.getAppliedSubstereotype(blockStereotype,
+						"SysML::ConstraintBlocks::ConstraintBlock");
+				if (stereoConstraintBlock != null) {
+					constraintBlock = clazz;
+				}
+
+			}
+		}
+		if (constraintBlock != null) {
+
+			for (Property prop : PropertyMapping.contraintsProperties) {
+				if (prop.getType().equals(eContainer)) {
+					sysmlObject = prop.eContainer();
+					break;
+				}
+			}
+
+		} else {
+			sysmlObject = eContainer;
+		}
+		return sysmlObject;
+	}
+
 
 	/**
 	 * Get the capella constraint container.
@@ -132,8 +176,9 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 	 *            the SysML constraint to transform
 	 * @return Object parent.
 	 */
-	private Object getCapellaConstraintContainer(org.eclipse.uml2.uml.Constraint sysMLConstraint) {
-		Object capellaObject = MappingRulesManager.getCapellaObjectFromAllRules(sysMLConstraint.eContainer());
+	private Object getCapellaConstraintContainer(EObject sysMLContainer) {
+		Object capellaObject = MappingRulesManager.getCapellaObjectFromAllRules(sysMLContainer);
+
 		// if no transformed container, add the capella constraint in the
 		// main dataPkg.
 		if (capellaObject == null) {
@@ -179,6 +224,7 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 	 *            the capella {@link Constraint}
 	 * @param specification
 	 *            the ValueSpecification to transform
+	 * @param map
 	 */
 	private void transformValueSpecification(Resource eResource, Constraint constraintCapella,
 			ValueSpecification specification) {
@@ -193,6 +239,7 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 		for (String string : languages) {
 			capellaExpr.getLanguages().add(string);
 		}
+
 		constraintCapella.setOwnedSpecification(capellaExpr);
 		Sysml2CapellaUtils.trace(this, eResource, specification, capellaExpr, "ValueSpec_");
 	}

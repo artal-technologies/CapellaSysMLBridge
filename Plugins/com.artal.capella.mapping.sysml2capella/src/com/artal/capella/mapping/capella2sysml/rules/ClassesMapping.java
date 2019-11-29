@@ -9,7 +9,10 @@
  *******************************************************************************/
 package com.artal.capella.mapping.capella2sysml.rules;
 
-import org.eclipse.emf.common.util.EList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
@@ -17,9 +20,11 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Stereotype;
+import org.polarsys.capella.common.helpers.EObjectExt;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.information.Class;
 import org.polarsys.capella.core.data.information.DataPkg;
+import org.polarsys.capella.core.data.information.InformationPackage;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
@@ -103,8 +108,12 @@ public class ClassesMapping extends AbstractMapping {
 
 		Stereotype ownedStereotype = profile.getNestedPackage("Blocks").getOwnedStereotype("Block");
 
-		EList<org.polarsys.capella.core.data.information.Class> ownedClasses = dataPkgRoot.getOwnedClasses();
-		for (org.polarsys.capella.core.data.information.Class clazz : ownedClasses) {
+		// get all classes and classes in sub packages
+		Set<EObject> all = EObjectExt.getAll(dataPkgRoot, InformationPackage.eINSTANCE.getClass_());
+		List<Class> classes = all.stream().filter(cl -> cl instanceof Class).map(Class.class::cast)
+				.collect(Collectors.toList());
+		
+		for (org.polarsys.capella.core.data.information.Class clazz : classes) {
 			transformClass(clazz, paramPkg, ownedStereotype);
 			PropertiesMapping propertiesMapping = new PropertiesMapping(getAlgo(), clazz, _mappingExecution);
 			_manager.add(

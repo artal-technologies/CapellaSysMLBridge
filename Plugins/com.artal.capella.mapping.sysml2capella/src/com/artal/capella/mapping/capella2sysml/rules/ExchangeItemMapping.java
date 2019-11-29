@@ -9,7 +9,10 @@
  *******************************************************************************/
 package com.artal.capella.mapping.capella2sysml.rules;
 
-import org.eclipse.emf.common.util.EList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
@@ -18,9 +21,11 @@ import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Stereotype;
+import org.polarsys.capella.common.helpers.EObjectExt;
 import org.polarsys.capella.core.data.capellamodeller.Project;
-import org.polarsys.capella.core.data.information.DataPkg;
 import org.polarsys.capella.core.data.information.ExchangeItem;
+import org.polarsys.capella.core.data.information.InformationPackage;
+import org.polarsys.capella.core.data.la.LogicalArchitecture;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
@@ -72,12 +77,15 @@ public class ExchangeItemMapping extends AbstractMapping {
 	 */
 	@Override
 	public void computeMapping() {
-		DataPkg dataPkgRoot = Sysml2CapellaUtils.getDataPkgRoot(_source);
+		LogicalArchitecture logicalArchitecture = Sysml2CapellaUtils.getLogicalArchitecture(_source);
 		Package paramPkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "PARAMETRIC_PKG");
-		EList<ExchangeItem> ownedExchangeItems = dataPkgRoot.getOwnedExchangeItems();
+
+		Set<EObject> all = EObjectExt.getAll(logicalArchitecture, InformationPackage.eINSTANCE.getExchangeItem());
+		List<ExchangeItem> eis = all.stream().filter(ei -> ei instanceof ExchangeItem).map(ExchangeItem.class::cast)
+				.collect(Collectors.toList());
 
 		// transform exchange items.
-		transformExchangeItems(paramPkg, ownedExchangeItems);
+		transformExchangeItems(paramPkg, eis);
 
 		_manager.executeRules();
 
@@ -92,7 +100,7 @@ public class ExchangeItemMapping extends AbstractMapping {
 	 * @param ownedExchangeItems
 	 *            the {@link ExchangeItem} to transform.
 	 */
-	private void transformExchangeItems(Package paramPkg, EList<ExchangeItem> ownedExchangeItems) {
+	private void transformExchangeItems(Package paramPkg, List<ExchangeItem> ownedExchangeItems) {
 		IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
 		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
 		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);

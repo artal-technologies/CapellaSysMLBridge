@@ -34,6 +34,7 @@ import org.polarsys.capella.vp.requirements.CapellaRequirements.CapellaModule;
 import org.polarsys.capella.vp.requirements.CapellaRequirements.CapellaOutgoingRelation;
 import org.polarsys.kitalpha.emde.model.ElementExtension;
 import org.polarsys.kitalpha.vp.requirements.Requirements.AbstractRelation;
+import org.polarsys.kitalpha.vp.requirements.Requirements.RelationType;
 import org.polarsys.kitalpha.vp.requirements.Requirements.Requirement;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
@@ -95,7 +96,8 @@ public class RequierementsMapping extends AbstractMapping {
 
 		transformSatisfyElement(requirement, umlRequirement, ownedStereotype);
 		transformRefineElement(requirement, umlRequirement, ownedStereotype);
-
+		transformAllocateElement(requirement, umlRequirement, ownedStereotype);
+		transformTraceElement(requirement, umlRequirement, ownedStereotype);
 	}
 
 	/**
@@ -107,6 +109,13 @@ public class RequierementsMapping extends AbstractMapping {
 			_reqProfile = SysML2CapellaUMLProfile.getProfile(getResourceSet(), UMLProfile.SYSML_PROFILE);
 		}
 		return _reqProfile.getNestedPackage("Requirements");
+	}
+
+	private Package getAllocationsNestedPkg() {
+		if (_reqProfile == null) {
+			_reqProfile = SysML2CapellaUMLProfile.getProfile(getResourceSet(), UMLProfile.SYSML_PROFILE);
+		}
+		return _reqProfile.getNestedPackage("Allocations");
 	}
 
 	/**
@@ -133,11 +142,19 @@ public class RequierementsMapping extends AbstractMapping {
 	 */
 	private void transformRefineElement(Requirement requirement, Class umlRequirement, Stereotype ownedStereotype) {
 
-		Collection<Setting> referencingInverse = Sysml2CapellaUtils.getReferencingInverse(requirement);
-		for (Setting setting : referencingInverse) {
-			EObject eObject = setting.getEObject();
-			if (eObject instanceof CapellaOutgoingRelation) {
-				CapellaElement source = ((CapellaOutgoingRelation) eObject).getSource();
+		EList<AbstractRelation> ownedRelations = requirement.getOwnedRelations();
+		for (AbstractRelation abstractRelation : ownedRelations) {
+			if (abstractRelation instanceof CapellaOutgoingRelation) {
+				RelationType relationType = ((CapellaOutgoingRelation) abstractRelation).getRelationType();
+				if (relationType == null) {
+					continue;
+				}
+				String reqIFLongName = relationType.getReqIFLongName();
+				if (!reqIFLongName.equals("Refine")) {
+					continue;
+				}
+
+				CapellaElement source = ((CapellaOutgoingRelation) abstractRelation).getSource();
 				Object umlSource = MappingRulesManager.getCapellaObjectFromAllRules(source);
 				if (umlSource instanceof EObject) {
 					List<EObject> value = (List<EObject>) umlRequirement.getValue(ownedStereotype, "RefinedBy");
@@ -156,7 +173,7 @@ public class RequierementsMapping extends AbstractMapping {
 					refineAbs.getClients().add((NamedElement) umlSource);
 					// refineAbs.setValue(refineStereoType,
 					// "base_DirectedRelationship", refineAbs);
-					Sysml2CapellaUtils.trace(this, _source.eResource(), eObject, refineAbs, "REFINE_");
+					Sysml2CapellaUtils.trace(this, _source.eResource(), abstractRelation, refineAbs, "REFINE_");
 
 				}
 			}
@@ -178,8 +195,17 @@ public class RequierementsMapping extends AbstractMapping {
 	private void transformSatisfyElement(Requirement requirement, Class umlRequirement, Stereotype ownedStereotype) {
 		EList<AbstractRelation> ownedRelations = requirement.getOwnedRelations();
 		for (AbstractRelation abstractRelation : ownedRelations) {
-			if (abstractRelation instanceof CapellaIncomingRelation) {
-				CapellaElement target = ((CapellaIncomingRelation) abstractRelation).getTarget();
+			if (abstractRelation instanceof CapellaOutgoingRelation) {
+				RelationType relationType = ((CapellaOutgoingRelation) abstractRelation).getRelationType();
+				if (relationType == null) {
+					continue;
+				}
+				String reqIFLongName = relationType.getReqIFLongName();
+				if (!reqIFLongName.equals("Satisfy")) {
+					continue;
+				}
+
+				CapellaElement target = ((CapellaOutgoingRelation) abstractRelation).getSource();
 
 				Object umlTarget = MappingRulesManager.getCapellaObjectFromAllRules(target);
 				List<EObject> value = (List<EObject>) umlRequirement.getValue(ownedStereotype, "SatisfiedBy");
@@ -202,6 +228,159 @@ public class RequierementsMapping extends AbstractMapping {
 
 			}
 		}
+	}
+
+	/**
+	 * Tarnsform Refine element.
+	 * 
+	 * @param requirement
+	 *            the {@link Requirement} to transform
+	 * @param umlRequirement
+	 *            the transformed uml Class. (with Requirement stereotype)
+	 * @param ownedStereotype
+	 *            the refined by stereotype.
+	 */
+	private void transformAllocateElement(Requirement requirement, Class umlRequirement, Stereotype ownedStereotype) {
+
+		EList<AbstractRelation> ownedRelations = requirement.getOwnedRelations();
+		for (AbstractRelation abstractRelation : ownedRelations) {
+			if (abstractRelation instanceof CapellaOutgoingRelation) {
+				RelationType relationType = ((CapellaOutgoingRelation) abstractRelation).getRelationType();
+				if (relationType == null) {
+					continue;
+				}
+				String reqIFLongName = relationType.getReqIFLongName();
+				if (!reqIFLongName.equals("Allocate")) {
+					continue;
+				}
+
+				CapellaElement source = ((CapellaOutgoingRelation) abstractRelation).getSource();
+				Object umlSource = MappingRulesManager.getCapellaObjectFromAllRules(source);
+				if (umlSource instanceof EObject) {
+					Package firstPackageParent = getFirstPackageParent((EObject) umlSource);
+					Abstraction refineAbs = UMLFactory.eINSTANCE.createAbstraction();
+					firstPackageParent.getPackagedElements().add(refineAbs);
+					Stereotype refineStereoType = getAllocationsNestedPkg().getOwnedStereotype("Allocate");
+					EObject applyStereotype = refineAbs.applyStereotype(refineStereoType);
+					getAlgo().getStereoApplications().add(applyStereotype);
+					refineAbs.getSuppliers().add(umlRequirement);
+					refineAbs.getClients().add((NamedElement) umlSource);
+					// refineAbs.setValue(refineStereoType,
+					// "base_DirectedRelationship", refineAbs);
+					Sysml2CapellaUtils.trace(this, _source.eResource(), abstractRelation, refineAbs, "ALLOC_");
+
+				}
+			}
+
+			if (abstractRelation instanceof CapellaIncomingRelation) {
+				RelationType relationType = ((CapellaIncomingRelation) abstractRelation).getRelationType();
+				if (relationType == null) {
+					continue;
+				}
+				String reqIFLongName = relationType.getReqIFLongName();
+				if (!reqIFLongName.equals("Allocate")) {
+					continue;
+				}
+
+				CapellaElement target = ((CapellaIncomingRelation) abstractRelation).getTarget();
+				Object umlTarget = MappingRulesManager.getCapellaObjectFromAllRules(target);
+				if (umlTarget instanceof EObject) {
+					Package firstPackageParent = getFirstPackageParent((EObject) umlTarget);
+					Abstraction refineAbs = UMLFactory.eINSTANCE.createAbstraction();
+					firstPackageParent.getPackagedElements().add(refineAbs);
+					Stereotype refineStereoType = getAllocationsNestedPkg().getOwnedStereotype("Allocate");
+					EObject applyStereotype = refineAbs.applyStereotype(refineStereoType);
+					getAlgo().getStereoApplications().add(applyStereotype);
+					refineAbs.getSuppliers().add((NamedElement) umlTarget);
+					refineAbs.getClients().add(umlRequirement);
+					// refineAbs.setValue(refineStereoType,
+					// "base_DirectedRelationship", refineAbs);
+					Sysml2CapellaUtils.trace(this, _source.eResource(), abstractRelation, refineAbs, "ALLOC_");
+
+				}
+			}
+
+		}
+
+	}
+
+	/**
+	 * Tarnsform Refine element.
+	 * 
+	 * @param requirement
+	 *            the {@link Requirement} to transform
+	 * @param umlRequirement
+	 *            the transformed uml Class. (with Requirement stereotype)
+	 * @param ownedStereotype
+	 *            the refined by stereotype.
+	 */
+	private void transformTraceElement(Requirement requirement, Class umlRequirement, Stereotype ownedStereotype) {
+
+		EList<AbstractRelation> ownedRelations = requirement.getOwnedRelations();
+		for (AbstractRelation abstractRelation : ownedRelations) {
+			if (abstractRelation instanceof CapellaOutgoingRelation) {
+				RelationType relationType = ((CapellaOutgoingRelation) abstractRelation).getRelationType();
+				if (relationType == null) {
+					continue;
+				}
+				String reqIFLongName = relationType.getReqIFLongName();
+				if (!reqIFLongName.equals("Trace")) {
+					continue;
+				}
+
+				CapellaElement source = ((CapellaOutgoingRelation) abstractRelation).getSource();
+				Object umlSource = MappingRulesManager.getCapellaObjectFromAllRules(source);
+				if (umlSource instanceof EObject) {
+					Package firstPackageParent = getFirstPackageParent((EObject) umlSource);
+					Abstraction refineAbs = UMLFactory.eINSTANCE.createAbstraction();
+					firstPackageParent.getPackagedElements().add(refineAbs);
+					Stereotype refineStereoType = getRequirementNestedPkg().getOwnedStereotype("Trace");
+					EObject applyStereotype = refineAbs.applyStereotype(refineStereoType);
+					getAlgo().getStereoApplications().add(applyStereotype);
+					refineAbs.getSuppliers().add(umlRequirement);
+					refineAbs.getClients().add((NamedElement) umlSource);
+					// refineAbs.setValue(refineStereoType,
+					// "base_DirectedRelationship", refineAbs);
+					Sysml2CapellaUtils.trace(this, _source.eResource(), abstractRelation, refineAbs, "TRACE_");
+
+				}
+			}
+			if (abstractRelation instanceof CapellaIncomingRelation) {
+				RelationType relationType = ((CapellaIncomingRelation) abstractRelation).getRelationType();
+				if (relationType == null) {
+					continue;
+				}
+				String reqIFLongName = relationType.getReqIFLongName();
+				if (!reqIFLongName.equals("Trace")) {
+					continue;
+				}
+
+				CapellaElement source = ((CapellaIncomingRelation) abstractRelation).getTarget();
+				Object umlSource = MappingRulesManager.getCapellaObjectFromAllRules(source);
+				if (umlSource instanceof EObject) {
+					List<EObject> value = (List<EObject>) umlRequirement.getValue(ownedStereotype, "TracedTo");
+					if (value == null) {
+						value = new ArrayList<EObject>();
+						umlRequirement.setValue(ownedStereotype, "TracedTo", value);
+					}
+					value.add((EObject) umlSource);
+					Package firstPackageParent = getFirstPackageParent((EObject) umlSource);
+					Abstraction refineAbs = UMLFactory.eINSTANCE.createAbstraction();
+					firstPackageParent.getPackagedElements().add(refineAbs);
+					Stereotype refineStereoType = getRequirementNestedPkg().getOwnedStereotype("Trace");
+					EObject applyStereotype = refineAbs.applyStereotype(refineStereoType);
+					getAlgo().getStereoApplications().add(applyStereotype);
+					refineAbs.getSuppliers().add((NamedElement) umlSource);
+					refineAbs.getClients().add(umlRequirement);
+					// refineAbs.setValue(refineStereoType,
+					// "base_DirectedRelationship", refineAbs);
+					Sysml2CapellaUtils.trace(this, _source.eResource(), abstractRelation, refineAbs, "TRACE_");
+
+				}
+			}
+
+		}
+
 	}
 
 	/**

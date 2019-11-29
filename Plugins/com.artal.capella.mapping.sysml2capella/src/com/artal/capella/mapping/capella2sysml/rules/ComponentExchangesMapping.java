@@ -10,8 +10,11 @@
 package com.artal.capella.mapping.capella2sysml.rules;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 
 import org.eclipse.emf.common.util.EList;
@@ -183,16 +186,19 @@ public class ComponentExchangesMapping extends AbstractMapping {
 
 		// create all the intermdiate Port (with respect to the difference of
 		// level between component source and component target).
-		Port umlSourceIntermediatePort = createIntermediatePort((ComponentPort) sourcePort, umlSourcePort, commonParent,
-				sourceAncestorQueue);
-		Port umlTargetIntermediatePort = createIntermediatePort((ComponentPort) targetPort, umlTargetPort, commonParent,
-				targetAncestorQueue);
+		Entry<Port, Property> portPropSource = createIntermediatePort((ComponentPort) sourcePort, umlSourcePort,
+				commonParent, sourceAncestorQueue).entrySet().iterator().next();
+		Port umlSourceIntermediatePort = portPropSource.getKey();
+		Entry<Port, Property> portPropTarget = createIntermediatePort((ComponentPort) targetPort, umlTargetPort,
+				commonParent, targetAncestorQueue).entrySet().iterator().next();
+		Port umlTargetIntermediatePort = portPropTarget.getKey();
 
 		// get the uml Class mapped with the capella common parent.
 		Class umlParent = (Class) MappingRulesManager.getCapellaObjectFromAllRules(commonParent);
 
 		// create new connector.
-		createConnector(ce, sourceProp, targetProp, umlSourceIntermediatePort, umlTargetIntermediatePort, umlParent);
+		createConnector(ce, portPropSource.getValue(), portPropTarget.getValue(), umlSourceIntermediatePort,
+				umlTargetIntermediatePort, umlParent);
 	}
 
 	/**
@@ -217,7 +223,17 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		connector.setName(ce.getName());
 		umlParent.getOwnedConnectors().add(connector);
 		Sysml2CapellaUtils.trace(this, _source.eResource(), ce, connector, "CONNECTOR_");
-
+		
+		
+		// manage binding connector stereotype
+		IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
+		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
+		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
+		Package blockProfile = profile.getNestedPackage("Blocks");
+		Stereotype bindingConnectorStereo = blockProfile.getOwnedStereotype("BindingConnector");
+		EObject applyStereotype = connector.applyStereotype(bindingConnectorStereo);
+		getAlgo().getStereoApplications().add(applyStereotype);
+		
 		ConnectorEnd targetEnd = connector.createEnd();
 		// Sysml2CapellaUtils.trace(this, _source.eResource(), ,
 		// targetElement, prefix);
@@ -229,6 +245,25 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		sourceEnd.setPartWithPort(sourceProp);
 		targetEnd.setRole(umlTargetIntermediatePort);
 		targetEnd.setPartWithPort(targetProp);
+
+		// manage nested connector ends stereotype.
+		Stereotype nestedConnectorEndStereo = blockProfile.getOwnedStereotype("NestedConnectorEnd");
+		if (nestedConnectorEndStereo != null) {
+			List<Property> srcList = new ArrayList<>();
+			srcList.add(sourceProp);
+			List<Property> trgList = new ArrayList<>();
+			trgList.add(targetProp);
+
+			EObject applyStereotype3 = sourceEnd.applyStereotype(nestedConnectorEndStereo);
+			sourceEnd.setValue(nestedConnectorEndStereo, "propertyPath", srcList);
+
+			EObject applyStereotype2 = targetEnd.applyStereotype(nestedConnectorEndStereo);
+			targetEnd.setValue(nestedConnectorEndStereo, "propertyPath", trgList);
+
+			getAlgo().getStereoApplications().add(applyStereotype3);
+			getAlgo().getStereoApplications().add(applyStereotype2);
+		}
+
 	}
 
 	/**
@@ -373,11 +408,17 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	 *            the ancestor
 	 * @return the intermediage port
 	 */
-	private Port createIntermediatePort(ComponentPort capellaPort, Port umlPort, Component common,
+	private Map<Port, Property> createIntermediatePort(ComponentPort capellaPort, Port umlPort, Component common,
 			Queue<Component> ancestors) {
 		// reach the ancestor while the common parent is not found.
 		Component parent;
 		boolean isFoundCommon = false;
+		Component container = (Component) capellaPort.eContainer();
+		Property targetProp = null;
+		Part partInitial = Sysml2CapellaUtils.getInversePart(container);
+
+		// get source and target properties.
+		targetProp = (Property) MappingRulesManager.getCapellaObjectFromAllRules(partInitial);
 		// reach ancestors
 		while ((parent = ancestors.poll()) != null && !isFoundCommon) {
 			// if common parent found, exit the while loop.
@@ -394,19 +435,59 @@ public class ComponentExchangesMapping extends AbstractMapping {
 				Connector connector = UMLFactory.eINSTANCE.createConnector();
 				umlParent.getOwnedConnectors().add(connector);
 
+				// Manage binding connector stereotype
+				IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
+				ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
+				Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
+				Package blockProfile = profile.getNestedPackage("Blocks");
+				Stereotype bindingConnectorStereo = blockProfile.getOwnedStereotype("BindingConnector");
+				EObject applyStereotype = connector.applyStereotype(bindingConnectorStereo);
+				getAlgo().getStereoApplications().add(applyStereotype);
+
 				ConnectorEnd sourceEnd = connector.createEnd();
 				sourceEnd.setRole(umlPort);
+
 				ConnectorEnd targetEnd = connector.createEnd();
 
 				Port mirrorPort = umlParent.createOwnedPort(capellaPort.getName(), null);
 				targetEnd.setRole(mirrorPort);
 				umlPort = mirrorPort;
+				
+				Part partSource = Sysml2CapellaUtils.getInversePart(container);
+				Property sourceProp = (Property) MappingRulesManager.getCapellaObjectFromAllRules(partSource);
+				container = parent;
+				Part partTarget = Sysml2CapellaUtils.getInversePart(container);
+
+				// get source and target properties.
+				targetProp = (Property) MappingRulesManager.getCapellaObjectFromAllRules(partTarget);
+
+				sourceEnd.setPartWithPort(sourceProp);
+
+				Stereotype nestedConnectorEndStereo = blockProfile.getOwnedStereotype("NestedConnectorEnd");
+				if (nestedConnectorEndStereo != null) {
+					List<Property> srcList = new ArrayList<>();
+					srcList.add(sourceProp);
+//					List<Property> trgList = new ArrayList<>();
+//					trgList.add(targetProp);
+
+					EObject applyStereotype3 = sourceEnd.applyStereotype(nestedConnectorEndStereo);
+					sourceEnd.setValue(nestedConnectorEndStereo, "propertyPath", srcList);
+
+//					EObject applyStereotype2 = targetEnd.applyStereotype(nestedConnectorEndStereo);
+//					targetEnd.setValue(nestedConnectorEndStereo, "propertyPath", trgList);
+
+					getAlgo().getStereoApplications().add(applyStereotype3);
+//					getAlgo().getStereoApplications().add(applyStereotype2);
+				}
 
 			}
 
 		}
+
 		// return the port under the common parent.
-		return umlPort;
+		Map<Port, Property> map = new HashMap<>();
+		map.put(umlPort, targetProp);
+		return map;
 	}
 
 	private void manageOrientation(ComponentPort port, Port umlPort) {

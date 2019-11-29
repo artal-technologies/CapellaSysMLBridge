@@ -9,17 +9,24 @@
  *******************************************************************************/
 package com.artal.capella.mapping.sysml2capella.rules;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Stereotype;
+import org.polarsys.capella.core.data.cs.CsFactory;
+import org.polarsys.capella.core.data.cs.ExchangeItemAllocation;
+import org.polarsys.capella.core.data.cs.Interface;
+import org.polarsys.capella.core.data.cs.InterfacePkg;
 import org.polarsys.capella.core.data.information.DataPkg;
 import org.polarsys.capella.core.data.information.ExchangeItem;
 import org.polarsys.capella.core.data.information.ExchangeMechanism;
@@ -74,13 +81,15 @@ public class ParametricClassesMapping extends AbstractMapping {
 	@Override
 	public void computeMapping() {
 		Resource eResource = _source.eResource();
-		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, getAlgo().getConfiguration().getParametricPath());
+		List<Class> classes = getAllSubClass(
+				Sysml2CapellaUtils.getClasses(_source, getAlgo().getConfiguration().getParametricPath()));
 
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
 		DataPkg dataPkgRoot = Sysml2CapellaUtils.getDataPkgRoot(targetScope.getProject());
 
 		Map<String, AbstractMapping> blocks = new HashMap<String, AbstractMapping>();
 		Map<String, AbstractMapping> interfaces = new HashMap<String, AbstractMapping>();
+		Map<String, AbstractMapping> constraints = new HashMap<String, AbstractMapping>();
 
 		for (Class sysmlParamClass : classes) {
 			Stereotype blockStereotype = sysmlParamClass.getApplicableStereotype("SysML::Blocks::Block");
@@ -91,9 +100,11 @@ public class ParametricClassesMapping extends AbstractMapping {
 						"SysML::ConstraintBlocks::ConstraintBlock");
 				// check is not InterfaceBlock or ConstraintBlock
 				if (interfaceBlock != null) {
-					transformExchangeItem(eResource, dataPkgRoot, interfaces, sysmlParamClass);
+					InterfacePkg interfacePkgRoot = Sysml2CapellaUtils.getInterfacePkgRoot(targetScope.getProject());
+					transformExchangeItem(eResource, dataPkgRoot, interfacePkgRoot, interfaces, sysmlParamClass);
 				} else if (constraintBlock != null) {
 
+					transformConstraintClass(eResource, dataPkgRoot, constraints, sysmlParamClass);
 				} else {
 					transformClass(eResource, dataPkgRoot, blocks, sysmlParamClass);
 				}
@@ -109,8 +120,31 @@ public class ParametricClassesMapping extends AbstractMapping {
 		for (Entry<String, AbstractMapping> entryInterfaces : interfaces.entrySet()) {
 			_manager.add(entryInterfaces.getKey(), entryInterfaces.getValue());
 		}
+		for (Entry<String, AbstractMapping> entryConstraintes : constraints.entrySet()) {
+			_manager.add(entryConstraintes.getKey(), entryConstraintes.getValue());
+		}
 
 		_manager.executeRules();
+
+	}
+
+	private List<Class> getAllSubClass(List<Class> classes) {
+		List<Class> results = new ArrayList<Class>();
+		for (Classifier clazz : classes) {
+			results.add((Class) clazz);
+			List<Class> nestedClassifiers = ((Class) clazz).getNestedClassifiers().stream()
+					.filter(cl -> (cl instanceof Class)).map(Class.class::cast).collect(Collectors.toList());
+			results.addAll(getAllSubClass(nestedClassifiers));
+		}
+		return results;
+	}
+
+	private void transformConstraintClass(Resource eResource, DataPkg dataPkgRoot,
+			Map<String, AbstractMapping> constraints, Class sysmlParamClass) {
+
+		// nothing to do, the BlockConstraint aren't transformed in Capella. The
+		// constraint under the Block constraint is move under the Block
+		// constraint container.
 
 	}
 
@@ -147,18 +181,33 @@ public class ParametricClassesMapping extends AbstractMapping {
 	 *            the sysml model
 	 * @param dataPkgRoot
 	 *            the {@link DataPkg} root
+	 * @param interfacePkgRoot
 	 * @param interfaces
 	 *            the {@link Map} to fill with the properties rule
 	 * @param sysmlParamClass
 	 *            the SysML {@link Class} to transform
 	 */
-	private void transformExchangeItem(Resource eResource, DataPkg dataPkgRoot, Map<String, AbstractMapping> interfaces,
-			Class sysmlParamClass) {
+	private void transformExchangeItem(Resource eResource, DataPkg dataPkgRoot, InterfacePkg interfacePkgRoot,
+			Map<String, AbstractMapping> interfaces, Class sysmlParamClass) {
+
+		Interface inter = CsFactory.eINSTANCE.createInterface();
+		inter.setName(sysmlParamClass.getName());
+		interfacePkgRoot.getOwnedInterfaces().add(inter);
+		Sysml2CapellaUtils.trace(this, eResource,
+				Sysml2CapellaUtils.getSysMLID(_source.eResource(), sysmlParamClass) + "INTERFACE", inter, "INTERFACE");
+
 		ExchangeItem ei = InformationFactory.eINSTANCE.createExchangeItem();
 		ei.setName(sysmlParamClass.getName());
 		ei.setExchangeMechanism(ExchangeMechanism.FLOW);
 		dataPkgRoot.getOwnedExchangeItems().add(ei);
 		Sysml2CapellaUtils.trace(this, eResource, sysmlParamClass, ei, "EXCHANGEITEM");
+
+		ExchangeItemAllocation eia = CsFactory.eINSTANCE.createExchangeItemAllocation();
+		eia.setAllocatedItem(ei);
+		inter.getOwnedExchangeItemAllocations().add(eia);
+		Sysml2CapellaUtils.trace(this, eResource,
+				Sysml2CapellaUtils.getSysMLID(_source.eResource(), sysmlParamClass) + "EXCHANGEITEMALLOCATION", eia,
+				"EXCHANGEITEMALLOCATION");
 
 		PropertyMapping propertyMapping = new PropertyMapping(getAlgo(), sysmlParamClass, _mappingExecution);
 		interfaces.put(propertyMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(eResource, sysmlParamClass),

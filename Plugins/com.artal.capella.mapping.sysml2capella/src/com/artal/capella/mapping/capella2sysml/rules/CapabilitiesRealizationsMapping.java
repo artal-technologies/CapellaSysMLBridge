@@ -134,8 +134,9 @@ public class CapabilitiesRealizationsMapping extends AbstractMapping {
 			Sysml2CapellaUtils.trace(this, _source.eResource(), acri, association, "_ASSOCIATION");
 
 			Property propertySource = association.createOwnedEnd("", usecase);
+			association.getNavigableOwnedEnds().add(propertySource);
 			Property propertyTarget = association.createOwnedEnd("", umlActor);
-
+			association.getNavigableOwnedEnds().add(propertyTarget);
 			Sysml2CapellaUtils.trace(this, _source.eResource(), acri + "SOURCE", propertySource, "SOURCE_END_");
 			Sysml2CapellaUtils.trace(this, _source.eResource(), acri + "TARGET", propertyTarget, "TARGET_END_");
 
