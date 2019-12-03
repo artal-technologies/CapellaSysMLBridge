@@ -247,7 +247,7 @@ public class RequirementsMapping extends AbstractMapping {
 							.trace(this, eResource,
 									Sysml2CapellaUtils.getSysMLID(eResource, appliedStereotype)
 											+ Sysml2CapellaUtils.getSysMLID(eResource, eObject),
-									incomingRelation, "TRACE_");
+									incomingRelation, "TRACE_IN");
 				}
 			}
 		}
@@ -269,7 +269,7 @@ public class RequirementsMapping extends AbstractMapping {
 							.trace(this, eResource,
 									Sysml2CapellaUtils.getSysMLID(eResource, appliedStereotype)
 											+ Sysml2CapellaUtils.getSysMLID(eResource, eObject),
-									incomingRelation, "TRACE_");
+									incomingRelation, "TRACE_OUT");
 				}
 			}
 		}

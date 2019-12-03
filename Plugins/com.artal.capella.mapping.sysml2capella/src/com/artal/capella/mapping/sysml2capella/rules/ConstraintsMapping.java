@@ -13,12 +13,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.uml2.uml.Activity;
+import org.eclipse.uml2.uml.CallBehaviorAction;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Model;
@@ -100,33 +103,40 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 
 		for (org.eclipse.uml2.uml.Constraint sysMLConstraint : sysMLConstraints) {
 
-			EObject sysmlObject = getSysmlObjectContainer(sysMLConstraint);
+			List<EObject> sysmlObjects = getSysmlObjectContainer(sysMLConstraint);
 
-			// get the container capella element from the container sysml
-			// element.
-			Object capellaObject = getCapellaConstraintContainer(sysmlObject);
+			for (EObject sysmlObject : sysmlObjects) {
 
-			// create the capella constraint
-			Constraint constraintCapella = CapellacoreFactory.eINSTANCE.createConstraint();
-			constraintCapella.setName(sysMLConstraint.getName());
+				// get the container capella element from the container sysml
+				// element.
+				Object capellaObject = getCapellaConstraintContainer(sysmlObject);
 
-			// get the transformed capella constrained elements and add them in
-			// the new capella constraint.
-			EList<Element> constrainedElements = sysMLConstraint.getConstrainedElements();
-			fillConstrainedElements(constraintCapella, constrainedElements);
+				// create the capella constraint
+				Constraint constraintCapella = CapellacoreFactory.eINSTANCE.createConstraint();
+				constraintCapella.setName(sysMLConstraint.getName());
 
-			// get the SysML OpaqueExpression and transform in Capella
-			// OpaqueExpression.
-			ValueSpecification specification = sysMLConstraint.getSpecification();
-			if (specification instanceof OpaqueExpression) {
-				transformValueSpecification(eResource, constraintCapella, specification);
-			}
+				// get the transformed capella constrained elements and add them
+				// in
+				// the new capella constraint.
+				EList<Element> constrainedElements = sysMLConstraint.getConstrainedElements();
+				fillConstrainedElements(constraintCapella, constrainedElements);
 
-			// add the capella constraint to capella container.
-			if (capellaObject instanceof ModelElement) {
-				List<AbstractConstraint> ownedConstraints = ((ModelElement) capellaObject).getOwnedConstraints();
-				ownedConstraints.add(constraintCapella);
-				Sysml2CapellaUtils.trace(this, eResource, sysMLConstraint, constraintCapella, "Constraint_");
+				// get the SysML OpaqueExpression and transform in Capella
+				// OpaqueExpression.
+				ValueSpecification specification = sysMLConstraint.getSpecification();
+				if (specification instanceof OpaqueExpression) {
+					transformValueSpecification(eResource, constraintCapella, specification, sysmlObject);
+				}
+
+				// add the capella constraint to capella container.
+				if (capellaObject instanceof ModelElement) {
+					List<AbstractConstraint> ownedConstraints = ((ModelElement) capellaObject).getOwnedConstraints();
+					ownedConstraints.add(constraintCapella);
+					Sysml2CapellaUtils.trace(this, eResource,
+							Sysml2CapellaUtils.getSysMLID(eResource, sysMLConstraint)
+									+ Sysml2CapellaUtils.getSysMLID(eResource, sysmlObject),
+							constraintCapella, "Constraint_");
+				}
 			}
 		}
 
@@ -134,10 +144,12 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 
 	/**
 	 * Get the object that references the constraint.
+	 * 
 	 * @param sysMLConstraint
 	 * @return
 	 */
-	private EObject getSysmlObjectContainer(org.eclipse.uml2.uml.Constraint sysMLConstraint) {
+	private List<EObject> getSysmlObjectContainer(org.eclipse.uml2.uml.Constraint sysMLConstraint) {
+		List<EObject> results = new ArrayList<>();
 		EObject sysmlObject = null;
 		EObject eContainer = sysMLConstraint.eContainer();
 		Class constraintBlock = null;
@@ -158,16 +170,16 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 			for (Property prop : PropertyMapping.contraintsProperties) {
 				if (prop.getType().equals(eContainer)) {
 					sysmlObject = prop.eContainer();
-					break;
+					results.add(sysmlObject);
 				}
 			}
 
 		} else {
 			sysmlObject = eContainer;
+			results.add(sysmlObject);
 		}
-		return sysmlObject;
+		return results;
 	}
-
 
 	/**
 	 * Get the capella constraint container.
@@ -177,14 +189,25 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 	 * @return Object parent.
 	 */
 	private Object getCapellaConstraintContainer(EObject sysMLContainer) {
+		if (sysMLContainer instanceof Activity) {
+			Map<Activity, List<CallBehaviorAction>> mapActivityToCallBehaviors = LogicalFunctionMapping
+					.getMapActivityToCallBehaviors();
+			List<CallBehaviorAction> list = mapActivityToCallBehaviors.get((sysMLContainer));
+			sysMLContainer = list.get(0);
+		}
 		Object capellaObject = MappingRulesManager.getCapellaObjectFromAllRules(sysMLContainer);
 
 		// if no transformed container, add the capella constraint in the
 		// main dataPkg.
+
 		if (capellaObject == null) {
 			CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
 			capellaObject = Sysml2CapellaUtils.getDataPkgRoot(targetScope.getProject());
 		}
+		if (capellaObject instanceof List<?>) {
+			capellaObject = ((List<?>) capellaObject).get(0);
+		}
+
 		return capellaObject;
 	}
 
@@ -224,10 +247,11 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 	 *            the capella {@link Constraint}
 	 * @param specification
 	 *            the ValueSpecification to transform
+	 * @param sysmlObject
 	 * @param map
 	 */
 	private void transformValueSpecification(Resource eResource, Constraint constraintCapella,
-			ValueSpecification specification) {
+			ValueSpecification specification, EObject sysmlObject) {
 		org.polarsys.capella.core.data.information.datavalue.OpaqueExpression capellaExpr = DatavalueFactory.eINSTANCE
 				.createOpaqueExpression();
 		capellaExpr.setName(capellaExpr.getName());
@@ -241,7 +265,8 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 		}
 
 		constraintCapella.setOwnedSpecification(capellaExpr);
-		Sysml2CapellaUtils.trace(this, eResource, specification, capellaExpr, "ValueSpec_");
+		Sysml2CapellaUtils.trace(this, eResource, Sysml2CapellaUtils.getSysMLID(eResource, specification)
+				+ Sysml2CapellaUtils.getSysMLID(eResource, sysmlObject), capellaExpr, "ValueSpec_");
 	}
 
 	@Override
