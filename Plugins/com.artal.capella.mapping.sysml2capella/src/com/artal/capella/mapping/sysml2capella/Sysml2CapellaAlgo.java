@@ -44,6 +44,7 @@ import com.artal.capella.mapping.sysml2capella.rules.PropertyMapping;
 import com.artal.capella.mapping.sysml2capella.rules.RequirementsMapping;
 import com.artal.capella.mapping.sysml2capella.rules.StateMachineMapping;
 import com.artal.capella.mapping.sysml2capella.rules.UseCaseMapping;
+import com.artal.capella.mapping.sysml2capella.rules.ValueTypesMapping;
 
 /**
  * 
@@ -92,6 +93,10 @@ public class Sysml2CapellaAlgo extends CapellaBridgeAlgo<Model> {
 			_configuration = new SysMLConfiguration();
 		}
 		PropertyMapping.contraintsProperties.clear();
+
+		ValueTypesMapping valueTypesMapping = new ValueTypesMapping(this, source, mappingExecution_p);
+		_managerRules.add(valueTypesMapping.getClass().getName(), valueTypesMapping);
+
 		// Class
 		ParametricClassesMapping classesMapping = new ParametricClassesMapping(this, source, mappingExecution_p);
 		_managerRules.add(classesMapping.getClass().getName(), classesMapping);

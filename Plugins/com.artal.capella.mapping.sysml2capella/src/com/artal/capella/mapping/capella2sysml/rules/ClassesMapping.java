@@ -17,14 +17,17 @@ import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.Stereotype;
+import org.eclipse.uml2.uml.UMLFactory;
 import org.polarsys.capella.common.helpers.EObjectExt;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.information.Class;
 import org.polarsys.capella.core.data.information.DataPkg;
 import org.polarsys.capella.core.data.information.InformationPackage;
+import org.polarsys.capella.core.data.information.datatype.DatatypePackage;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
@@ -107,14 +110,32 @@ public class ClassesMapping extends AbstractMapping {
 		Profile profile = SysML2CapellaUMLProfile.getProfile(rset, UMLProfile.SYSML_PROFILE);
 
 		Stereotype ownedStereotype = profile.getNestedPackage("Blocks").getOwnedStereotype("Block");
+		Stereotype ownedStereotypeValueType = profile.getNestedPackage("Blocks").getOwnedStereotype("ValueType");
 
 		// get all classes and classes in sub packages
 		Set<EObject> all = EObjectExt.getAll(dataPkgRoot, InformationPackage.eINSTANCE.getClass_());
 		List<Class> classes = all.stream().filter(cl -> cl instanceof Class).map(Class.class::cast)
 				.collect(Collectors.toList());
-		
+
 		for (org.polarsys.capella.core.data.information.Class clazz : classes) {
-			transformClass(clazz, paramPkg, ownedStereotype);
+			if (!clazz.isIsPrimitive()) {
+				transformClass(clazz, paramPkg, ownedStereotype);
+			} else {
+				transformDataType(clazz, paramPkg, ownedStereotypeValueType);
+			}
+			PropertiesMapping propertiesMapping = new PropertiesMapping(getAlgo(), clazz, _mappingExecution);
+			_manager.add(
+					propertiesMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(_source.eResource(), clazz),
+					propertiesMapping);
+		}
+		Set<EObject> allNT = EObjectExt.getAll(dataPkgRoot, DatatypePackage.eINSTANCE.getDataType());
+		List<org.polarsys.capella.core.data.information.datatype.DataType> dataTypes = allNT.stream()
+				.filter(cl -> cl instanceof org.polarsys.capella.core.data.information.datatype.DataType)
+				.map(org.polarsys.capella.core.data.information.datatype.DataType.class::cast)
+				.collect(Collectors.toList());
+
+		for (org.polarsys.capella.core.data.information.datatype.DataType clazz : dataTypes) {
+			transformDataType(clazz, paramPkg, ownedStereotypeValueType);
 			PropertiesMapping propertiesMapping = new PropertiesMapping(getAlgo(), clazz, _mappingExecution);
 			_manager.add(
 					propertiesMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(_source.eResource(), clazz),
@@ -138,6 +159,30 @@ public class ClassesMapping extends AbstractMapping {
 		EObject applyStereotype = umlClass.applyStereotype(ownedStereotype);
 		getAlgo().getStereoApplications().add(applyStereotype);
 		Sysml2CapellaUtils.trace(this, _source.eResource(), clazz, umlClass, "CLASS_");
+
+	}
+
+	private void transformDataType(org.polarsys.capella.core.data.information.Class clazz, Package paramPkg,
+			Stereotype ownedStereotype) {
+		DataType dataType = UMLFactory.eINSTANCE.createDataType();
+		dataType.setName(clazz.getName());
+		paramPkg.getPackagedElements().add(dataType);
+
+		EObject applyStereotype = dataType.applyStereotype(ownedStereotype);
+		getAlgo().getStereoApplications().add(applyStereotype);
+		Sysml2CapellaUtils.trace(this, _source.eResource(), clazz, dataType, "DATATYPE_");
+
+	}
+
+	private void transformDataType(org.polarsys.capella.core.data.information.datatype.DataType clazz, Package paramPkg,
+			Stereotype ownedStereotype) {
+		DataType dataType = UMLFactory.eINSTANCE.createDataType();
+		dataType.setName(clazz.getName());
+		paramPkg.getPackagedElements().add(dataType);
+
+		EObject applyStereotype = dataType.applyStereotype(ownedStereotype);
+		getAlgo().getStereoApplications().add(applyStereotype);
+		Sysml2CapellaUtils.trace(this, _source.eResource(), clazz, dataType, "DATATYPE_");
 
 	}
 

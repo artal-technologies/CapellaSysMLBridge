@@ -17,6 +17,7 @@ import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdate
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.LiteralBoolean;
 import org.eclipse.uml2.uml.LiteralInteger;
@@ -62,7 +63,7 @@ public class PropertyMapping extends AbstractMapping {
 	/**
 	 * The sysml root {@link Class}.
 	 */
-	Class _source;
+	org.eclipse.uml2.uml.Classifier _source;
 	/**
 	 * the {@link IMappingExecution} allows to get the mapping data.
 	 */
@@ -84,7 +85,8 @@ public class PropertyMapping extends AbstractMapping {
 	 * @param mappingExecution
 	 *            the {@link IMappingExecution} allows to get the mapping data.
 	 */
-	public PropertyMapping(Sysml2CapellaAlgo algo, Class source, IMappingExecution mappingExecution) {
+	public PropertyMapping(Sysml2CapellaAlgo algo, org.eclipse.uml2.uml.Classifier source,
+			IMappingExecution mappingExecution) {
 		super(algo);
 		_source = source;
 		_mappingExecution = mappingExecution;
@@ -191,6 +193,32 @@ public class PropertyMapping extends AbstractMapping {
 
 				if (capellaProp instanceof AbstractTypedElement) {
 
+					transformType(scope, property, (AbstractTypedElement) capellaProp);
+				}
+			} else if (_source instanceof DataType) {
+				NamedElement capellaObjectFromAllRules = (NamedElement) MappingRulesManager
+						.getCapellaObjectFromAllRules(_source);
+				NamedElement capellaProp = null;
+
+				capellaProp = InformationFactory.eINSTANCE.createProperty();
+
+				capellaProp.setName(property.getName());
+				Sysml2CapellaUtils.trace(this, eResource, property, capellaProp, "PROPERTY_");
+
+				if (capellaProp instanceof MultiplicityElement) {
+					ValueSpecification lowerValue = property.getLowerValue();
+					transformMinCard(eResource, property, (MultiplicityElement) capellaProp, lowerValue);
+
+					ValueSpecification upperValue = property.getUpperValue();
+					transformMaxCard(eResource, property, (MultiplicityElement) capellaProp, upperValue);
+
+					ValueSpecification defaultValue = property.getDefaultValue();
+					if (defaultValue != null) {
+						transformDefault(eResource, property, (MultiplicityElement) capellaProp, defaultValue);
+					}
+				}
+				((Classifier) capellaObjectFromAllRules).getOwnedFeatures().add((Feature) capellaProp);
+				if (capellaProp instanceof AbstractTypedElement) {
 					transformType(scope, property, (AbstractTypedElement) capellaProp);
 				}
 			}

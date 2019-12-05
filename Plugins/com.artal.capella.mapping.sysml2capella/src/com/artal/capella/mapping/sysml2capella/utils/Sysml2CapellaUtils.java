@@ -32,6 +32,7 @@ import org.eclipse.uml2.uml.Actor;
 import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
+import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.PackageableElement;
 import org.eclipse.uml2.uml.PrimitiveType;
@@ -53,7 +54,6 @@ import org.polarsys.capella.core.data.fa.ComponentExchange;
 import org.polarsys.capella.core.data.fa.FaPackage;
 import org.polarsys.capella.core.data.fa.FunctionPkg;
 import org.polarsys.capella.core.data.information.DataPkg;
-import org.polarsys.capella.core.data.information.datatype.DataType;
 import org.polarsys.capella.core.data.la.LogicalActorPkg;
 import org.polarsys.capella.core.data.la.LogicalArchitecture;
 import org.polarsys.capella.core.data.la.LogicalComponent;
@@ -105,6 +105,43 @@ public class Sysml2CapellaUtils {
 				}
 			} else if (structurePkg instanceof Class && structurePkg.getName().equals(packageName)) {
 				results.add((Class) structurePkg);
+			}
+		}
+		return results;
+	}
+
+	/*
+	 * Get the datatype from target uml package
+	 * 
+	 * @param source the container package
+	 * 
+	 * @param paths the path to the package target. the format is
+	 * "Pkg1/Pkg2/../Pkg2" or "Pkg1/Pkg2/../Pkg2/TargetClass" and represents the
+	 * path from source (source/<code>paths</code>).
+	 * 
+	 * @return the Class {@link List}
+	 */
+	static public List<DataType> getDatatTypes(Package source, String paths) {
+		List<DataType> results = new ArrayList<>();
+
+		String[] pathsArray = paths.split("/");
+		paths = paths.substring(paths.indexOf("/") + 1, paths.length());
+		String packageName = pathsArray[0];
+		EList<PackageableElement> packagedElements = source.getPackagedElements();
+		for (PackageableElement structurePkg : packagedElements) {
+			if (structurePkg instanceof Package && structurePkg.getName().equals(packageName)) {
+				if (pathsArray.length > 1) {
+					results.addAll(getDatatTypes((Package) structurePkg, paths));
+				} else {
+					EList<PackageableElement> packagedElements2 = ((Package) structurePkg).getPackagedElements();
+					for (PackageableElement packageableElement : packagedElements2) {
+						if (packageableElement instanceof DataType) {
+							results.add((DataType) packageableElement);
+						}
+					}
+				}
+			} else if (structurePkg instanceof DataType && structurePkg.getName().equals(packageName)) {
+				results.add((DataType) structurePkg);
 			}
 		}
 		return results;
@@ -654,8 +691,9 @@ public class Sysml2CapellaUtils {
 	static public boolean isPrimiriveType(AbstractType type) {
 		DataPkg dataPkgPredefinedTypeRoot = getDataPkgPredefinedTypeRoot(type);
 		if (dataPkgPredefinedTypeRoot != null) {
-			EList<DataType> ownedDataTypes = dataPkgPredefinedTypeRoot.getOwnedDataTypes();
-			for (DataType dataType : ownedDataTypes) {
+			EList<org.polarsys.capella.core.data.information.datatype.DataType> ownedDataTypes = dataPkgPredefinedTypeRoot
+					.getOwnedDataTypes();
+			for (org.polarsys.capella.core.data.information.datatype.DataType dataType : ownedDataTypes) {
 				if (dataType.equals(type)) {
 					return true;
 				}
@@ -692,7 +730,8 @@ public class Sysml2CapellaUtils {
 		return ownedType;
 	}
 
-	static public DataType getPrimitiveType(PrimitiveType primitiveType, Project capella) {
+	static public org.polarsys.capella.core.data.information.datatype.DataType getPrimitiveType(
+			PrimitiveType primitiveType, Project capella) {
 		String name = primitiveType.getName();
 		String capellaDataTypeName = "";
 		switch (name) {
@@ -719,8 +758,9 @@ public class Sysml2CapellaUtils {
 		}
 
 		DataPkg dataPkgPredefinedTypeRoot = getDataPkgPredefinedTypeRoot(capella);
-		EList<DataType> ownedDataTypes = dataPkgPredefinedTypeRoot.getOwnedDataTypes();
-		for (DataType dataType : ownedDataTypes) {
+		EList<org.polarsys.capella.core.data.information.datatype.DataType> ownedDataTypes = dataPkgPredefinedTypeRoot
+				.getOwnedDataTypes();
+		for (org.polarsys.capella.core.data.information.datatype.DataType dataType : ownedDataTypes) {
 			if (dataType.getName().equals(capellaDataTypeName)) {
 				return dataType;
 			}

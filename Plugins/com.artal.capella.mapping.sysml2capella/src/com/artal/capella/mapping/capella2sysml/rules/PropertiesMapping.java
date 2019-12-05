@@ -16,6 +16,8 @@ import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.uml2.uml.Classifier;
+import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.EnumerationLiteral;
 import org.eclipse.uml2.uml.LiteralInteger;
 import org.eclipse.uml2.uml.Package;
@@ -85,7 +87,7 @@ public class PropertiesMapping extends AbstractMapping {
 	 */
 	@Override
 	public void computeMapping() {
-		org.eclipse.uml2.uml.Class classParent = (org.eclipse.uml2.uml.Class) MappingRulesManager
+		org.eclipse.uml2.uml.Classifier classParent = (org.eclipse.uml2.uml.Classifier) MappingRulesManager
 				.getCapellaObjectFromAllRules(_source);
 
 		List<NamedElement> attributes = getAllAttributes();
@@ -122,10 +124,14 @@ public class PropertiesMapping extends AbstractMapping {
 	 * @param namedElement
 	 * @param classParent
 	 */
-	private void transformProperty(NamedElement namedElement, org.eclipse.uml2.uml.Class classParent) {
+	private void transformProperty(NamedElement namedElement, org.eclipse.uml2.uml.Classifier classParent) {
 		Property property = UMLFactory.eINSTANCE.createProperty();
 		property.setName(namedElement.getName());
-		classParent.getOwnedAttributes().add(property);
+		if (classParent instanceof org.eclipse.uml2.uml.Class) {
+			((org.eclipse.uml2.uml.Class) classParent).getOwnedAttributes().add(property);
+		} else if (classParent instanceof DataType) {
+			((DataType) classParent).getOwnedAttributes().add(property);
+		}
 		Sysml2CapellaUtils.trace(this, _source.eResource(), namedElement, property, "PROPERTY_");
 
 		IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
@@ -176,6 +182,9 @@ public class PropertiesMapping extends AbstractMapping {
 		// profile.getty
 		if (abstractType != null && Sysml2CapellaUtils.isPrimiriveType(abstractType)) {
 			Type ptype = Sysml2CapellaUtils.getPrimitiveType(abstractType, targetResourceSet);
+			if (ptype == null) {
+				ptype = (Type) MappingRulesManager.getCapellaObjectFromAllRules(abstractType);
+			}
 			property.setType(ptype);
 
 		} else {
