@@ -12,8 +12,8 @@ package com.artal.capella.mapping.capella2sysml.rules;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.diffmerge.api.IMapping;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
+import org.eclipse.emf.diffmerge.generic.api.IMapping;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Namespace;

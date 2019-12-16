@@ -9,6 +9,8 @@
  *******************************************************************************/
 package com.artal.capella.mapping.capella2sysml.rules;
 
+import java.util.stream.Collectors;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
@@ -26,6 +28,7 @@ import org.polarsys.capella.common.data.modellingcore.TraceableElement;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.fa.ComponentFunctionalAllocation;
 import org.polarsys.capella.core.data.la.LogicalComponent;
+import org.polarsys.capella.core.data.la.LogicalComponentPkg;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
@@ -111,11 +114,12 @@ public class ComponentBlockMapping extends AbstractMapping {
 		return _sysMLProfile;
 	}
 
+	
 	/**
 	 * Transform Capella {@link LogicalComponent} to uml {@link Class} with
 	 * Blocks::Block sysml stereotype.
 	 * 
-	 * @param parent
+	 * @param logicalContext
 	 *            the LogicalComponent root containg all the
 	 *            {@link LogicalComponent} to transform.
 	 * @param pkgParent
@@ -124,7 +128,7 @@ public class ComponentBlockMapping extends AbstractMapping {
 	 *            the {@link Stereotype} to apply on the transformed
 	 *            {@link Class}
 	 */
-	public void transformComponents(LogicalComponent parent, Element pkgParent, Stereotype stereotype) {
+	public void transformComponents(LogicalComponent logicalContext, Element pkgParent, Stereotype stereotype) {
 		Profile profile = getSysMLProfile();
 		// get trace stereotype.
 		Stereotype traceStereotype = profile.getNestedPackage("Allocations").getOwnedStereotype("Allocate");
@@ -133,7 +137,7 @@ public class ComponentBlockMapping extends AbstractMapping {
 		// Allocation LogicalFunction to LogicalComponent.
 		Package behaviorPkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "BEHAVIOR_PKG");
 		// for each sub LogicalComponent
-		EList<LogicalComponent> ownedLogicalComponents = parent.getOwnedLogicalComponents();
+		EList<LogicalComponent> ownedLogicalComponents = (EList<LogicalComponent>) logicalContext.getOwnedLogicalComponents().stream().map(sel->(LogicalComponent) sel).filter(sel-> !sel.isActor()).collect((Collectors.toList()));
 		for (LogicalComponent logicalComponent : ownedLogicalComponents) {
 			// create the class
 			createClass(pkgParent, stereotype, logicalComponent);
@@ -149,6 +153,7 @@ public class ComponentBlockMapping extends AbstractMapping {
 
 		}
 	}
+
 
 	/**
 	 * Create the uml {@link Class}.

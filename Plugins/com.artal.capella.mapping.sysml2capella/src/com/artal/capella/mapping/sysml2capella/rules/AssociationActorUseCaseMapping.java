@@ -19,10 +19,10 @@ import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
-import org.polarsys.capella.core.data.cs.ActorCapabilityRealizationInvolvement;
-import org.polarsys.capella.core.data.cs.CsFactory;
+import org.polarsys.capella.core.data.capellacommon.CapabilityRealizationInvolvement;
+import org.polarsys.capella.core.data.capellacommon.CapellacommonFactory;
 import org.polarsys.capella.core.data.la.CapabilityRealization;
-import org.polarsys.capella.core.data.la.LogicalActor;
+import org.polarsys.capella.core.data.la.LogicalComponent;
 
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
@@ -72,8 +72,8 @@ public class AssociationActorUseCaseMapping extends AbstractMapping {
 		Resource eResource = _source.eResource();
 
 		for (Association association : associations) {
-			ActorCapabilityRealizationInvolvement acri = CsFactory.eINSTANCE
-					.createActorCapabilityRealizationInvolvement();
+			CapabilityRealizationInvolvement acri = CapellacommonFactory.eINSTANCE
+					.createCapabilityRealizationInvolvement();
 			EList<Property> ownedEnds = association.getOwnedEnds();
 			if (ownedEnds.size() == 2) {// TODO Is it possible more ?
 				Property source = ownedEnds.get(0);
@@ -96,18 +96,18 @@ public class AssociationActorUseCaseMapping extends AbstractMapping {
 					cr = (CapabilityRealization) mapSToTUseCase.get(targetType);
 				}
 
-				LogicalActor partActor = null;
+				LogicalComponent partActor = null;
 				if (object instanceof List) {
 					List<?> list = (List<?>) object;
 					for (Object object2 : list) {
-						if (object2 instanceof LogicalActor) {
-							partActor = (LogicalActor) object2;
+						if (object2 instanceof LogicalComponent) {
+							partActor = (LogicalComponent) object2;
 						}
 					}
 				}
 
 				acri.setInvolved(partActor);
-				cr.getOwnedActorCapabilityRealizations().add(acri);
+				cr.getOwnedCapabilityRealizationInvolvements().add(acri);
 
 				Sysml2CapellaUtils.trace(this, eResource, association, acri, "AssociationActorUseCase_");
 			}

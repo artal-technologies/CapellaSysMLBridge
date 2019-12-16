@@ -15,8 +15,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * Manage the rules.
  * 

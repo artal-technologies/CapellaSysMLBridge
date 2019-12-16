@@ -11,6 +11,7 @@ package com.artal.capella.mapping.capella2sysml;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.diffmerge.api.scopes.IEditableModelScope;
+import org.eclipse.emf.diffmerge.generic.api.scopes.ITreeDataScope;
 import org.eclipse.emf.diffmerge.gmf.GMFDiffPolicy;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
@@ -30,10 +31,6 @@ public class Capella2SysmlBridgeJob extends UMLBridgeJob<Project> {
 
 	public Capella2SysmlBridgeJob(String jobName_p, Project sourceDataSet_p, URI targetURI_p) {
 		super(sourceDataSet_p, targetURI_p, new Capella2SysmlAlgo());
-	}
-
-	@Override
-	protected void setupLogger() {
 	}
 
 	public void setTargetParentFolder(String folder) {
@@ -65,8 +62,8 @@ public class Capella2SysmlBridgeJob extends UMLBridgeJob<Project> {
 			};
 
 			@Override
-			public boolean coverValue(Object value_p, EAttribute attribute_p) {
-				return super.coverValue(value_p, attribute_p);
+			public boolean coverValue(Object value_p, Object attribute_p, ITreeDataScope<EObject> scope) {
+				return super.coverValue(value_p, attribute_p, scope);
 			}
 
 			@Override
@@ -90,8 +87,8 @@ public class Capella2SysmlBridgeJob extends UMLBridgeJob<Project> {
 			}
 
 			@Override
-			public boolean considerEqual(Object value1_p, Object value2_p, EAttribute attribute_p) {
-				return super.considerEqual(value1_p, value2_p, attribute_p);
+			public boolean considerEqual(Object value1_p, Object value2_p, Object attribute_p, ITreeDataScope<EObject> scope) {
+				return super.considerEqual(value1_p, value2_p, attribute_p, scope);
 			}
 		};
 		return diffPolicy;

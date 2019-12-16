@@ -13,11 +13,13 @@ import java.util.List;
 
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Model;
 import org.polarsys.capella.core.data.la.LaFactory;
 import org.polarsys.capella.core.data.la.LogicalComponent;
+import org.polarsys.capella.core.data.la.LogicalComponentPkg;
 
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
@@ -52,12 +54,10 @@ public class ComponentMapping extends AbstractMapping {
 	/**
 	 * Constructor.
 	 * 
-	 * @param algo
-	 *            the {@link Sysml2CapellaAlgo} algo.
-	 * @param source
-	 *            the {@link Model} sysml model.
-	 * @param mappingExecution
-	 *            the {@link IMappingExecution} allows to get the mapping data.
+	 * @param algo             the {@link Sysml2CapellaAlgo} algo.
+	 * @param source           the {@link Model} sysml model.
+	 * @param mappingExecution the {@link IMappingExecution} allows to get the
+	 *                         mapping data.
 	 */
 	public ComponentMapping(Sysml2CapellaAlgo algo, Model source, IMappingExecution mappingExecution) {
 		super(algo);
@@ -86,20 +86,15 @@ public class ComponentMapping extends AbstractMapping {
 	/**
 	 * Fill breakdown of {@link LogicalComponent} from breakdown of Classes.
 	 * 
-	 * @param parent
-	 *            the logical component container.
-	 * @param sourceClasses
-	 *            the sysml classes to transform
-	 * @param eResource
-	 *            the sysml resource
+	 * @param parent        the logical component container.
+	 * @param sourceClasses the sysml classes to transform
+	 * @param eResource     the sysml resource
 	 */
 	private void fillBreakdownLogicalComponent(LogicalComponent parent, List<Class> sourceClasses, Resource eResource) {
 		for (Class class1 : sourceClasses) {
 			LogicalComponent lComponent = LaFactory.eINSTANCE.createLogicalComponent();
 			lComponent.setName(class1.getName());
-
 			parent.getOwnedLogicalComponents().add(lComponent);
-
 			Sysml2CapellaUtils.trace(this, eResource, class1, lComponent, "LogicalComponent_");
 			// transpose the port
 			ComponentPortMapping componentPortMapping = new ComponentPortMapping(getAlgo(), class1, _mappingExecution);

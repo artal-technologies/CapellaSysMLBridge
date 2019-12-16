@@ -21,13 +21,13 @@ import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.UseCase;
+import org.polarsys.capella.core.data.capellacommon.CapabilityRealizationInvolvement;
 import org.polarsys.capella.core.data.capellacore.InvolvedElement;
 import org.polarsys.capella.core.data.capellamodeller.Project;
-import org.polarsys.capella.core.data.cs.ActorCapabilityRealizationInvolvement;
 import org.polarsys.capella.core.data.interaction.AbstractCapabilityInclude;
 import org.polarsys.capella.core.data.la.CapabilityRealization;
 import org.polarsys.capella.core.data.la.CapabilityRealizationPkg;
-import org.polarsys.capella.core.data.la.LogicalActor;
+import org.polarsys.capella.core.data.la.LogicalComponent;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
@@ -80,7 +80,7 @@ public class CapabilitiesRealizationsMapping extends AbstractMapping {
 		// list includes to fill
 		List<AbstractCapabilityInclude> includes = new ArrayList<>();
 		// list ActorCapabilityRealizationInvolvement to fill
-		List<ActorCapabilityRealizationInvolvement> acris = new ArrayList<>();
+		List<CapabilityRealizationInvolvement> acris = new ArrayList<>();
 
 		// get the Capella Capability Realization.
 		CapabilityRealizationPkg capabilityRealizationPkg = (CapabilityRealizationPkg) Sysml2CapellaUtils
@@ -93,7 +93,7 @@ public class CapabilitiesRealizationsMapping extends AbstractMapping {
 		for (CapabilityRealization capabilityRealization : ownedCapabilityRealizations) {
 			// fill lists
 			includes.addAll(capabilityRealization.getIncludes());
-			acris.addAll(capabilityRealization.getOwnedActorCapabilityRealizations());
+			acris.addAll(capabilityRealization.getOwnedCapabilityRealizationInvolvements());
 
 			// transform
 			transformCapabilityRealization(capabilityRealization, useCasePkg);
@@ -105,7 +105,7 @@ public class CapabilitiesRealizationsMapping extends AbstractMapping {
 		}
 
 		// actor Capability Realization involvements
-		for (ActorCapabilityRealizationInvolvement acri : acris) {
+		for (CapabilityRealizationInvolvement acri : acris) {
 			transformActorCapabilityRealizationInvolvment(useCasePkg, acri);
 		}
 
@@ -121,11 +121,11 @@ public class CapabilitiesRealizationsMapping extends AbstractMapping {
 	 *            {@link ActorCapabilityRealizationInvolvement} to transform.
 	 */
 	private void transformActorCapabilityRealizationInvolvment(Package useCasePkg,
-			ActorCapabilityRealizationInvolvement acri) {
+			CapabilityRealizationInvolvement acri) {
 		CapabilityRealization cr = (CapabilityRealization) acri.eContainer();
 		InvolvedElement involved = acri.getInvolved();
 
-		if (involved instanceof LogicalActor) {
+		if (involved instanceof LogicalComponent && ((LogicalComponent)involved).isActor()) {
 			UseCase usecase = (UseCase) MappingRulesManager.getCapellaObjectFromAllRules(cr);
 			Actor umlActor = (Actor) MappingRulesManager.getCapellaObjectFromAllRules(involved);
 

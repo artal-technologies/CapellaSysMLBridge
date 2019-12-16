@@ -9,14 +9,16 @@
  *******************************************************************************/
 package com.artal.capella.mapping.capella2sysml.rules;
 
+import java.util.stream.Collectors;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.uml2.uml.Actor;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.polarsys.capella.core.data.capellamodeller.Project;
-import org.polarsys.capella.core.data.la.LogicalActor;
-import org.polarsys.capella.core.data.la.LogicalActorPkg;
+import org.polarsys.capella.core.data.la.LogicalComponent;
+import org.polarsys.capella.core.data.la.LogicalComponentPkg;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
@@ -59,12 +61,12 @@ public class ActorsMapping extends AbstractMapping {
 	@Override
 	public void computeMapping() {
 
-		LogicalActorPkg logicalActorPkg = Sysml2CapellaUtils.getLogicalActorPkg(_source);
-		EList<LogicalActor> ownedLogicalActors = logicalActorPkg.getOwnedLogicalActors();
+		LogicalComponentPkg logicalActorPkg = Sysml2CapellaUtils.getLogicalActorPkg(_source);
+		EList<LogicalComponent> ownedLogicalActors = (EList<LogicalComponent>) logicalActorPkg.getOwnedLogicalComponents().stream().map(sel->(LogicalComponent) sel).filter(sel-> sel.isActor()).collect((Collectors.toList()));
 
 		Package useCasePkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "USECASES");
 
-		for (LogicalActor logicalActor : ownedLogicalActors) {
+		for (LogicalComponent logicalActor : ownedLogicalActors) {
 			if (!logicalActor.getName().equals("Generic Actor")) {
 				Actor actor = UMLFactory.eINSTANCE.createActor();
 				actor.setName(logicalActor.getName());

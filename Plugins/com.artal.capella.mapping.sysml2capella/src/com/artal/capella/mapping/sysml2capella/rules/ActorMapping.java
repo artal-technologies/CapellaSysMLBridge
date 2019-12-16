@@ -21,9 +21,8 @@ import org.eclipse.uml2.uml.Model;
 import org.polarsys.capella.core.data.cs.CsFactory;
 import org.polarsys.capella.core.data.cs.Part;
 import org.polarsys.capella.core.data.la.LaFactory;
-import org.polarsys.capella.core.data.la.LogicalActor;
-import org.polarsys.capella.core.data.la.LogicalActorPkg;
-import org.polarsys.capella.core.data.la.LogicalContext;
+import org.polarsys.capella.core.data.la.LogicalComponent;
+import org.polarsys.capella.core.data.la.LogicalComponentPkg;
 
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.sysml2capella.Sysml2CapellaAlgo;
@@ -47,7 +46,7 @@ public class ActorMapping extends AbstractMapping {
 	/**
 	 * Map to find Part for an Actor
 	 */
-	Map<LogicalActor, Part> _mapLAtoPart = new HashMap<LogicalActor, Part>();
+	Map<LogicalComponent, Part> _mapLAtoPart = new HashMap<LogicalComponent, Part>();
 
 	/**
 	 * Constructor.
@@ -75,20 +74,20 @@ public class ActorMapping extends AbstractMapping {
 		List<Actor> actors = Sysml2CapellaUtils.getActors(_source, getAlgo().getConfiguration().getUseCasesPath());
 		Resource eResource = _source.eResource();
 		CapellaUpdateScope targetScope = _mappingExecution.getTargetDataSet();
-		LogicalActorPkg logicalActorPkg = Sysml2CapellaUtils.getLogicalActorPkg(targetScope.getProject());
-		LogicalContext logicalContext = Sysml2CapellaUtils.getLogicalContext(targetScope.getProject());
+		LogicalComponent logicalComponent = Sysml2CapellaUtils.getLogicalSystemRoot(targetScope.getProject());
 
 		for (Actor actor : actors) {
-			LogicalActor lActor = LaFactory.eINSTANCE.createLogicalActor();
+			LogicalComponent lActor = LaFactory.eINSTANCE.createLogicalComponent();
 			lActor.setName(actor.getName());
+			lActor.setActor(true);
 
-			logicalActorPkg.getOwnedLogicalActors().add(lActor);
+			logicalComponent.getOwnedLogicalComponents().add(lActor);
 			Sysml2CapellaUtils.trace(this, eResource, actor, lActor, "LogicalActor_");
 
 			Part partActor = CsFactory.eINSTANCE.createPart();
 			partActor.setAbstractType(lActor);
 			partActor.setName(lActor.getName());
-			logicalContext.getOwnedFeatures().add(partActor);
+			logicalComponent.getContainedParts().add(partActor);
 			Sysml2CapellaUtils.trace(this, eResource, actor, partActor, "LogicalActor_Part_");
 
 			_mapLAtoPart.put(lActor, partActor);

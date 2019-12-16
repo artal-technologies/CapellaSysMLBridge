@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.ConnectableElement;
@@ -31,6 +32,7 @@ import org.polarsys.capella.core.data.fa.ComponentPort;
 import org.polarsys.capella.core.data.fa.FaFactory;
 import org.polarsys.capella.core.data.information.ExchangeItem;
 import org.polarsys.capella.core.data.la.LogicalComponent;
+import org.polarsys.capella.core.data.la.LogicalComponentPkg;
 
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;

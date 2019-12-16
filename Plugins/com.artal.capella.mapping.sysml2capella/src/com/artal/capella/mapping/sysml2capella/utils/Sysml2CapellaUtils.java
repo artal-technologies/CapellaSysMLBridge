@@ -54,10 +54,9 @@ import org.polarsys.capella.core.data.fa.ComponentExchange;
 import org.polarsys.capella.core.data.fa.FaPackage;
 import org.polarsys.capella.core.data.fa.FunctionPkg;
 import org.polarsys.capella.core.data.information.DataPkg;
-import org.polarsys.capella.core.data.la.LogicalActorPkg;
 import org.polarsys.capella.core.data.la.LogicalArchitecture;
 import org.polarsys.capella.core.data.la.LogicalComponent;
-import org.polarsys.capella.core.data.la.LogicalContext;
+import org.polarsys.capella.core.data.la.LogicalComponentPkg;
 import org.polarsys.capella.core.data.la.LogicalFunction;
 import org.polarsys.capella.core.data.la.LogicalFunctionPkg;
 
@@ -373,7 +372,7 @@ public class Sysml2CapellaUtils {
 	 *            the semantic object
 	 * @return the logical component root
 	 */
-	public static LogicalActorPkg getLogicalActorPkg(EObject source_p) {
+	public static LogicalComponentPkg getLogicalActorPkg(EObject source_p) {
 		ResourceSet resourceSet = source_p.eResource().getResourceSet();
 		URI semanticResourceURI = source_p.eResource().getURI().trimFileExtension()
 				.appendFileExtension("melodymodeller");
@@ -388,7 +387,7 @@ public class Sysml2CapellaUtils {
 								.getOwnedArchitectures();
 						for (ModellingArchitecture arch : containedLogicalArchitecture) {
 							if (arch instanceof LogicalArchitecture)
-								return ((LogicalArchitecture) arch).getOwnedLogicalActorPkg();
+								return ((LogicalArchitecture) arch).getOwnedLogicalComponentPkg();
 						}
 					}
 				}
@@ -404,7 +403,7 @@ public class Sysml2CapellaUtils {
 	 *            the semantic object
 	 * @return the logical component root
 	 */
-	public static LogicalContext getLogicalContext(EObject source_p) {
+	public static LogicalComponentPkg getRootLogicalComponentPkg(EObject source_p) {
 		ResourceSet resourceSet = source_p.eResource().getResourceSet();
 		URI semanticResourceURI = source_p.eResource().getURI().trimFileExtension()
 				.appendFileExtension("melodymodeller");
@@ -419,7 +418,7 @@ public class Sysml2CapellaUtils {
 								.getOwnedArchitectures();
 						for (ModellingArchitecture arch : containedLogicalArchitecture) {
 							if (arch instanceof LogicalArchitecture)
-								return ((LogicalArchitecture) arch).getOwnedLogicalContext();
+								return ((LogicalArchitecture) arch).getOwnedLogicalComponentPkg();
 						}
 					}
 				}
@@ -462,8 +461,7 @@ public class Sysml2CapellaUtils {
 	/**
 	 * Returns the logical component system root given a semantic object
 	 * 
-	 * @param source_p
-	 *            the semantic object
+	 * @param source_p the semantic object
 	 * @return the logical component root
 	 */
 	public static LogicalComponent getLogicalSystemRoot(EObject source_p) {
@@ -481,7 +479,7 @@ public class Sysml2CapellaUtils {
 								.getOwnedArchitectures();
 						for (ModellingArchitecture arch : containedLogicalArchitecture) {
 							if (arch instanceof LogicalArchitecture)
-								return ((LogicalArchitecture) arch).getOwnedLogicalComponent();
+								return (LogicalComponent) ((LogicalArchitecture) arch).getSystem();
 						}
 					}
 				}

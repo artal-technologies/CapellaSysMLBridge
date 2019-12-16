@@ -14,7 +14,6 @@ package com.artal.capella.mapping;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.diffmerge.api.IMatchPolicy;
 import org.eclipse.emf.diffmerge.api.scopes.IEditableModelScope;
 import org.eclipse.emf.diffmerge.bridge.api.IBridge;
 import org.eclipse.emf.diffmerge.bridge.api.IBridgeTrace;
@@ -25,6 +24,7 @@ import org.eclipse.emf.diffmerge.bridge.interactive.EMFInteractiveBridge;
 import org.eclipse.emf.diffmerge.bridge.traces.gen.bridgetraces.impl.TraceImpl;
 import org.eclipse.emf.diffmerge.diffdata.EComparison;
 import org.eclipse.emf.diffmerge.diffdata.impl.EComparisonImpl;
+import org.eclipse.emf.diffmerge.generic.api.IMatchPolicy;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.polarsys.capella.core.data.capellamodeller.Project;
@@ -94,8 +94,8 @@ public class CapellaExtensionBridgeJob<SD> extends CapellaBridgeJob<SD> {
 			protected EComparison compare(IEditableModelScope created_p, IEditableModelScope existing_p,
 					IBridgeTrace createdTrace_p, IBridgeTrace existingTrace_p, IProgressMonitor monitor_p) {
 				EComparison comparison = new EComparisonImpl(existing_p, created_p);
-				IMatchPolicy delegate = createMatchPolicyDelegate();
-				IMatchPolicy matchPolicy = createDelegatingMatchPolicy(created_p, createdTrace_p, existingTrace_p,
+				IMatchPolicy<EObject> delegate = createMatchPolicyDelegate();
+				IMatchPolicy<EObject> matchPolicy = createDelegatingMatchPolicy(created_p, createdTrace_p, existingTrace_p,
 						delegate);
 				comparison.compute(matchPolicy, getDiffPolicy(), getMergePolicy(), monitor_p);
 				return comparison;
@@ -140,8 +140,8 @@ public class CapellaExtensionBridgeJob<SD> extends CapellaBridgeJob<SD> {
 		return _algo;
 	}
 
-	@Override
-	protected void setupLogger() {
-		// TODO Auto-generated method stub
-	}
+//	@Override
+//	protected void setupLogger() {
+//		// TODO Auto-generated method stub
+//	}
 }

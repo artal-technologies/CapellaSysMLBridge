@@ -16,5 +16,6 @@ Require-Bundle: org.polarsys.capella.core.data.gen,
  com.artal.capella.mapping,
  org.polarsys.capella.vp.requirements.model;resolution:=optional,
  org.eclipse.emf.diffmerge.bridge.uml,
- org.eclipse.uml2.uml.resources
+ org.eclipse.uml2.uml.resources,
+ org.eclipse.emf.diffmerge.generic
 Export-Package: com.artal.capella.mapping.sysml2capella

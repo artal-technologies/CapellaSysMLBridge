@@ -24,53 +24,31 @@
 		<repository>
 			<id>capella</id>
 			<layout>p2</layout>
-			<url>http://odin.phedre.fr/capella_1.2.1-mirrors/capella
+			<url>https://download.eclipse.org/capella/core/updates/releases/5.1.0-R20210615-075512/org.polarsys.capella.rcp.site/
 			</url>
-		</repository>
-		<repository>
-			<id>requirements</id>
-			<layout>p2</layout>
-			<url>https://hudson.polarsys.org/capella/view/Capella%20Viewpoints/job/capella-requirements-viewpoint-v0.9.x/301/artifact/releng/org.polarsys.capella.vp.requirements.site/target/repository/</url>
 		</repository>
 		<repository>
 			<id>coevolution</id>
 			<layout>p2</layout>
-			<url>http://odin.phedre.fr/capella_1.2.1-mirrors/coevolution_0.9
+			<url>https://download.eclipse.org/diffmerge/releases/0.13.1/edm-coevolution-site/
 			</url>
 		</repository>
 		<repository>
 			<id>diffmerge</id>
 			<layout>p2</layout>
-			<url>http://odin.phedre.fr/capella_1.2.1-mirrors/diffmerge
+			<url>https://download.eclipse.org/diffmerge/releases/0.12.0/emf-diffmerge-site/
 			</url>
 		</repository>
 		<repository>
 			<id>sirius</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/sirius/updates/releases/5.1.0/neon/</url>
-		</repository>
-		<repository>
-			<id>siriuslegacy</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/sirius/updates/legacy/1.1.0</url>
+			<url>https://download.eclipse.org/sirius/updates/releases/6.6.0/2020-09/</url>
 		</repository>
 		<repository>
 			<id>amalgam</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/modeling/amalgam/updates/nightly/1.8.0-N20161128-035928/mars</url>
+			<url>https://download.eclipse.org/modeling/amalgam/updates/releases/1.12.1/capella/</url>
 		</repository>
-		<repository>
-			<id>kitalpha</id>
-			<layout>p2</layout>
-			<url>http://odin.phedre.fr/capella_1.2.1-mirrors/kitalpha-runtime-core
-			</url>
-		</repository>
-		<repository>
-			<id>kitalpha-sdk</id>
-			<url>http://odin.phedre.fr/capella_1.2.1-mirrors/kitalpha-sdk</url>
-			<layout>p2</layout>
-		</repository>
-
 	</repositories>
 	<dependencies>
 		<dependency>

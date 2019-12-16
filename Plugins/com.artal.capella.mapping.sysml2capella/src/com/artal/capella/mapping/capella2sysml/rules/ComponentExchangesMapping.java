@@ -552,7 +552,7 @@ public class ComponentExchangesMapping extends AbstractMapping {
 			}
 
 		}
-		queue.add(Sysml2CapellaUtils.getLogicalContext(_source));
+		queue.add(Sysml2CapellaUtils.getLogicalSystemRoot(_source));
 		return queue;
 
 	}

@@ -39,8 +39,8 @@ public class Sysml2CapellaBridgeJob extends CapellaExtensionBridgeJob<Model> {
 		return new EMFMappingBridge<>();
 	}
 
-	@Override
-	protected void setupLogger() {
-	}
+//	@Override
+//	protected void setupLogger() {
+//	}
 
 }

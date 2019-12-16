@@ -24,6 +24,7 @@ import org.polarsys.capella.common.data.modellingcore.AbstractType;
 import org.polarsys.capella.core.data.cs.CsFactory;
 import org.polarsys.capella.core.data.cs.Part;
 import org.polarsys.capella.core.data.la.LogicalComponent;
+import org.polarsys.capella.core.data.la.LogicalComponentPkg;
 
 import com.artal.capella.mapping.rules.AbstractMapping;
 import com.artal.capella.mapping.rules.MappingRulesManager;
@@ -71,7 +72,7 @@ public class PartMapping extends AbstractMapping {
 		LogicalComponent rootLogicalSystem = Sysml2CapellaUtils.getLogicalSystemRoot(targetScope.getProject());
 
 		List<Class> classes = Sysml2CapellaUtils.getClasses(_source, getAlgo().getConfiguration().getProductPath());
-		transformPartsFromBreakDownBlock(classes, rootLogicalSystem, eResource);
+//		transformPartsFromBreakDownBlock(classes, rootLogicalSystem, eResource);
 
 		List<Class> blocks = Sysml2CapellaUtils.getClasses(_source, getAlgo().getConfiguration().getPartPath());
 		for (Class class1 : blocks) {

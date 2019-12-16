@@ -81,9 +81,9 @@ public class CapellaQueryExecution<C, P> extends QueryExecution {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <S, T> T getLastTargetObject(IMappingExecution mappingExecution_p, IRuleIdentifier<S, T> ruleID) {
+	public <TRS, T> T getLastTargetObject(IMappingExecution mappingExecution_p, IRuleIdentifier<?, TRS, T> ruleID) {
 		if (ruleID.equals(_realIdentifier)) {
-			return (T) mappingExecution_p.get((S) _value, (IRuleIdentifier<S, T>) _identifierWrapper);
+			return (T) mappingExecution_p.get((TRS) _value, (IRuleIdentifier<?, TRS, T>) _identifierWrapper);
 		}
 		if (_superQueryExecution != null) {
 			return _superQueryExecution.getLastTargetObject(mappingExecution_p, ruleID);
@@ -92,9 +92,10 @@ public class CapellaQueryExecution<C, P> extends QueryExecution {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <S, T> T getTargetObject(IMappingExecution mappingExecution_p, IRuleIdentifier<S, T> ruleID, S source) {
+	public <TRS, T> T getTargetObject(IMappingExecution mappingExecution_p, IRuleIdentifier<?, TRS, T> ruleID,
+			TRS source) {
 		if (ruleID.equals(_realIdentifier)) {
-			T target = mappingExecution_p.get(source, (IRuleIdentifier<S, T>) _identifierWrapper);
+			T target = mappingExecution_p.get(source, (IRuleIdentifier<?, TRS, T>) _identifierWrapper);
 
 			if (target != null) {
 				return target;

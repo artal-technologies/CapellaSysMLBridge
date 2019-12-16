@@ -34,7 +34,6 @@ import org.polarsys.capella.common.data.modellingcore.ModelElement;
 import org.polarsys.capella.core.data.capellacore.CapellacoreFactory;
 import org.polarsys.capella.core.data.capellacore.Constraint;
 import org.polarsys.capella.core.data.information.datavalue.DatavalueFactory;
-import org.polarsys.capella.core.data.la.LogicalActor;
 import org.polarsys.capella.core.data.la.LogicalComponent;
 import org.polarsys.capella.core.data.la.LogicalFunction;
 
@@ -225,7 +224,7 @@ abstract public class ConstraintsMapping extends AbstractMapping {
 			// in some case a sysml element is transform in list.
 			if (capellaElement instanceof List<?>) {
 				for (Object o : new ArrayList<>(((List<?>) capellaElement))) {
-					if (o instanceof LogicalActor || o instanceof LogicalFunction || o instanceof LogicalComponent) {
+					if (o instanceof LogicalFunction || o instanceof LogicalComponent) {
 						capellaElement = o;
 						break;
 					}

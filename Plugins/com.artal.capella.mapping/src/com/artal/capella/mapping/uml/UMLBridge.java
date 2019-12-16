@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.Profile;
-import org.eclipse.uml2.uml.util.UMLUtil;
 
 import com.artal.capella.mapping.CapellaMappingUtil;
 import com.artal.capella.mapping.cheat.TraceCheat;
@@ -43,7 +42,7 @@ public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope>
 	}
 
 	public MappingExecution createExecution(Editable trace_p) {
-		_capellaMappingExecution = new CapellaMappingExecution(trace_p);
+		_capellaMappingExecution = new CapellaMappingExecution(trace_p, null); //null is the logger
 		return _capellaMappingExecution;
 	};
 
@@ -72,17 +71,17 @@ public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope>
 			 */
 			protected void handleRuleForProfileApplications(Object source_p, MappingExecution execution_p,
 					Object targetDataSet_p, Phase phase_p) {
-				Map<IRule<?, ?>, PendingDefinition> pendingDefinitions = execution_p.getPendingDefinitions(source_p);
+				Map<IRule<?, ?, ?>, PendingDefinition> pendingDefinitions = execution_p.getPendingDefinitions(source_p);
 				// Handle all pending definitions
-				for (Entry<IRule<?, ?>, PendingDefinition> entry : pendingDefinitions.entrySet()) {
-					IRule<?, ?> rule = entry.getKey();
+				for (Entry<IRule<?, ?, ?>, PendingDefinition> entry : pendingDefinitions.entrySet()) {
+					IRule<?, ?, ?> rule = entry.getKey();
 					if (phase_p == Phase.PROFILE_APPLICATION) // Registering
 						registerTarget(entry.getValue(), source_p, entry.getKey(), execution_p);
 					if (rule instanceof RuleWrapper) {
 						rule = ((RuleWrapper<?, ?>) rule).getRealRule();
 					}
 					if (rule instanceof IUMLRule) {
-						handleRuleForProfileApplication((IUMLRule<?, ?>) rule, source_p, entry.getValue(), execution_p,
+						handleRuleForProfileApplication((IUMLRule<?, ?, ?>) rule, source_p, entry.getValue(), execution_p,
 								targetDataSet_p, phase_p);
 					}
 
