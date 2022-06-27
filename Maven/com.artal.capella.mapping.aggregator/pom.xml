@@ -35,7 +35,7 @@
   		../../Features/com.artal.capella.mapping.sysml2capella.feature
   	</module>
   	<module>
-  		../../Sites/com.artal.capella.mapping.sysml2capella.uptatesite_1_2_1
+  		../../Sites/com.artal.capella.mapping.sysml2capella.uptatesite_5_1_0
   	</module>
   	<module>../../Plugins/com.artal.capella.mapping</module>
   	<module>
