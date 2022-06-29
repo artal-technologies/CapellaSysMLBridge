@@ -18,46 +18,37 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.pde.core.target.TargetFeature;
 import org.eclipse.uml2.uml.Model;
-import org.eclipse.uml2.uml.UMLPackage;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.polarsys.capella.common.data.modellingcore.AbstractExchangeItem;
 import org.polarsys.capella.common.data.modellingcore.AbstractType;
 import org.polarsys.capella.common.data.modellingcore.TraceableElement;
 import org.polarsys.capella.common.helpers.EObjectExt;
 import org.polarsys.capella.core.data.capellacommon.AbstractCapabilityPkg;
+import org.polarsys.capella.core.data.capellacommon.CapabilityRealizationInvolvement;
 import org.polarsys.capella.core.data.capellacore.CapellacorePackage;
 import org.polarsys.capella.core.data.capellacore.Constraint;
-import org.polarsys.capella.core.data.capellacore.EnumerationPropertyLiteral;
 import org.polarsys.capella.core.data.capellacore.Feature;
-import org.polarsys.capella.core.data.capellacore.NamedElement;
 import org.polarsys.capella.core.data.capellamodeller.Project;
-import org.polarsys.capella.core.data.cs.ActorCapabilityRealizationInvolvement;
 import org.polarsys.capella.core.data.cs.Part;
 import org.polarsys.capella.core.data.fa.AbstractFunction;
 import org.polarsys.capella.core.data.fa.ComponentExchange;
 import org.polarsys.capella.core.data.fa.ComponentFunctionalAllocation;
 import org.polarsys.capella.core.data.fa.FunctionPkg;
-import org.polarsys.capella.core.data.fa.FunctionalExchange;
 import org.polarsys.capella.core.data.information.Port;
 import org.polarsys.capella.core.data.information.datavalue.OpaqueExpression;
 import org.polarsys.capella.core.data.interaction.AbstractCapabilityInclude;
 import org.polarsys.capella.core.data.la.CapabilityRealization;
 import org.polarsys.capella.core.data.la.CapabilityRealizationPkg;
-import org.polarsys.capella.core.data.la.LaFactory;
 import org.polarsys.capella.core.data.la.LaPackage;
-import org.polarsys.capella.core.data.la.LogicalActor;
-import org.polarsys.capella.core.data.la.LogicalActorPkg;
 import org.polarsys.capella.core.data.la.LogicalArchitecture;
 import org.polarsys.capella.core.data.la.LogicalComponent;
+import org.polarsys.capella.core.data.la.LogicalComponentPkg;
 import org.polarsys.capella.core.data.la.LogicalFunction;
 import org.polarsys.capella.core.data.la.LogicalFunctionPkg;
 
@@ -175,8 +166,8 @@ public class Sysml2CapellaMappingTest {
 		if (listLa != null && !listLa.isEmpty()) {
 			LogicalArchitecture logicalArchitecture = listLa.get(0);
 
-			LogicalActorPkg ownedLogicalActorPkg = logicalArchitecture.getOwnedLogicalActorPkg();
-			EList<LogicalActor> ownedLogicalActors = ownedLogicalActorPkg.getOwnedLogicalActors();
+			LogicalComponentPkg ownedLogicalActorPkg = logicalArchitecture.getOwnedLogicalComponentPkg();
+			EList<LogicalComponent> ownedLogicalActors = (EList<LogicalComponent>) ownedLogicalActorPkg.getOwnedLogicalComponents().stream().filter(s->s.isActor()).collect(Collectors.toList());
 
 			// nb of actors = 2
 			if (ownedLogicalActors.size() != 2) {
@@ -186,7 +177,7 @@ public class Sysml2CapellaMappingTest {
 			// Actor 1
 			boolean hasActor1 = false;
 			boolean hasActor2 = false;
-			for (LogicalActor logicalActor : ownedLogicalActors) {
+			for (LogicalComponent logicalActor : ownedLogicalActors) {
 				if (logicalActor.getName().equals("Actor 1")) {
 					hasActor1 = true;
 				}
@@ -250,7 +241,7 @@ public class Sysml2CapellaMappingTest {
 			}
 
 			// check Component allocations
-			LogicalComponent logicalSystem = logicalArchitecture.getOwnedLogicalComponent();
+			LogicalComponent logicalSystem = (LogicalComponent) logicalArchitecture.getSystem();
 
 			EList<Feature> ownedFeatures = logicalSystem.getOwnedFeatures();
 
@@ -288,8 +279,8 @@ public class Sysml2CapellaMappingTest {
 				.collect(Collectors.toList());
 		if (listLa != null && !listLa.isEmpty()) {
 			LogicalArchitecture logicalArchitecture = listLa.get(0);
-			LogicalActorPkg ownedLogicalActorPkg = logicalArchitecture.getOwnedLogicalActorPkg();
-			EList<LogicalActor> ownedLogicalActors = ownedLogicalActorPkg.getOwnedLogicalActors();
+			LogicalComponentPkg ownedLogicalActorPkg = logicalArchitecture.getOwnedLogicalComponentPkg();
+			EList<LogicalComponent> ownedLogicalActors = (EList<LogicalComponent>) ownedLogicalActorPkg.getOwnedLogicalComponents().stream().filter(s->s.isActor()).collect(Collectors.toList());
 
 			// nb of actors = 1
 			if (ownedLogicalActors.size() != 1) {
@@ -298,7 +289,7 @@ public class Sysml2CapellaMappingTest {
 
 			// Actor 1
 			boolean hasActor1 = false;
-			for (LogicalActor logicalActor : ownedLogicalActors) {
+			for (LogicalComponent logicalActor : ownedLogicalActors) {
 				if (logicalActor.getName().equals("Actor 1")) {
 					hasActor1 = true;
 				}
@@ -335,13 +326,13 @@ public class Sysml2CapellaMappingTest {
 					}
 				}
 				if (capabilityRealization.getName().equals("UseCase 1")) {
-					EList<ActorCapabilityRealizationInvolvement> ownedActorCapabilityRealizations = capabilityRealization
-							.getOwnedActorCapabilityRealizations();
+					EList<CapabilityRealizationInvolvement> ownedActorCapabilityRealizations = capabilityRealization
+							.getOwnedCapabilityRealizationInvolvements();
 					if (ownedActorCapabilityRealizations.size() != 1) {
 						Assert.fail("bad actor realization size");
 					}
-					for (ActorCapabilityRealizationInvolvement actorCapabilityRealizationInvolvement : ownedActorCapabilityRealizations) {
-						if (!((LogicalActor) actorCapabilityRealizationInvolvement.getInvolved()).getName()
+					for (CapabilityRealizationInvolvement actorCapabilityRealizationInvolvement : ownedActorCapabilityRealizations) {
+						if (!((LogicalComponent) actorCapabilityRealizationInvolvement.getInvolved()).getName()
 								.equals("Actor 1")) {
 							Assert.fail("Bad actor realization");
 						}
@@ -413,7 +404,7 @@ public class Sysml2CapellaMappingTest {
 		if (listLa != null && !listLa.isEmpty()) {
 			LogicalArchitecture logicalArchitecture = listLa.get(0);
 
-			LogicalComponent logicalSystem = logicalArchitecture.getOwnedLogicalComponent();
+			LogicalComponent logicalSystem = logicalArchitecture.getOwnedLogicalComponentPkg().getOwnedLogicalComponents().get(0);
 
 			List<String> expectedComponents = new ArrayList<>();
 			expectedComponents.add("Component 1");

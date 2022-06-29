@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.emf.diffmerge.bridge.uml
+Bundle-Version: 0.13.0.202206282330
+Bundle-Activator: org.eclipse.emf.diffmerge.bridge.uml.UMLBridgePlugin
+Require-Bundle: org.eclipse.core.runtime,org.eclipse.emf.diffmerge.bridg
+ e.mapping;visibility:=reexport,org.eclipse.emf.diffmerge.gmf;visibility
+ :=reexport,org.eclipse.uml2.uml;visibility:=reexport,org.apache.log4j
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: %providerName
+Export-Package: org.eclipse.emf.diffmerge.bridge.uml,org.eclipse.emf.dif
+ fmerge.bridge.uml.incremental,org.eclipse.emf.diffmerge.bridge.uml.mapp
+ ing,org.eclipse.emf.diffmerge.bridge.uml.util
+Automatic-Module-Name: org.eclipse.emf.diffmerge.bridge.uml
+

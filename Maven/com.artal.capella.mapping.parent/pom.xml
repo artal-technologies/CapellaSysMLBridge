@@ -7,10 +7,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>CapellaMapping</groupId>
 	<artifactId>com.artal.capella.mapping.parent</artifactId>
-	<version>1.0.7-SNAPSHOT</version>
+	<version>5.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
-		<tycho-version>0.26.0</tycho-version>
+		<tycho-version>2.3.0</tycho-version>
 		<platform-version-name>mars</platform-version-name>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -19,49 +19,43 @@
 		<repository>
 			<id>Neon</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/neon/</url>
+			<url>https://download.eclipse.org/releases/2021-06/202106161001/</url>
 		</repository>
 		<repository>
 			<id>capella</id>
 			<layout>p2</layout>
-			<url>https://download.eclipse.org/capella/core/updates/releases/5.1.0-R20210615-075512/org.polarsys.capella.rcp.site/
+			<url>http://download.eclipse.org/capella/core/updates/releases/5.1.0-R20210615-075512/org.polarsys.capella.rcp.site/
 			</url>
 		</repository>
 		<repository>
 			<id>coevolution</id>
 			<layout>p2</layout>
-			<url>https://download.eclipse.org/diffmerge/releases/0.13.1/edm-coevolution-site/
+			<url>http://download.eclipse.org/diffmerge/releases/0.13.1/edm-coevolution-site/
 			</url>
 		</repository>
 		<repository>
 			<id>diffmerge</id>
 			<layout>p2</layout>
-			<url>https://download.eclipse.org/diffmerge/releases/0.13.1/emf-diffmerge-site/
+			<url>http://download.eclipse.org/diffmerge/releases/0.13.1/emf-diffmerge-site/
 			</url>
 		</repository>
 		<repository>
 			<id>sirius</id>
 			<layout>p2</layout>
-			<url>https://download.eclipse.org/sirius/updates/releases/6.6.0/2020-09/</url>
+			<url>http://download.eclipse.org/sirius/updates/releases/6.6.0/2020-09/</url>
 		</repository>
 		<repository>
 			<id>amalgam</id>
 			<layout>p2</layout>
-			<url>https://download.eclipse.org/modeling/amalgam/updates/releases/1.12.1/capella/</url>
+			<url>http://download.eclipse.org/modeling/amalgam/updates/releases/1.12.1/capella/</url>
 		</repository>
+		<repository>
+			<id>kitalpha</id>
+			<layout>p2</layout>
+			<url>https://download.eclipse.org/kitalpha/updates/release/sdk/5.1.0/</url>
+		</repository>
+
 	</repositories>
-	<dependencies>
-		<dependency>
-			<groupId>CapellaMapping</groupId>
-			<artifactId>org.eclipse.emf.diffmerge.bridge.capella.integration</artifactId>
-			<version>1.2.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>CapellaMapping</groupId>
-			<artifactId>org.eclipse.emf.diffmerge.bridge.uml</artifactId>
-			<version>1.2.0-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -92,17 +86,7 @@
 						<environment>
 							<os>linux</os>
 							<ws>gtk</ws>
-							<arch>x86</arch>
-						</environment>
-						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
 							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86</arch>
 						</environment>
 						<environment>
 							<os>win32</os>

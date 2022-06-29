@@ -11,7 +11,7 @@
 <feature
       id="com.artal.capella.mapping.sysml2capella.feature"
       label="Feature"
-      version="1.0.7.qualifier">
+      version="5.1.0.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -25,14 +25,6 @@
       [Enter License Description here.]
    </license>
 
-   <includes
-         id="org.eclipse.emf.diffmerge.coevolution.sdk.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.uml2"
-         version="0.0.0"/>
-
    <plugin
          id="com.artal.capella.mapping.sysml2capella"
          download-size="0"
@@ -42,20 +34,6 @@
 
    <plugin
          id="com.artal.capella.mapping"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.diffmerge.bridge.capella.integration"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.emf.diffmerge.bridge.uml"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -19,19 +19,18 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.diffmerge.api.IComparison;
-import org.eclipse.emf.diffmerge.api.IMatchPolicy;
-import org.eclipse.emf.diffmerge.api.diff.IAttributeValuePresence;
-import org.eclipse.emf.diffmerge.api.diff.IDifference;
-import org.eclipse.emf.diffmerge.api.diff.IElementPresence;
-import org.eclipse.emf.diffmerge.api.diff.IReferenceValuePresence;
 import org.eclipse.emf.diffmerge.api.scopes.IEditableModelScope;
 import org.eclipse.emf.diffmerge.bridge.api.IBridgeTrace;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.policies.DelegatingTraceBasedMatchPolicy;
 import org.eclipse.emf.diffmerge.bridge.capella.integration.scopes.CapellaUpdateScope;
 import org.eclipse.emf.diffmerge.bridge.interactive.util.ResourceUtil;
-import org.eclipse.emf.diffmerge.bridge.traces.gen.bridgetraces.BridgetracesPackage;
 import org.eclipse.emf.diffmerge.diffdata.impl.EComparisonImpl;
+import org.eclipse.emf.diffmerge.generic.api.IComparison;
+import org.eclipse.emf.diffmerge.generic.api.IMatchPolicy;
+import org.eclipse.emf.diffmerge.generic.api.diff.IAttributeValuePresence;
+import org.eclipse.emf.diffmerge.generic.api.diff.IDifference;
+import org.eclipse.emf.diffmerge.generic.api.diff.IElementPresence;
+import org.eclipse.emf.diffmerge.generic.api.diff.IReferenceValuePresence;
 import org.eclipse.emf.diffmerge.impl.policies.ConfigurableDiffPolicy;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
@@ -292,14 +291,14 @@ public class SysmlToCapellaTestUtils {
 		Collection<IDifference> remainingDifferences = comparison.getRemainingDifferences();
 		for (IDifference iDifference : remainingDifferences) {
 			if (iDifference instanceof IElementPresence) {
-				EObject element = ((IElementPresence) iDifference).getElement();
+				EObject element = ((IElementPresence<EObject>) iDifference).getElement();
 				if (element instanceof NamedElement) {
 					message += ("Element " + ((NamedElement) element).getName()
 							+ " in a scope has no match in the reference model.\n");
 				}
 			}
 			if (iDifference instanceof IReferenceValuePresence) {
-				EObject value = ((IReferenceValuePresence) iDifference).getValue();
+				EObject value = ((IReferenceValuePresence<EObject>) iDifference).getValue();
 				if (value instanceof NamedElement) {
 					message += ("Element " + ((NamedElement) value).getName()
 							+ " references another element in the reference model.\n");

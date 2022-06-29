@@ -1,0 +1,11 @@
+
+/**************Capa_04 Test************************/
+/*************************************************/
+
+Check:
+      - Creation Capella CapabilityRealization from Cameo UseCase
+      - Creation LogicalActor from Cameo Actor.
+      - Creation ActorCapabilityRealizationInvolvment from Cameo Association.
+      - Creation AbstractCapabilityInclude from Cameo Inclure.
+
+
