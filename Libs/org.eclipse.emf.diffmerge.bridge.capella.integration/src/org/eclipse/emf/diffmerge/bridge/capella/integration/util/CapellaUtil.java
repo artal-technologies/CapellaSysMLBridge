@@ -43,7 +43,7 @@ public class CapellaUtil {
 	/**
 	 * The Capella model file extension
 	 */
-	public static final String CAPELLA_MODEL_FILE_EXTENSION = "melodymodeller"; //$NON-NLS-1$
+	public static final String CAPELLA_MODEL_FILE_EXTENSION = "capella"; //$NON-NLS-1$
 
 	/**
 	 * The Aird file extension

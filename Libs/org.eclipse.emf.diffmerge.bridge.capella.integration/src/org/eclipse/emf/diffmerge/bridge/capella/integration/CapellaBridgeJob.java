@@ -328,7 +328,7 @@ public class CapellaBridgeJob<SD> extends BridgeJob<SD> {
 	 */
 	@Override
 	protected IEditableModelScope getTargetScope(final Resource resource_p) {
-		Project project = (Project) resource_p.getContents().get(0);
+		Project project = (Project) resource_p.getContents().get(0);//Pas tjrs un project
 		return new CapellaUpdateScope(project);
 	}
 }

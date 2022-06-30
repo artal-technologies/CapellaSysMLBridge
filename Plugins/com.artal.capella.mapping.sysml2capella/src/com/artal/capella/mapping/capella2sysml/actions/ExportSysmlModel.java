@@ -68,7 +68,7 @@ public class ExportSysmlModel extends AbstractHandler {
 		LogicalArchitecture firstElement = (LogicalArchitecture) currentSelection.getFirstElement();
 		Resource capellaResource = firstElement.eResource();
 		ResourceSet resourceSet = capellaResource.getResourceSet();
-		URI semanticResourceURI = capellaResource.getURI().trimFileExtension().appendFileExtension("melodymodeller");
+		URI semanticResourceURI = capellaResource.getURI().trimFileExtension().appendFileExtension("capella");
 		Resource semanticResource = resourceSet.getResource(semanticResourceURI, false);
 		Project context = null;
 		if (semanticResource != null) {

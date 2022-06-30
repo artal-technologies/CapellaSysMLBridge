@@ -104,7 +104,7 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 			partGenActor.setAbstractType(genericActor);
 
 			logicalActorPkg.getOwnedLogicalComponents().add(genericActor);
-			logicalActorPkg.getContainedParts().add(partGenActor);
+			logicalActorPkg.getOwnedFeatures().add(partGenActor);
 			logicalFunctionRoot.getOwnedFunctions().add(evironnement);
 
 			ComponentFunctionalAllocation cfa = FaFactory.eINSTANCE.createComponentFunctionalAllocation();

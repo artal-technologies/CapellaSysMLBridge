@@ -139,13 +139,13 @@ public class SysmlToCapellaTestUtils {
 	 * Load the capella {@link Project}.
 	 * 
 	 * @param path
-	 *            the path of the Capella melodymodeller
+	 *            the path of the Capella capella
 	 * @return {@link Project}
 	 */
 	static public Project loadCapellaModel(String path) {
-		URI melodyModeller = URI.createFileURI(path);
+		URI capella = URI.createFileURI(path);
 
-		Resource resource = getCapellaResource(melodyModeller);
+		Resource resource = getCapellaResource(capella);
 
 		Project projectCapella = (org.polarsys.capella.core.data.capellamodeller.Project) resource.getContents().get(0);
 		return projectCapella;
@@ -172,16 +172,16 @@ public class SysmlToCapellaTestUtils {
 	/**
 	 * Create Capella ResourceSet and get Resource for the capella uri.
 	 * 
-	 * @param melodyModeller
+	 * @param capella
 	 *            the Capella uri.
 	 * @return {@link Resource}
 	 */
-	private static Resource getCapellaResource(URI melodyModeller) {
+	private static Resource getCapellaResource(URI capella) {
 		ResourceSet res = new ResourceSetImpl();
 
 		res.getResourceFactoryRegistry().getExtensionToFactoryMap().put(CapellamodellerPackage.eNS_PREFIX,
 				new CapellamodellerResourceFactoryImpl());
-		res.getResourceFactoryRegistry().getExtensionToFactoryMap().put("melodymodeller",
+		res.getResourceFactoryRegistry().getExtensionToFactoryMap().put("capella",
 				new CapellamodellerResourceFactoryImpl());
 
 		res.getPackageRegistry().put("http://www.polarsys.org/capella/common/libraries/1.2.0",
@@ -206,7 +206,7 @@ public class SysmlToCapellaTestUtils {
 		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/requirement/1.2.0",
 				RequirementPackage.eINSTANCE);
 		res.getPackageRegistry().put("http://www.polarsys.org/kitalpha/patterns/emde/1.2.0", EmdePackage.eINSTANCE);
-		Resource resource = res.getResource(melodyModeller, true);
+		Resource resource = res.getResource(capella, true);
 		return resource;
 	}
 

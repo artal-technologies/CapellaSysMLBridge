@@ -87,7 +87,7 @@ public class ActorMapping extends AbstractMapping {
 			Part partActor = CsFactory.eINSTANCE.createPart();
 			partActor.setAbstractType(lActor);
 			partActor.setName(lActor.getName());
-			logicalComponent.getContainedParts().add(partActor);
+			logicalComponent.getOwnedFeatures().add(partActor);
 			Sysml2CapellaUtils.trace(this, eResource, actor, partActor, "LogicalActor_Part_");
 
 			_mapLAtoPart.put(lActor, partActor);

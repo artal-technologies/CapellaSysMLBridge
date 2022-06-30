@@ -30,10 +30,13 @@ import com.artal.capella.mapping.patch.wrappers.RuleIdentifierWrapper;
  * @author YBI
  */
 public class CapellaMappingExecution extends MappingExecution {
-	public CapellaMappingExecution(org.eclipse.emf.diffmerge.bridge.api.IBridgeTrace.Editable trace_p, Logger _logger) {
-		super(trace_p, _logger);
+	public CapellaMappingExecution(org.eclipse.emf.diffmerge.bridge.api.IBridgeTrace.Editable trace_p) {
+		super(trace_p, LOGGER);
 	}
 
+	  private static final Logger LOGGER = Logger.getLogger(CapellaMappingExecution.class);
+
+	
 	/**
 	 * Bypass the Mapping bug. This method must return "false" but the variable
 	 * must be set to "true" (default value) to REALLY be tolerant to duplicates

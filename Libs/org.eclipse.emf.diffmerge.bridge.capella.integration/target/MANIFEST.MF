@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Bridge Mapping Capella Scopes
 Bundle-SymbolicName: org.eclipse.emf.diffmerge.bridge.capella.integratio
  n
-Bundle-Version: 0.13.0.202206282330
+Bundle-Version: 0.13.0.202207011016
 Bundle-Activator: org.eclipse.emf.diffmerge.bridge.capella.integration.i
  nternal.Activator
 Require-Bundle: org.eclipse.emf.diffmerge.bridge.interactive,org.eclipse
@@ -12,7 +12,6 @@ Require-Bundle: org.eclipse.emf.diffmerge.bridge.interactive,org.eclipse
  ="1.4.0",org.polarsys.capella.core.model.handler;bundle-version="1.4.0"
  ,org.eclipse.emf.diffmerge.generic
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.emf.diffmerge.bridge.capella.integration,org
  .eclipse.emf.diffmerge.bridge.capella.integration.policies,org.eclipse.
  emf.diffmerge.bridge.capella.integration.scopes,org.eclipse.emf.diffmer

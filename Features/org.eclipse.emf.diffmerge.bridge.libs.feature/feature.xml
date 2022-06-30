@@ -10,7 +10,7 @@
  -->
 <feature
       id="org.eclipse.emf.diffmerge.bridge.libs.feature"
-      label="Feature"
+      label="DiffMerge integration feature"
       version="5.1.0.qualifier">
 
    <description url="http://www.example.com/description">

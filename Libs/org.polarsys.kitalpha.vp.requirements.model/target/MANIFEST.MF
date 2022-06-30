@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.polarsys.kitalpha.vp.requirements.model;singlet
  on:=true
-Bundle-Version: 0.12.2.202206282330
+Bundle-Version: 0.12.2.202207011016
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

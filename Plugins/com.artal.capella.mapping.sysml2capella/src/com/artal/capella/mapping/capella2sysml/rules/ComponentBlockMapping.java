@@ -9,6 +9,7 @@
  *******************************************************************************/
 package com.artal.capella.mapping.capella2sysml.rules;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
@@ -28,7 +29,6 @@ import org.polarsys.capella.common.data.modellingcore.TraceableElement;
 import org.polarsys.capella.core.data.capellamodeller.Project;
 import org.polarsys.capella.core.data.fa.ComponentFunctionalAllocation;
 import org.polarsys.capella.core.data.la.LogicalComponent;
-import org.polarsys.capella.core.data.la.LogicalComponentPkg;
 
 import com.artal.capella.mapping.CapellaBridgeAlgo;
 import com.artal.capella.mapping.capella2sysml.Capella2SysmlAlgo;
@@ -137,7 +137,7 @@ public class ComponentBlockMapping extends AbstractMapping {
 		// Allocation LogicalFunction to LogicalComponent.
 		Package behaviorPkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "BEHAVIOR_PKG");
 		// for each sub LogicalComponent
-		EList<LogicalComponent> ownedLogicalComponents = (EList<LogicalComponent>) logicalContext.getOwnedLogicalComponents().stream().map(sel->(LogicalComponent) sel).filter(sel-> !sel.isActor()).collect((Collectors.toList()));
+		List<LogicalComponent> ownedLogicalComponents = logicalContext.getOwnedLogicalComponents().stream().map(sel->(LogicalComponent) sel).filter(sel-> !sel.isActor()).collect((Collectors.toList()));
 		for (LogicalComponent logicalComponent : ownedLogicalComponents) {
 			// create the class
 			createClass(pkgParent, stereotype, logicalComponent);

@@ -9,6 +9,7 @@
  *******************************************************************************/
 package com.artal.capella.mapping.capella2sysml.rules;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
@@ -62,7 +63,7 @@ public class ActorsMapping extends AbstractMapping {
 	public void computeMapping() {
 
 		LogicalComponentPkg logicalActorPkg = Sysml2CapellaUtils.getLogicalActorPkg(_source);
-		EList<LogicalComponent> ownedLogicalActors = (EList<LogicalComponent>) logicalActorPkg.getOwnedLogicalComponents().stream().map(sel->(LogicalComponent) sel).filter(sel-> sel.isActor()).collect((Collectors.toList()));
+		List<LogicalComponent> ownedLogicalActors = logicalActorPkg.getOwnedLogicalComponents().stream().map(sel->(LogicalComponent) sel).filter(sel-> sel.isActor()).collect((Collectors.toList()));
 
 		Package useCasePkg = (Package) MappingRulesManager.getCapellaObjectFromAllRules(_source + "USECASES");
 

@@ -92,73 +92,73 @@ public class Sysml2CapellaMappingTest {
 	public void classesToComponentsTest() throws IOException {
 		// load uml source project.
 		String pathUmlModel = "resources/cameoResources/CameoToCapella.uml";
-		String pathReferenceModel = "resources/capellaResources/coffeedispense/CoffeeDispense.melodymodeller";
-		String pathRefBridgeTrace = "resources/capellaResources/coffeedispense/CoffeeDispense.melodymodeller.bridgetraces";
-		String bridgeTraceName = "CoffeeDispense.melodymodeller";
-		String pathEmptyProject = "resources/capellaResources/coffeedispense/CoffeeDispense_empty.melodymodeller";
+		String pathReferenceModel = "resources/capellaResources_5.1.x/coffeedispense/CoffeeDispense.capella";
+		String pathRefBridgeTrace = "resources/capellaResources_5.1.x/coffeedispense/CoffeeDispense.capella.bridgetraces";
+		String bridgeTraceName = "CoffeeDispense.capella";
+		String pathEmptyProject = "resources/capellaResources_5.1.x/coffeedispense/CoffeeDispense_empty.capella";
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "", pathEmptyProject);
 	}
 
 	@Test
 	public void comp01Test() throws IOException {
-		String pathUmlModel = "resources/capellaResources/Components/Comp_01/ComponentCameo01.uml";
-		String pathReferenceModel = "resources/capellaResources/Components/Comp_01/Comp_1.melodymodeller";
-		String pathRefBridgeTrace = "resources/capellaResources/Components/Comp_01/Comp_1.melodymodeller.bridgetraces";
-		String bridgeTraceName = "Comp_1.melodymodeller";
-		String pathEmptyProject = "resources/capellaResources/Components/Comp_01/Comp_1_empty.melodymodeller";
+		String pathUmlModel = "resources/capellaResources_5.1.x/Components/Comp_01/ComponentCameo01.uml";
+		String pathReferenceModel = "resources/capellaResources_5.1.x/Components/Comp_01/Comp_1.capella";
+		String pathRefBridgeTrace = "resources/capellaResources_5.1.x/Components/Comp_01/Comp_1.capella.bridgetraces";
+		String bridgeTraceName = "Comp_1.capella";
+		String pathEmptyProject = "resources/capellaResources_5.1.x/Components/Comp_01/Comp_1_empty.capella";
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "comp01Test",
 				pathEmptyProject);
 	}
 
 	@Test
 	public void comp02Test() throws IOException {
-		String pathUmlModel = "resources/capellaResources/Components/Comp_02/ComponentCameo02.uml";
-		String pathReferenceModel = "resources/capellaResources/Components/Comp_02/Comp_2.melodymodeller";
-		String pathRefBridgeTrace = "resources/capellaResources/Components/Comp_02/Comp_2.melodymodeller.bridgetraces";
-		String bridgeTraceName = "Comp_2.melodymodeller";
-		String pathEmptyProject = "resources/capellaResources/Components/Comp_02/Comp_2_empty.melodymodeller";
+		String pathUmlModel = "resources/capellaResources_5.1.x/Components/Comp_02/ComponentCameo02.uml";
+		String pathReferenceModel = "resources/capellaResources_5.1.x/Components/Comp_02/Comp_2.capella";
+		String pathRefBridgeTrace = "resources/capellaResources_5.1.x/Components/Comp_02/Comp_2.capella.bridgetraces";
+		String bridgeTraceName = "Comp_2.capella";
+		String pathEmptyProject = "resources/capellaResources_5.1.x/Components/Comp_02/Comp_2_empty.capella";
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "comp02Test",
 				pathEmptyProject);
 	}
 
 	@Test
 	public void comp03Test() throws IOException {
-		String pathUmlModel = "resources/capellaResources/Components/Comp_03/ComponentCameo03.uml";
-		String pathReferenceModel = "resources/capellaResources/Components/Comp_03/Comp_03.melodymodeller";
-		String pathRefBridgeTrace = "resources/capellaResources/Components/Comp_03/Comp_03.melodymodeller.bridgetraces";
-		String bridgeTraceName = "Comp_03.melodymodeller";
-		String pathEmptyProject = "resources/capellaResources/Components/Comp_03/Comp_03_empty.melodymodeller";
+		String pathUmlModel = "resources/capellaResources_5.1.x/Components/Comp_03/ComponentCameo03.uml";
+		String pathReferenceModel = "resources/capellaResources_5.1.x/Components/Comp_03/Comp_03.capella";
+		String pathRefBridgeTrace = "resources/capellaResources_5.1.x/Components/Comp_03/Comp_03.capella.bridgetraces";
+		String bridgeTraceName = "Comp_03.capella";
+		String pathEmptyProject = "resources/capellaResources_5.1.x/Components/Comp_03/Comp_03_empty.capella";
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "comp03Test",
 				pathEmptyProject);
 	}
 
 	@Test
 	public void capa04Test() throws IOException {
-		String pathUmlModel = "resources/capellaResources/Capabilities/Capa_04/CapabilitiesCameo04.uml";
-		String pathReferenceModel = "resources/capellaResources/Capabilities/Capa_04/Capa_4.melodymodeller";
-		String pathRefBridgeTrace = "resources/capellaResources/Capabilities/Capa_04/Capa_4.melodymodeller.bridgetraces";
-		String bridgeTraceName = "Capa_4.melodymodeller";
-		String pathEmptyProject = "resources/capellaResources/Capabilities/Capa_04/Capa_4_empty.melodymodeller";
+		String pathUmlModel = "resources/capellaResources_5.1.x/Capabilities/Capa_04/CapabilitiesCameo04.uml";
+		String pathReferenceModel = "resources/capellaResources_5.1.x/Capabilities/Capa_04/Capa_4.capella";
+		String pathRefBridgeTrace = "resources/capellaResources_5.1.x/Capabilities/Capa_04/Capa_4.capella.bridgetraces";
+		String bridgeTraceName = "Capa_4.capella";
+		String pathEmptyProject = "resources/capellaResources_5.1.x/Capabilities/Capa_04/Capa_4_empty.capella";
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "capa04Test",
 				pathEmptyProject);
 	}
 
 	@Test
 	public void funct05Test() throws IOException {
-		String pathUmlModel = "resources/capellaResources/Functions/Funct_05/FunctionCameo05.uml";
-		String pathReferenceModel = "resources/capellaResources/Functions/Funct_05/Funct_5.melodymodeller";
-		String pathRefBridgeTrace = "resources/capellaResources/Functions/Funct_05/Funct_5.melodymodeller.bridgetraces";
-		String bridgeTraceName = "Funct_5.melodymodeller";
-		String pathEmptyProject = "resources/capellaResources/Functions/Funct_05/Funct_5_empty.melodymodeller";
+		String pathUmlModel = "resources/capellaResources_5.1.x/Functions/Funct_05/FunctionCameo05.uml";
+		String pathReferenceModel = "resources/capellaResources_5.1.x/Functions/Funct_05/Funct_5.capella";
+		String pathRefBridgeTrace = "resources/capellaResources_5.1.x/Functions/Funct_05/Funct_5.capella.bridgetraces";
+		String bridgeTraceName = "Funct_5.capella";
+		String pathEmptyProject = "resources/capellaResources_5.1.x/Functions/Funct_05/Funct_5_empty.capella";
 		launchTest(pathUmlModel, pathReferenceModel, pathRefBridgeTrace, bridgeTraceName, "funct05Test",
 				pathEmptyProject);
 	}
 
 	@Test
 	public void actorTest() throws IOException {
-		Project actorProject = launchTest2("resources/SysML2Capella/Actor/UML_Export/SysML2Capella_Actor.uml",
+		Project actorProject = launchTest2("resources/SysML2Capella_5.1.x/Actor/UML_Export/SysML2Capella_Actor.uml",
 				"actorTest", "actor.bridgetraces",
-				"resources/SysML2Capella/Actor/empty_project/ActorTest.melodymodeller");
+				"resources/SysML2Capella_5.1.x/Actor/empty_project/ActorTest.capella");
 
 		List<LogicalArchitecture> listLa = EObjectExt.getAll(actorProject, LaPackage.Literals.LOGICAL_ARCHITECTURE)
 				.stream().filter(la -> la instanceof LogicalArchitecture).map(LogicalArchitecture.class::cast)
@@ -167,7 +167,8 @@ public class Sysml2CapellaMappingTest {
 			LogicalArchitecture logicalArchitecture = listLa.get(0);
 
 			LogicalComponentPkg ownedLogicalActorPkg = logicalArchitecture.getOwnedLogicalComponentPkg();
-			EList<LogicalComponent> ownedLogicalActors = (EList<LogicalComponent>) ownedLogicalActorPkg.getOwnedLogicalComponents().stream().filter(s->s.isActor()).collect(Collectors.toList());
+			List<LogicalComponent> ownedLogicalActors =  ownedLogicalActorPkg
+					.getOwnedLogicalComponents().stream().filter(s -> s.isActor()).collect(Collectors.toList());
 
 			// nb of actors = 2
 			if (ownedLogicalActors.size() != 2) {
@@ -201,9 +202,9 @@ public class Sysml2CapellaMappingTest {
 	@Test
 	public void activitiesTest() throws IOException {
 
-		Project activityProject = launchTest2("resources/SysML2Capella/Activities/UML_Export/Activities.uml",
+		Project activityProject = launchTest2("resources/SysML2Capella_5.1.x/Activities/UML_Export/Activities.uml",
 				"activitiesTest", "activities.bridgetraces",
-				"resources/SysML2Capella/Activities/empty_project/ActivityTest.melodymodeller");
+				"resources/SysML2Capella_5.1.x/Activities/empty_project/ActivityTest.capella");
 		List<LogicalArchitecture> listLa = EObjectExt.getAll(activityProject, LaPackage.Literals.LOGICAL_ARCHITECTURE)
 				.stream().filter(la -> la instanceof LogicalArchitecture).map(LogicalArchitecture.class::cast)
 				.collect(Collectors.toList());
@@ -243,7 +244,7 @@ public class Sysml2CapellaMappingTest {
 			// check Component allocations
 			LogicalComponent logicalSystem = (LogicalComponent) logicalArchitecture.getSystem();
 
-			EList<Feature> ownedFeatures = logicalSystem.getOwnedFeatures();
+			EList<LogicalComponent> ownedFeatures = logicalSystem.getOwnedLogicalComponents();
 
 			List<String> expectedFeatures = new ArrayList<String>();
 
@@ -251,7 +252,7 @@ public class Sysml2CapellaMappingTest {
 			expectedFeatures.add("Component 2");
 			expectedFeatures.add("Component 3");
 
-			for (Feature feature : ownedFeatures) {
+			for (LogicalComponent feature : ownedFeatures) {
 				if (!expectedFeatures.contains(feature.getName())) {
 					Assert.fail("Bad feature " + feature.getName());
 				}
@@ -271,16 +272,17 @@ public class Sysml2CapellaMappingTest {
 	@Test
 	public void actorCapabalityRealizationTest() throws IOException {
 		Project activityProject = launchTest2(
-				"resources/SysML2Capella/ActorCapabilityRealizationAssociation/UML_Export/ActorCapabilityRealizationAssociation.uml",
+				"resources/SysML2Capella_5.1.x/ActorCapabilityRealizationAssociation/UML_Export/ActorCapabilityRealizationAssociation.uml",
 				"actorCapRealTest", "actorCapabilityRealization.bridgetraces",
-				"resources/SysML2Capella/ActorCapabilityRealizationAssociation/empty_project/ActorCapabilitiesRealizationTest.melodymodeller");
+				"resources/SysML2Capella_5.1.x/ActorCapabilityRealizationAssociation/empty_project/ActorCapabilitiesRealizationTest.capella");
 		List<LogicalArchitecture> listLa = EObjectExt.getAll(activityProject, LaPackage.Literals.LOGICAL_ARCHITECTURE)
 				.stream().filter(la -> la instanceof LogicalArchitecture).map(LogicalArchitecture.class::cast)
 				.collect(Collectors.toList());
 		if (listLa != null && !listLa.isEmpty()) {
 			LogicalArchitecture logicalArchitecture = listLa.get(0);
 			LogicalComponentPkg ownedLogicalActorPkg = logicalArchitecture.getOwnedLogicalComponentPkg();
-			EList<LogicalComponent> ownedLogicalActors = (EList<LogicalComponent>) ownedLogicalActorPkg.getOwnedLogicalComponents().stream().filter(s->s.isActor()).collect(Collectors.toList());
+			List<LogicalComponent> ownedLogicalActors = ownedLogicalActorPkg
+					.getOwnedLogicalComponents().stream().filter(s -> s.isActor()).collect(Collectors.toList());
 
 			// nb of actors = 1
 			if (ownedLogicalActors.size() != 1) {
@@ -349,9 +351,9 @@ public class Sysml2CapellaMappingTest {
 	@Test
 	public void capabilityRealizationTest() throws IOException {
 		Project activityProject = launchTest2(
-				"resources/SysML2Capella/CapabilityRealization/UML_Export/CapabilityRealization.uml", "capRealTest",
-				"capabilityRealization.bridgetraces",
-				"resources/SysML2Capella/CapabilityRealization/empty_project/CapabilityRealizationTest.melodymodeller");
+				"resources/SysML2Capella_5.1.x/CapabilityRealization/UML_Export/CapabilityRealization.uml",
+				"capRealTest", "capabilityRealization.bridgetraces",
+				"resources/SysML2Capella_5.1.x/CapabilityRealization/empty_project/CapabilityRealizationTest.capella");
 		List<LogicalArchitecture> listLa = EObjectExt.getAll(activityProject, LaPackage.Literals.LOGICAL_ARCHITECTURE)
 				.stream().filter(la -> la instanceof LogicalArchitecture).map(LogicalArchitecture.class::cast)
 				.collect(Collectors.toList());
@@ -395,16 +397,17 @@ public class Sysml2CapellaMappingTest {
 
 	@Test
 	public void componentsTest() throws IOException {
-		Project componentProject = launchTest2("resources/SysML2Capella/Components/UML_Export/Components.uml",
+		Project componentProject = launchTest2("resources/SysML2Capella_5.1.x/Components/UML_Export/Components.uml",
 				"componentTest", "component.bridgetraces",
-				"resources/SysML2Capella/Components/empty_project/ComponentsTest.melodymodeller");
+				"resources/SysML2Capella_5.1.x/Components/empty_project/ComponentsTest.capella");
 		List<LogicalArchitecture> listLa = EObjectExt.getAll(componentProject, LaPackage.Literals.LOGICAL_ARCHITECTURE)
 				.stream().filter(la -> la instanceof LogicalArchitecture).map(LogicalArchitecture.class::cast)
 				.collect(Collectors.toList());
 		if (listLa != null && !listLa.isEmpty()) {
 			LogicalArchitecture logicalArchitecture = listLa.get(0);
 
-			LogicalComponent logicalSystem = logicalArchitecture.getOwnedLogicalComponentPkg().getOwnedLogicalComponents().get(0);
+			LogicalComponent logicalSystem = logicalArchitecture.getOwnedLogicalComponentPkg()
+					.getOwnedLogicalComponents().get(0);
 
 			List<String> expectedComponents = new ArrayList<>();
 			expectedComponents.add("Component 1");
@@ -492,9 +495,9 @@ public class Sysml2CapellaMappingTest {
 	@Test
 	public void constraintsTest() throws IOException {
 
-		Project constraintProject = launchTest2("resources/SysML2Capella/Constraints/UML_Export/Constraints.uml",
+		Project constraintProject = launchTest2("resources/SysML2Capella_5.1.x/Constraints/UML_Export/Constraints.uml",
 				"constraintTest", "constraint.bridgetraces",
-				"resources/SysML2Capella/Constraints/empty_project/ConstraintTest.melodymodeller");
+				"resources/SysML2Capella_5.1.x/Constraints/empty_project/ConstraintTest.capella");
 		List<LogicalArchitecture> listLa = EObjectExt.getAll(constraintProject, LaPackage.Literals.LOGICAL_ARCHITECTURE)
 				.stream().filter(la -> la instanceof LogicalArchitecture).map(LogicalArchitecture.class::cast)
 				.collect(Collectors.toList());
@@ -654,6 +657,22 @@ public class Sysml2CapellaMappingTest {
 			}
 		}
 
+	}
+
+	private void checkAllocation(LogicalComponent comp, String anObject, String compName) {
+		boolean hasComp1Alloc = false;
+		EList<ComponentFunctionalAllocation> ownedFunctionalAllocation = ((LogicalComponent) comp)
+				.getOwnedFunctionalAllocation();
+		for (ComponentFunctionalAllocation componentFunctionalAllocation : ownedFunctionalAllocation) {
+			TraceableElement targetElement = componentFunctionalAllocation.getTargetElement();
+			if (targetElement instanceof LogicalFunction
+					&& ((LogicalFunction) targetElement).getName().equals(anObject)) {
+				hasComp1Alloc = true;
+			}
+			if (!hasComp1Alloc) {
+				Assert.fail("Allocation " + anObject + " to " + compName);
+			}
+		}
 	}
 
 }
