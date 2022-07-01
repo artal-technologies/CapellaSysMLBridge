@@ -12,7 +12,6 @@
     <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/pde-junit"/>
     <booleanAttribute key="default" value="false"/>
     <setAttribute key="deselected_workspace_bundles">
-        <setEntry value="com.artal.capella.bridge.core"/>
         <setEntry value="com.artal.capella.mapping"/>
         <setEntry value="com.google.guava"/>
         <setEntry value="com.thalesgroup.capella.bridge.uml.ea.core"/>
@@ -32,6 +31,8 @@
         <setEntry value="org.polarsys.capella.core.sirius.analysis"/>
         <setEntry value="org.polarsys.capella.vp.requirements"/>
         <setEntry value="org.polarsys.capella.vp.requirements.model"/>
+        <setEntry value="org.polarsys.kitalpha.vp.requirements"/>
+        <setEntry value="org.polarsys.kitalpha.vp.requirements.model"/>
     </setAttribute>
     <booleanAttribute key="includeOptional" value="true"/>
     <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
@@ -53,11 +54,10 @@
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
     <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dosgi.requiredJavaVersion=1.8  -Xms512m -Xmx1024m -XX:PermSize=256M"/>
     <stringAttribute key="pde.version" value="3.3"/>
-    <stringAttribute key="product" value="org.polarsys.capella.studio.product.CapellaStudio"/>
+    <stringAttribute key="product" value="org.polarsys.capella.rcp.product"/>
     <booleanAttribute key="run_in_ui_thread" value="false"/>
     <setAttribute key="selected_target_bundles">
         <setEntry value="ca.odell.glazedlists@default:default"/>
-        <setEntry value="com.artal.capella.mapping.sysml2capella@default:default"/>
         <setEntry value="com.artal.capella.mapping@default:default"/>
         <setEntry value="com.google.guava@default:default"/>
         <setEntry value="com.ibm.icu@default:default"/>
@@ -210,6 +210,7 @@
         <setEntry value="org.eclipse.emf.converter@default:default"/>
         <setEntry value="org.eclipse.emf.databinding.edit@default:default"/>
         <setEntry value="org.eclipse.emf.databinding@default:default"/>
+        <setEntry value="org.eclipse.emf.diffmerge.bridge.capella.integration@default:default"/>
         <setEntry value="org.eclipse.emf.diffmerge.bridge.incremental@default:default"/>
         <setEntry value="org.eclipse.emf.diffmerge.bridge.interactive@default:default"/>
         <setEntry value="org.eclipse.emf.diffmerge.bridge.log4j@default:false"/>
@@ -457,6 +458,12 @@
         <setEntry value="org.eclipse.platform.doc.user@default:default"/>
         <setEntry value="org.eclipse.platform@default:default"/>
         <setEntry value="org.eclipse.rcp@default:default"/>
+        <setEntry value="org.eclipse.rmf.reqif10.common@default:default"/>
+        <setEntry value="org.eclipse.rmf.reqif10.edit@default:default"/>
+        <setEntry value="org.eclipse.rmf.reqif10.serialization@default:default"/>
+        <setEntry value="org.eclipse.rmf.reqif10.xhtml.edit@default:default"/>
+        <setEntry value="org.eclipse.rmf.reqif10.xhtml@default:default"/>
+        <setEntry value="org.eclipse.rmf.reqif10@default:default"/>
         <setEntry value="org.eclipse.sdk@default:default"/>
         <setEntry value="org.eclipse.search@default:default"/>
         <setEntry value="org.eclipse.sirius.common.acceleo.aql.ide@default:default"/>
@@ -501,6 +508,7 @@
         <setEntry value="org.eclipse.sirius.ui.ext@default:default"/>
         <setEntry value="org.eclipse.sirius.ui@default:default"/>
         <setEntry value="org.eclipse.sirius@default:default"/>
+        <setEntry value="org.eclipse.sphinx.emf.serialization@default:default"/>
         <setEntry value="org.eclipse.swt.win32.win32.x86_64@default:false"/>
         <setEntry value="org.eclipse.swt@default:default"/>
         <setEntry value="org.eclipse.team.core@default:default"/>
@@ -761,6 +769,29 @@
         <setEntry value="org.polarsys.capella.ui.views@default:false"/>
         <setEntry value="org.polarsys.capella.validation.doc@default:default"/>
         <setEntry value="org.polarsys.capella.viewpoint.doc@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.af@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.business.queries@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.design@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.doc@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.importer.attributes.doors.rmf@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.importer.commandline@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.importer.extension@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.importer.preferences@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.importer@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.model.edit.decorators@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.model.edit@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.model.helpers@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.model@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.quickfix@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.reqif.resource.obfuscator@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.semantic.browser@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.ui.commands@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.ui.importer.preferences@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.ui.properties@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.ui@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.validation@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements.vpdsl@default:default"/>
+        <setEntry value="org.polarsys.capella.vp.requirements@default:default"/>
         <setEntry value="org.polarsys.kitalpha.ad.af.coredomain.model.edit@default:default"/>
         <setEntry value="org.polarsys.kitalpha.ad.af.coredomain.model.editor@default:default"/>
         <setEntry value="org.polarsys.kitalpha.ad.af.coredomain.model@default:default"/>
@@ -855,6 +886,16 @@
         <setEntry value="org.polarsys.kitalpha.transposer.transformation.emf@default:default"/>
         <setEntry value="org.polarsys.kitalpha.transposer.transformation@default:default"/>
         <setEntry value="org.polarsys.kitalpha.transposer.ui@default:default"/>
+        <setEntry value="org.polarsys.kitalpha.vp.requirements.af@default:default"/>
+        <setEntry value="org.polarsys.kitalpha.vp.requirements.design@default:default"/>
+        <setEntry value="org.polarsys.kitalpha.vp.requirements.model.edit.decorators@default:default"/>
+        <setEntry value="org.polarsys.kitalpha.vp.requirements.model.edit@default:default"/>
+        <setEntry value="org.polarsys.kitalpha.vp.requirements.model.helpers@default:default"/>
+        <setEntry value="org.polarsys.kitalpha.vp.requirements.model@default:default"/>
+        <setEntry value="org.polarsys.kitalpha.vp.requirements.ui.properties@default:default"/>
+        <setEntry value="org.polarsys.kitalpha.vp.requirements.ui@default:default"/>
+        <setEntry value="org.polarsys.kitalpha.vp.requirements.vpdsl@default:default"/>
+        <setEntry value="org.polarsys.kitalpha.vp.requirements@default:default"/>
         <setEntry value="org.sat4j.core@default:default"/>
         <setEntry value="org.sat4j.pb@default:default"/>
         <setEntry value="org.slf4j.api@default:default"/>
@@ -868,8 +909,6 @@
         <setEntry value="com.artal.capella.mapping.sysml2capella.test@default:default"/>
         <setEntry value="com.artal.capella.mapping.sysml2capella@default:default"/>
         <setEntry value="org.eclipse.emf.diffmerge.bridge.capella.integration@default:default"/>
-        <setEntry value="org.polarsys.kitalpha.vp.requirements.model@default:default"/>
-        <setEntry value="org.polarsys.kitalpha.vp.requirements@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <stringAttribute key="templateConfig" value="${target_home}\configuration\config.ini"/>
