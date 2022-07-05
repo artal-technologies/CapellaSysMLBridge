@@ -56,6 +56,7 @@ import org.polarsys.capella.core.data.fa.FaPackage;
 import org.polarsys.capella.core.data.information.InformationPackage;
 import org.polarsys.capella.core.data.information.datatype.DatatypePackage;
 import org.polarsys.capella.core.data.information.datavalue.DatavaluePackage;
+import org.polarsys.capella.core.data.interaction.InteractionPackage;
 import org.polarsys.capella.core.data.la.LaPackage;
 import org.polarsys.capella.core.data.oa.OaPackage;
 import org.polarsys.capella.core.data.pa.PaPackage;
@@ -194,6 +195,7 @@ public class SysmlToCapellaTestUtils {
 		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/cs/5.0.0", CsPackage.eINSTANCE);
 		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/ctx/5.0.0", CtxPackage.eINSTANCE);
 		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/fa/5.0.0", FaPackage.eINSTANCE);
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/interaction/5.0.0", InteractionPackage.eINSTANCE);
 		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/information/5.0.0",
 				InformationPackage.eINSTANCE);
 		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/information/datatype/5.0.0",

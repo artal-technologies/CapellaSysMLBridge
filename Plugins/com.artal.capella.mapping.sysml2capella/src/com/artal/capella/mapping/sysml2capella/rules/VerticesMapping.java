@@ -9,7 +9,9 @@
  *******************************************************************************/
 package com.artal.capella.mapping.sysml2capella.rules;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
@@ -22,6 +24,7 @@ import org.eclipse.uml2.uml.PseudostateKind;
 import org.eclipse.uml2.uml.Region;
 import org.eclipse.uml2.uml.State;
 import org.eclipse.uml2.uml.Vertex;
+import org.polarsys.capella.common.data.modellingcore.IState;
 import org.polarsys.capella.core.data.capellacommon.AbstractState;
 import org.polarsys.capella.core.data.capellacommon.CapellacommonFactory;
 import org.polarsys.capella.core.data.capellacommon.Mode;
@@ -55,12 +58,10 @@ public class VerticesMapping extends AbstractMapping {
 	/**
 	 * Constructor.
 	 * 
-	 * @param algo
-	 *            the {@link Sysml2CapellaAlgo} algo.
-	 * @param source
-	 *            the {@link Region} sysml Region.
-	 * @param mappingExecution
-	 *            the {@link IMappingExecution} allows to get the mapping data.
+	 * @param algo             the {@link Sysml2CapellaAlgo} algo.
+	 * @param source           the {@link Region} sysml Region.
+	 * @param mappingExecution the {@link IMappingExecution} allows to get the
+	 *                         mapping data.
 	 */
 	public VerticesMapping(Sysml2CapellaAlgo algo, Region source, IMappingExecution mappingExecution) {
 		super(algo);
@@ -86,10 +87,8 @@ public class VerticesMapping extends AbstractMapping {
 	/**
 	 * Transform {@link Vertex} to {@link AbstractState}
 	 * 
-	 * @param eResource
-	 *            the sysml model
-	 * @param subvertices
-	 *            the vertices list to transform
+	 * @param eResource   the sysml model
+	 * @param subvertices the vertices list to transform
 	 */
 	private void transformVertices(Resource eResource, EList<Vertex> subvertices) {
 		for (Vertex vertex : subvertices) {
@@ -138,7 +137,21 @@ public class VerticesMapping extends AbstractMapping {
 			org.polarsys.capella.core.data.capellacommon.Region region = (org.polarsys.capella.core.data.capellacommon.Region) MappingRulesManager
 					.getCapellaObjectFromAllRules(_source);
 			region.getOwnedStates().add(capellaState);
-
+			region.getInvolvedStates().add(capellaState);
+			if (capellaState instanceof org.polarsys.capella.core.data.capellacommon.State) {
+				Object parent = MappingRulesManager.getCapellaObjectFromAllRules(_source.eContainer());
+				if (parent instanceof IState) {
+					IState state = (IState) parent;
+					List<State> subStates = _source.getOwnedMembers().stream().filter(s -> s instanceof State)
+							.map(s -> (State) s).collect(Collectors.toList());
+					for (State subState : subStates) {
+						Object res = MappingRulesManager.getCapellaObjectFromAllRules(subState);
+						if (res instanceof IState) {
+							state.getReferencedStates().add((IState) res);
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -147,10 +160,8 @@ public class VerticesMapping extends AbstractMapping {
 	 * {@link org.polarsys.capella.core.data.capellacommon.FinalState} or
 	 * {@link Mode}
 	 * 
-	 * @param eResource
-	 *            the sysml model
-	 * @param state
-	 *            the {@link State} to transform
+	 * @param eResource the sysml model
+	 * @param state     the {@link State} to transform
 	 * @return the {@link AbstractState}
 	 */
 	private AbstractState transformState(Resource eResource, State state) {
@@ -249,12 +260,9 @@ public class VerticesMapping extends AbstractMapping {
 	 * Create the default
 	 * {@link org.polarsys.capella.core.data.capellacommon.Region}
 	 * 
-	 * @param eResource
-	 *            the sysml model
-	 * @param state
-	 *            the sysml state
-	 * @param capellaState
-	 *            the capella state
+	 * @param eResource    the sysml model
+	 * @param state        the sysml state
+	 * @param capellaState the capella state
 	 */
 	private void createDefaultRegion(Resource eResource, State state, AbstractState capellaState) {
 		org.polarsys.capella.core.data.capellacommon.Region defaultRegion = CapellacommonFactory.eINSTANCE

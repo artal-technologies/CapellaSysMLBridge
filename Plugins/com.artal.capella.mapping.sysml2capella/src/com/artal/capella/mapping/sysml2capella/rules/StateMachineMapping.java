@@ -135,12 +135,12 @@ public class StateMachineMapping extends AbstractMapping {
 			// transform regions under statemachine
 			RegionsMapping regionsMapping = new RegionsMapping(getAlgo(), sysmlStateMachine, _mappingExecution);
 			_manager.add(
-					regionsMapping.getClass().getName() + Sysml2CapellaUtils.getSysMLID(eResource, sysmlStateMachine),
+					RegionsMapping.class.getName() + Sysml2CapellaUtils.getSysMLID(eResource, sysmlStateMachine),
 					regionsMapping);
 			// transform transitions under statemachine
 			TransitionsMapping transitionsMapping = new TransitionsMapping(getAlgo(), sysmlStateMachine,
 					_mappingExecution);
-			_manager.add(transitionsMapping.getClass().getName()
+			_manager.add(TransitionsMapping.class.getName()
 					+ Sysml2CapellaUtils.getSysMLID(eResource, sysmlStateMachine), transitionsMapping);
 		}
 	}
