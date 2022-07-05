@@ -166,9 +166,9 @@ public class Sysml2CapellaMappingTest {
 		if (listLa != null && !listLa.isEmpty()) {
 			LogicalArchitecture logicalArchitecture = listLa.get(0);
 
-			LogicalComponentPkg ownedLogicalActorPkg = logicalArchitecture.getOwnedLogicalComponentPkg();
-			List<LogicalComponent> ownedLogicalActors =  ownedLogicalActorPkg
-					.getOwnedLogicalComponents().stream().filter(s -> s.isActor()).collect(Collectors.toList());
+			LogicalComponent ownedLogicalActorPkg = (LogicalComponent) logicalArchitecture.getSystem();
+			List<LogicalComponent> ownedLogicalActors = ownedLogicalActorPkg.getOwnedLogicalComponents().stream()
+					.filter(s -> s.isActor()).collect(Collectors.toList());
 
 			// nb of actors = 2
 			if (ownedLogicalActors.size() != 2) {
@@ -244,7 +244,7 @@ public class Sysml2CapellaMappingTest {
 			// check Component allocations
 			LogicalComponent logicalSystem = (LogicalComponent) logicalArchitecture.getSystem();
 
-			EList<LogicalComponent> ownedFeatures = logicalSystem.getOwnedLogicalComponents();
+			List<LogicalComponent> ownedFeatures = logicalSystem.getOwnedLogicalComponents().stream().filter(s->!s.isActor()).collect(Collectors.toList());
 
 			List<String> expectedFeatures = new ArrayList<String>();
 
@@ -280,9 +280,9 @@ public class Sysml2CapellaMappingTest {
 				.collect(Collectors.toList());
 		if (listLa != null && !listLa.isEmpty()) {
 			LogicalArchitecture logicalArchitecture = listLa.get(0);
-			LogicalComponentPkg ownedLogicalActorPkg = logicalArchitecture.getOwnedLogicalComponentPkg();
-			List<LogicalComponent> ownedLogicalActors = ownedLogicalActorPkg
-					.getOwnedLogicalComponents().stream().filter(s -> s.isActor()).collect(Collectors.toList());
+			LogicalComponent ownedLogicalActorPkg = (LogicalComponent) logicalArchitecture.getSystem();
+			List<LogicalComponent> ownedLogicalActors = ownedLogicalActorPkg.getOwnedLogicalComponents().stream()
+					.filter(s -> s.isActor()).collect(Collectors.toList());
 
 			// nb of actors = 1
 			if (ownedLogicalActors.size() != 1) {
@@ -507,22 +507,22 @@ public class Sysml2CapellaMappingTest {
 			Set<EObject> all = EObjectExt.getAll(logicalArchitecture, CapellacorePackage.Literals.CONSTRAINT);
 			List<Constraint> constraints = all.stream().map(Constraint.class::cast).collect(Collectors.toList());
 
-			if (!searchConstraint("constraint 1", "Interface 1", "Interface constraint", constraints)) {
+			if (!searchConstraint("constraint 1", "Interface 1", "Interface constraint\n", constraints)) {
 				Assert.fail("Wrong constraint");
 			}
-			if (!searchConstraint("constraint 2", "Use Case 1", "UseCase constraint", constraints)) {
+			if (!searchConstraint("constraint 2", "Use Case 1", "UseCase constraint\n", constraints)) {
 				Assert.fail("Wrong constraint");
 			}
-			if (!searchConstraint("constraint 3", "Actor 1", "actor constraint", constraints)) {
+			if (!searchConstraint("constraint 3", "Actor 1", "actor constraint\n", constraints)) {
 				Assert.fail("Wrong constraint");
 			}
 			if (!searchConstraint("constraint 4", "Activity 1", "acttivity constraint", constraints)) {
 				Assert.fail("Wrong constraint");
 			}
-			if (!searchConstraint("", "Class 1", "constraint in ConstraintBlock", constraints)) {
+			if (!searchConstraint("", "Class 1", "constraint in ConstraintBlock\n", constraints)) {
 				Assert.fail("Wrong constraint");
 			}
-			if (!searchConstraint("", "Component 1", "constraint in ConstraintBlock", constraints)) {
+			if (!searchConstraint("", "Component 1", "constraint in ConstraintBlock\n", constraints)) {
 				Assert.fail("Wrong constraint");
 			}
 
@@ -539,7 +539,8 @@ public class Sysml2CapellaMappingTest {
 			if (constraint.getName().equals(name)) {
 				// if (((NamedElement)
 				// constraint.eContainer()).getName().equals(containerName)) {
-				if (((OpaqueExpression) constraint.getOwnedSpecification()).getBodies().get(0).equals(expression)) {
+				String ccc = ((OpaqueExpression) constraint.getOwnedSpecification()).getBodies().get(0);
+				if (ccc.equals(expression)) {
 					return true;
 				}
 				// }
@@ -661,18 +662,20 @@ public class Sysml2CapellaMappingTest {
 
 	private void checkAllocation(LogicalComponent comp, String anObject, String compName) {
 		boolean hasComp1Alloc = false;
-		EList<ComponentFunctionalAllocation> ownedFunctionalAllocation = ((LogicalComponent) comp)
-				.getOwnedFunctionalAllocation();
-		for (ComponentFunctionalAllocation componentFunctionalAllocation : ownedFunctionalAllocation) {
-			TraceableElement targetElement = componentFunctionalAllocation.getTargetElement();
-			if (targetElement instanceof LogicalFunction
-					&& ((LogicalFunction) targetElement).getName().equals(anObject)) {
-				hasComp1Alloc = true;
-			}
-			if (!hasComp1Alloc) {
-				Assert.fail("Allocation " + anObject + " to " + compName);
+		if (comp.getName().equals(compName)) {
+
+			EList<ComponentFunctionalAllocation> ownedFunctionalAllocation = ((LogicalComponent) comp)
+					.getOwnedFunctionalAllocation();
+			for (ComponentFunctionalAllocation componentFunctionalAllocation : ownedFunctionalAllocation) {
+				TraceableElement targetElement = componentFunctionalAllocation.getTargetElement();
+				if (targetElement instanceof LogicalFunction
+						&& ((LogicalFunction) targetElement).getName().equals(anObject)) {
+					hasComp1Alloc = true;
+				}
+				if (!hasComp1Alloc) {
+					Assert.fail("Allocation " + anObject + " to " + compName);
+				}
 			}
 		}
 	}
-
 }

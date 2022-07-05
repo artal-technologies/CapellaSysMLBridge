@@ -99,6 +99,7 @@ public class FunctionalArchitectureMapping extends AbstractMapping {
 			evironnement.setName("Environment");
 			LogicalComponent genericActor = LaFactory.eINSTANCE.createLogicalComponent();
 			genericActor.setName("Generic Actor");
+			genericActor.setActor(true);
 			Part partGenActor = CsFactory.eINSTANCE.createPart();
 			partGenActor.setName(genericActor.getName());
 			partGenActor.setAbstractType(genericActor);
