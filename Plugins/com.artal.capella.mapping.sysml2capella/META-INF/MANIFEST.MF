@@ -19,3 +19,4 @@ Require-Bundle: org.polarsys.capella.core.data.gen,
  org.eclipse.emf.diffmerge.generic,
  org.polarsys.capella.vp.requirements.model;resolution:=optional
 Export-Package: com.artal.capella.mapping.sysml2capella
+Bundle-Vendor: Capella-SysML transformation rules

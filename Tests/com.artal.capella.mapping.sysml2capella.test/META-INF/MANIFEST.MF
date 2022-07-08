@@ -17,3 +17,4 @@ Require-Bundle: org.eclipse.uml2.uml,
  com.artal.capella.mapping,
  org.polarsys.capella.core.compare
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Vendor: Capella-Sysml transformation test

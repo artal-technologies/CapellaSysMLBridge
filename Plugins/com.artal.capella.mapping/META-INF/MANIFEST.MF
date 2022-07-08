@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mapping
+Bundle-Name: Mapping extension for capella
 Bundle-SymbolicName: com.artal.capella.mapping
 Bundle-Version: 5.1.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
@@ -13,3 +13,4 @@ Require-Bundle: org.eclipse.emf.diffmerge.bridge.interactive;bundle-version="0.9
 Export-Package: com.artal.capella.mapping,
  com.artal.capella.mapping.rules,
  com.artal.capella.mapping.uml
+Bundle-Vendor: Artal Technologies

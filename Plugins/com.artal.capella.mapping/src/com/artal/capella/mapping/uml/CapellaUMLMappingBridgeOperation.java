@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 Artal Technologies.
+ * Copyright (c) 2019 - 2022 Artal Technologies.
  * This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License 2.0
  * which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -9,10 +9,8 @@
  *******************************************************************************/
 package com.artal.capella.mapping.uml;
 
-import org.eclipse.emf.diffmerge.bridge.api.IBridge;
 import org.eclipse.emf.diffmerge.bridge.api.IBridgeExecution;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingBridge;
-import org.eclipse.emf.diffmerge.bridge.mapping.api.IRule;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.MappingExecution;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.MappingExecution.PendingDefinition;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.QueryExecution;
@@ -25,7 +23,6 @@ import org.eclipse.uml2.uml.Profile;
 import org.eclipse.uml2.uml.ProfileApplication;
 
 import com.artal.capella.mapping.patch.CapellaQueryExecution;
-import com.artal.capella.mapping.patch.wrappers.RuleWrapper;
 
 /**
  * @author YBI

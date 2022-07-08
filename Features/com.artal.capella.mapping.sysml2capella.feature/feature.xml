@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (c) 2019 Artal Technologies.
+    Copyright (c) 2019 - 2022 Artal Technologies.
     This program and the accompanying materials are made 
     available under the terms of the Eclipse Public License 2.0
     which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -10,19 +10,20 @@
  -->
 <feature
       id="com.artal.capella.mapping.sysml2capella.feature"
-      label="Sysml2capella Feature"
-      version="5.1.0.qualifier">
+      label="%featureName"
+      version="5.1.0.qualifier"
+      provider-name="%providerName">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description>
+      Capella - SysML bridge (Cameo) feature
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright>
+      %copyright
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="%licenseURL">
+      %license
    </license>
 
    <plugin
