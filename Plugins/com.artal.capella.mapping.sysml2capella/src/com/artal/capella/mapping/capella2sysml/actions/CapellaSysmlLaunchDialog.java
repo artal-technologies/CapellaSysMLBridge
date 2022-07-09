@@ -84,11 +84,12 @@ public class CapellaSysmlLaunchDialog extends TitleAreaDialog {
 				FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
 				dialog.setFilterExtensions(new String[] { "*.uml" });
 				String filePath = dialog.open();
-				if (!filePath.endsWith(".uml")) {
-					filePath += ".uml";
+				if (filePath != null) {
+					if (!filePath.endsWith(".uml")) {
+						filePath += ".uml";
+					}
+					umlText.setText(filePath);
 				}
-				umlText.setText(filePath);
-
 			}
 
 			@Override
@@ -121,7 +122,7 @@ public class CapellaSysmlLaunchDialog extends TitleAreaDialog {
 		} else {
 			File file = new File(_umlPath);
 			File parentFile = file.getParentFile();
-			if (parentFile==null || !parentFile.exists()) {
+			if (parentFile == null || !parentFile.exists()) {
 				errorMessage = "Invalid parent folder.";
 			}
 		}

@@ -15,35 +15,35 @@ import org.eclipse.emf.diffmerge.bridge.mapping.api.IQuery;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IQueryExecution;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IRule;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IRuleIdentifier;
-import org.eclipse.emf.diffmerge.bridge.mapping.impl.MappingExecution;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.QueryExecution;
 
 import com.artal.capella.mapping.patch.CapellaQueryExecution;
 
+
 /**
  * Used to simulate a different IRule (check PatchedMappingExecution)
  * 
- * @author YBI
+ * @author Yann BINOT
  *
  * @param <S>
  * @param <T>
  */
-public class RuleWrapper<S, T> implements IRule<S, S, T> {
-	private IRule<S, S, T> _realRule;
+public class RuleWrapper<S, TRS, T> implements IRule<S, TRS, T> {
+	private IRule<S, TRS, T> _realRule;
 
-	private IRuleIdentifier<S, S, T> _ruleIdWrapper;
+	private IRuleIdentifier<S, TRS, T> _ruleIdWrapper;
 
 	@SuppressWarnings("unchecked")
-	public RuleWrapper(IRule<S, S, T> rule_p, QueryExecution queryExecution_p) {
+	public RuleWrapper(IRule<S, TRS, T> rule_p, QueryExecution queryExecution_p) {
 		_realRule = rule_p;
 		if (queryExecution_p instanceof CapellaQueryExecution) {
-			_ruleIdWrapper = (IRuleIdentifier<S, S, T>) ((CapellaQueryExecution) queryExecution_p)
+			_ruleIdWrapper = (IRuleIdentifier<S, TRS, T>) ((CapellaQueryExecution) queryExecution_p)
 					.getCurrentIdentifierWrapper();
 		}
 	}
 
 	@Override
-	public IRuleIdentifier<S, S, T> getID() {
+	public IRuleIdentifier<S, TRS, T> getID() {
 		return _ruleIdWrapper;
 	}
 
@@ -67,12 +67,14 @@ public class RuleWrapper<S, T> implements IRule<S, S, T> {
 	public IQuery<?, ? extends S> getInputProvider() {
 		return _realRule.getInputProvider();
 	}
-		
-	public IRule<S, S, T> getRealRule() {
+
+	public IRule<S, TRS, T> getRealRule() {
 		return _realRule;
 	}
 
-	public S traceSource(S source_p) {
-	    return source_p;
+	@Override
+	public TRS traceSource(S source_p) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

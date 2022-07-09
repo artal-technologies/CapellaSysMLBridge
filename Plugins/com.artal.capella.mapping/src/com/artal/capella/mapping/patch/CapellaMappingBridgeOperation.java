@@ -33,10 +33,10 @@ public class CapellaMappingBridgeOperation extends MappingBridgeOperation {
 		return new CapellaQueryExecution();
 	}
 
-//	@Override
-//	protected <S,T> void handleRuleForTargetCreation(IRule<S,TRS, T> rule_p, IBridge<S, T> bridge_p, Object source_p,
+//@Override
+//	protected <S, T> void handleRuleForTargetCreation(IRule<S,TRS, T> rule_p, IBridge<S, T> bridge_p, Object source_p,
 //			Object targetDataSet_p, QueryExecution queryExecution_p, MappingExecution execution_p) {
-//		RuleWrapper<S,T> mirrorRule = new RuleWrapper<S,T>(rule_p, queryExecution_p);
+//		RuleWrapper<S, T> mirrorRule = new RuleWrapper<S, T>(rule_p, queryExecution_p);
 //		super.handleRuleForTargetCreation(mirrorRule, bridge_p, source_p, targetDataSet_p, queryExecution_p,
 //				execution_p);
 //

@@ -86,7 +86,7 @@ public class UMLBridge<SD, CD> extends UMLMappingBridge<SD, IEditableModelScope>
 					if (phase_p == Phase.PROFILE_APPLICATION) // Registering
 						registerTarget(entry.getValue(), source_p, entry.getKey(), execution_p);
 					if (rule instanceof RuleWrapper) {
-						rule = ((RuleWrapper<?, ?>) rule).getRealRule();
+						rule = ((RuleWrapper<?, ?, ?>) rule).getRealRule();
 					}
 					if (rule instanceof IUMLRule) {
 						handleRuleForProfileApplication((IUMLRule<?, ?, ?>) rule, source_p, entry.getValue(), execution_p,
