@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.artal.capella.mapping.sysml2capella.feature_5.1.0.qualifier.jar" id="com.artal.capella.mapping.sysml2capella.feature" version="5.1.0.qualifier"/>
+   <feature url="features/org.eclipse.emf.diffmerge.bridge.libs.feature_5.1.0.qualifier.jar" id="org.eclipse.emf.diffmerge.bridge.libs.feature" version="5.1.0.qualifier"/>
+</site>

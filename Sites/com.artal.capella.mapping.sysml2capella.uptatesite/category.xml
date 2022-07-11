@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="com.artal.capella.mapping.sysml2capella.feature">
+      <category name="Capella2SysML"/>
+   </feature>
+   <feature id="org.eclipse.emf.diffmerge.bridge.libs.feature">
+      <category name="Capella2SysML"/>
+   </feature>
+   <category-def name="Capella2SysML" label="Capella2SysML"/>
+</site>
