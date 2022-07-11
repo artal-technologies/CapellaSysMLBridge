@@ -12,7 +12,6 @@ package com.artal.capella.mapping.capella2sysml.rules;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.uml2.uml.Actor;
 import org.eclipse.uml2.uml.Package;

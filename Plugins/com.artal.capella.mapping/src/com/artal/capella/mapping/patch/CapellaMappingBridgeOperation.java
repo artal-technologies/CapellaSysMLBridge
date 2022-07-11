@@ -9,15 +9,10 @@
  *******************************************************************************/
 package com.artal.capella.mapping.patch;
 
-import org.eclipse.emf.diffmerge.bridge.api.IBridge;
 import org.eclipse.emf.diffmerge.bridge.api.IBridgeExecution;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingBridge;
-import org.eclipse.emf.diffmerge.bridge.mapping.api.IRule;
-import org.eclipse.emf.diffmerge.bridge.mapping.impl.MappingExecution;
 import org.eclipse.emf.diffmerge.bridge.mapping.impl.QueryExecution;
 import org.eclipse.emf.diffmerge.bridge.mapping.operations.MappingBridgeOperation;
-
-import com.artal.capella.mapping.patch.wrappers.RuleWrapper;
 
 /**
  * @author YBI
@@ -33,7 +28,7 @@ public class CapellaMappingBridgeOperation extends MappingBridgeOperation {
 		return new CapellaQueryExecution();
 	}
 
-//@Override
+//  @Override
 //	protected <S, T> void handleRuleForTargetCreation(IRule<S,TRS, T> rule_p, IBridge<S, T> bridge_p, Object source_p,
 //			Object targetDataSet_p, QueryExecution queryExecution_p, MappingExecution execution_p) {
 //		RuleWrapper<S, T> mirrorRule = new RuleWrapper<S, T>(rule_p, queryExecution_p);
