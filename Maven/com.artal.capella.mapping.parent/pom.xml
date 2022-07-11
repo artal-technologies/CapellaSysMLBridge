@@ -7,7 +7,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>CapellaMapping</groupId>
 	<artifactId>com.artal.capella.mapping.parent</artifactId>
-	<version>5.1.0-SNAPSHOT</version>
+	<version>6.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<tycho-version>2.3.0</tycho-version>
@@ -19,12 +19,12 @@
 		<repository>
 			<id>Neon</id>
 			<layout>p2</layout>
-			<url>https://download.eclipse.org/releases/2021-06/202106161001/</url>
+			<url>https://download.eclipse.org/releases/2022-06/202206151000/</url>
 		</repository>
 		<repository>
 			<id>capella</id>
 			<layout>p2</layout>
-			<url>http://download.eclipse.org/capella/core/updates/releases/5.1.0-R20210615-075512/org.polarsys.capella.rcp.site/
+			<url>https://download.eclipse.org/capella/core/updates/stable/v6.0.0-S20220526/org.polarsys.capella.rcp.site/
 			</url>
 		</repository>
 		<repository>
@@ -52,7 +52,7 @@
 		<repository>
 			<id>kitalpha</id>
 			<layout>p2</layout>
-			<url>https://download.eclipse.org/kitalpha/updates/release/sdk/5.1.0/</url>
+			<url>https://download.eclipse.org/kitalpha/updates/stable/sdk/S6.0.0.202205250955/</url>
 		</repository>
 
 	</repositories>

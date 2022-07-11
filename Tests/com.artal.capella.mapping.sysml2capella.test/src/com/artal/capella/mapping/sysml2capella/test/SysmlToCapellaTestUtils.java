@@ -185,26 +185,26 @@ public class SysmlToCapellaTestUtils {
 		res.getResourceFactoryRegistry().getExtensionToFactoryMap().put("capella",
 				new CapellamodellerResourceFactoryImpl());
 
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/common/libraries/5.0.0",
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/common/libraries/6.0.0",
 				LibrariesPackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/common/5.0.0",
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/common/6.0.0",
 				CapellacommonPackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/core/5.0.0", CapellacorePackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/modeller/5.0.0",
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/core/6.0.0", CapellacorePackage.eINSTANCE);
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/modeller/6.0.0",
 				CapellamodellerPackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/cs/5.0.0", CsPackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/ctx/5.0.0", CtxPackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/fa/5.0.0", FaPackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/interaction/5.0.0", InteractionPackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/information/5.0.0",
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/cs/6.0.0", CsPackage.eINSTANCE);
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/ctx/6.0.0", CtxPackage.eINSTANCE);
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/fa/6.0.0", FaPackage.eINSTANCE);
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/interaction/6.0.0", InteractionPackage.eINSTANCE);
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/information/6.0.0",
 				InformationPackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/information/datatype/5.0.0",
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/information/datatype/6.0.0",
 				DatatypePackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/information/datavalue/5.0.0",
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/information/datavalue/6.0.0",
 				DatavaluePackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/la/5.0.0", LaPackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/oa/5.0.0", OaPackage.eINSTANCE);
-		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/pa/5.0.0", PaPackage.eINSTANCE);
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/la/6.0.0", LaPackage.eINSTANCE);
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/oa/6.0.0", OaPackage.eINSTANCE);
+		res.getPackageRegistry().put("http://www.polarsys.org/capella/core/pa/6.0.0", PaPackage.eINSTANCE);
 		res.getPackageRegistry().put("http://www.polarsys.org/capella/requirements",
 				RequirementPackage.eINSTANCE);
 		res.getPackageRegistry().put("http://www.polarsys.org/kitalpha/requirements", EmdePackage.eINSTANCE);

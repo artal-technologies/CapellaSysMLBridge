@@ -11,7 +11,7 @@
 <feature
       id="org.eclipse.emf.diffmerge.bridge.libs.feature"
       label="DiffMerge integration feature"
-      version="5.1.0.qualifier">
+      version="6.0.0.qualifier">
 
    <description>
       This feature import the plugins (missing in official diffmerge update sites) required for the integration of diffmerge with capella
