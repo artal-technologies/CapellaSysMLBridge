@@ -49,7 +49,7 @@
   		../../Features/com.artal.capella.mapping.sysml2capella.feature
   	</module>
   	<module>
-  		../../Sites/com.artal.capella.mapping.sysml2capella.uptatesite_5_1_0
+  		../../Sites/com.artal.capella.mapping.sysml2capella.uptatesite
   	</module>
   	<module>../../Plugins/com.artal.capella.mapping</module>
   	<module>

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.polarsys.capella.vp.requirements.model;singleto
  n:=true
-Bundle-Version: 0.12.2.202207110949
+Bundle-Version: 0.12.2.202207111057
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
