@@ -22,6 +22,7 @@ import org.eclipse.emf.diffmerge.api.scopes.IModelScope;
 import org.eclipse.emf.diffmerge.bridge.mapping.api.IMappingExecution;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.uml2.uml.Actor;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Connector;
 import org.eclipse.uml2.uml.ConnectorEnd;
@@ -66,12 +67,10 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	/**
 	 * Constructor.
 	 * 
-	 * @param algo
-	 *            the {@link Capella2SysmlAlgo} algo.
-	 * @param source
-	 *            the Capella source {@link Project}.
-	 * @param mappingExecution
-	 *            the {@link IMappingExecution} allows to get the mapping data.
+	 * @param algo             the {@link Capella2SysmlAlgo} algo.
+	 * @param source           the Capella source {@link Project}.
+	 * @param mappingExecution the {@link IMappingExecution} allows to get the
+	 *                         mapping data.
 	 */
 	public ComponentExchangesMapping(CapellaBridgeAlgo<?> algo, Project source, IMappingExecution mappingExecution) {
 		super(algo);
@@ -95,8 +94,7 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	/**
 	 * Transform {@link ComponentExchange} to {@link Connector}
 	 * 
-	 * @param ce
-	 *            the {@link ComponentExchange} to transform
+	 * @param ce the {@link ComponentExchange} to transform
 	 */
 	private void transformComponentExchanges(ComponentExchange ce) {
 
@@ -119,6 +117,11 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		// transform the both source and target ports.
 		Port umlSourcePort = transformPort(sourcePort, ownedStereotype);
 		Port umlTargetPort = transformPort(targetPort, ownedStereotype);
+		
+		// TODO ybt 27/07/2022: We need to manage the ComponenExchange mapping in case with Actor. To be fix !!
+		if(umlTargetPort ==null || umlSourcePort == null) {
+			return;
+		}
 
 		// get the both source and target Component parent.
 		LogicalComponent sourceComponent = (LogicalComponent) sourcePort.eContainer();
@@ -151,29 +154,20 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	}
 
 	/**
-	 * Transform {@link ComponentExchange} with port parents are not in same
-	 * parent Component.
+	 * Transform {@link ComponentExchange} with port parents are not in same parent
+	 * Component.
 	 * 
-	 * @param ce
-	 *            The {@link ComponentExchange} to transform
-	 * @param sourcePort
-	 *            the capella source
-	 *            {@link org.polarsys.capella.core.data.information.Port}
-	 * @param targetPort
-	 *            the capella target
-	 *            {@link org.polarsys.capella.core.data.information.Port}
-	 * @param umlSourcePort
-	 *            the uml source {@link Port}
-	 * @param umlTargetPort
-	 *            the uml target {@link Port}
-	 * @param sourceAncestorQueue
-	 *            the source port ancestors
-	 * @param targetAncestorQueue
-	 *            the target port ancestors
-	 * @param sourceProp
-	 *            the source {@link Property}
-	 * @param targetPropthe
-	 *            target Property
+	 * @param ce                  The {@link ComponentExchange} to transform
+	 * @param sourcePort          the capella source
+	 *                            {@link org.polarsys.capella.core.data.information.Port}
+	 * @param targetPort          the capella target
+	 *                            {@link org.polarsys.capella.core.data.information.Port}
+	 * @param umlSourcePort       the uml source {@link Port}
+	 * @param umlTargetPort       the uml target {@link Port}
+	 * @param sourceAncestorQueue the source port ancestors
+	 * @param targetAncestorQueue the target port ancestors
+	 * @param sourceProp          the source {@link Property}
+	 * @param targetPropthe       target Property
 	 */
 	private void transformConnectorWithDiffParent(ComponentExchange ce,
 			org.polarsys.capella.core.data.information.Port sourcePort,
@@ -204,18 +198,12 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	/**
 	 * Create a new {@link Connector}
 	 * 
-	 * @param ce
-	 *            the {@link ComponentExchange} to transfom
-	 * @param sourceProp
-	 *            the source {@link Property}
-	 * @param targetProp
-	 *            the target {@link Property}
-	 * @param umlSourceIntermediatePort
-	 *            the source intermediate {@link Port}
-	 * @param umlTargetIntermediatePort
-	 *            the target intermediate {@link Port}
-	 * @param umlParent
-	 *            the uml parent
+	 * @param ce                        the {@link ComponentExchange} to transfom
+	 * @param sourceProp                the source {@link Property}
+	 * @param targetProp                the target {@link Property}
+	 * @param umlSourceIntermediatePort the source intermediate {@link Port}
+	 * @param umlTargetIntermediatePort the target intermediate {@link Port}
+	 * @param umlParent                 the uml parent
 	 */
 	private void createConnector(ComponentExchange ce, Property sourceProp, Property targetProp,
 			Port umlSourceIntermediatePort, Port umlTargetIntermediatePort, Class umlParent) {
@@ -223,8 +211,7 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		connector.setName(ce.getName());
 		umlParent.getOwnedConnectors().add(connector);
 		Sysml2CapellaUtils.trace(this, _source.eResource(), ce, connector, "CONNECTOR_");
-		
-		
+
 		// manage binding connector stereotype
 		IModelScope targetDataSet = (IModelScope) _mappingExecution.getTargetDataSet();
 		ResourceSet rset = Sysml2CapellaUtils.getTargetResourceSet(targetDataSet);
@@ -233,7 +220,7 @@ public class ComponentExchangesMapping extends AbstractMapping {
 		Stereotype bindingConnectorStereo = blockProfile.getOwnedStereotype("BindingConnector");
 		EObject applyStereotype = connector.applyStereotype(bindingConnectorStereo);
 		getAlgo().getStereoApplications().add(applyStereotype);
-		
+
 		ConnectorEnd targetEnd = connector.createEnd();
 		// Sysml2CapellaUtils.trace(this, _source.eResource(), ,
 		// targetElement, prefix);
@@ -269,10 +256,8 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	/**
 	 * Get the common parent
 	 * 
-	 * @param sourceAncestorQueue
-	 *            all the source ancestors
-	 * @param targetAncestorQueue
-	 *            all the target ancestors
+	 * @param sourceAncestorQueue all the source ancestors
+	 * @param targetAncestorQueue all the target ancestors
 	 * @return the first common component.
 	 */
 	private Component getCommonParent(Queue<Component> sourceAncestorQueue, Queue<Component> targetAncestorQueue) {
@@ -289,22 +274,15 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	/**
 	 * Transform {@link ComponentExchange} with ports have the same parent
 	 * 
-	 * @param ce
-	 *            the {@link ComponentExchange} to tranform
+	 * @param ce            the {@link ComponentExchange} to tranform
 	 * @param targetPort
 	 * @param sourcePort
-	 * @param profile
-	 *            the SysML profile
-	 * @param umlSourcePort
-	 *            the uml source {@link Port}
-	 * @param umlTargetPort
-	 *            the uml target {@link Port}
-	 * @param sourceProp
-	 *            the source {@link Property}
-	 * @param targetProp
-	 *            the target {@link Property}
-	 * @param commonParent
-	 *            the parent.
+	 * @param profile       the SysML profile
+	 * @param umlSourcePort the uml source {@link Port}
+	 * @param umlTargetPort the uml target {@link Port}
+	 * @param sourceProp    the source {@link Property}
+	 * @param targetProp    the target {@link Property}
+	 * @param commonParent  the parent.
 	 */
 	private void transformConnectorWithCommonParent(ComponentExchange ce, ComponentPort sourcePort,
 			ComponentPort targetPort, Profile profile, Port umlSourcePort, Port umlTargetPort, Property sourceProp,
@@ -345,22 +323,14 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	 * @param targetPort
 	 * @param sourcePort
 	 * 
-	 * @param umlSourcePort
-	 *            the uml source {@link Port}
-	 * @param umlTargetPort
-	 *            the uml target {@link Port}
-	 * @param sourceProp
-	 *            the source {@link Property}
-	 * @param targetProp
-	 *            the target {@link Property}
-	 * @param blockProfile
-	 *            the block profile;
-	 * @param targetEnd
-	 *            the target {@link ConnectorEnd}
-	 * @param sourceEnd
-	 *            the source ConnectorEnd
-	 * @param abstractExchangeItem
-	 *            the convoyed information
+	 * @param umlSourcePort        the uml source {@link Port}
+	 * @param umlTargetPort        the uml target {@link Port}
+	 * @param sourceProp           the source {@link Property}
+	 * @param targetProp           the target {@link Property}
+	 * @param blockProfile         the block profile;
+	 * @param targetEnd            the target {@link ConnectorEnd}
+	 * @param sourceEnd            the source ConnectorEnd
+	 * @param abstractExchangeItem the convoyed information
 	 * @param profile
 	 */
 	private void transformConvoyedInformation(ComponentPort sourcePort, ComponentPort targetPort, Port umlSourcePort,
@@ -398,14 +368,10 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	/**
 	 * Create intermediate port and connector.
 	 * 
-	 * @param capellaPort
-	 *            the source capella port
-	 * @param umlPort
-	 *            the uml port
-	 * @param common
-	 *            the common parent
-	 * @param ancestors
-	 *            the ancestor
+	 * @param capellaPort the source capella port
+	 * @param umlPort     the uml port
+	 * @param common      the common parent
+	 * @param ancestors   the ancestor
 	 * @return the intermediage port
 	 */
 	private Map<Port, Property> createIntermediatePort(ComponentPort capellaPort, Port umlPort, Component common,
@@ -452,7 +418,7 @@ public class ComponentExchangesMapping extends AbstractMapping {
 				Port mirrorPort = umlParent.createOwnedPort(capellaPort.getName(), null);
 				targetEnd.setRole(mirrorPort);
 				umlPort = mirrorPort;
-				
+
 				Part partSource = Sysml2CapellaUtils.getInversePart(container);
 				Property sourceProp = (Property) MappingRulesManager.getCapellaObjectFromAllRules(partSource);
 				container = parent;
@@ -500,26 +466,40 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	}
 
 	/**
-	 * Transform Capella {@link org.polarsys.capella.core.data.information.Port}
-	 * to uml {@link Port}.
+	 * Transform Capella {@link org.polarsys.capella.core.data.information.Port} to
+	 * uml {@link Port}.
 	 * 
-	 * @param capellaPort
-	 *            the capella {@link Port} to transform.
-	 * @param ownedStereotype
-	 *            the stereotype to apply on created port.
+	 * @param capellaPort     the capella {@link Port} to transform.
+	 * @param ownedStereotype the stereotype to apply on created port.
 	 * @return the uml {@link Port}.
 	 */
 	private Port transformPort(org.polarsys.capella.core.data.information.Port capellaPort,
 			Stereotype ownedStereotype) {
 		EObject parent = capellaPort.eContainer();
 		if (parent instanceof LogicalComponent) {
-			Class blockComp = (Class) MappingRulesManager.getCapellaObjectFromAllRules(parent);
+			Object capellaObjectFromAllRules = MappingRulesManager.getCapellaObjectFromAllRules(parent);
+			if (capellaObjectFromAllRules instanceof Class) {
+				Class blockComp = (Class) capellaObjectFromAllRules;
 
-			Port umlPort = blockComp.createOwnedPort(capellaPort.getName(), null);
-			EObject applyStereotype = umlPort.applyStereotype(ownedStereotype);
-			getAlgo().getStereoApplications().add(applyStereotype);
-			Sysml2CapellaUtils.trace(this, _source.eResource(), capellaPort, umlPort, "PORT_");
-			return umlPort;
+				Port umlPort = blockComp.createOwnedPort(capellaPort.getName(), null);
+				EObject applyStereotype = umlPort.applyStereotype(ownedStereotype);
+				getAlgo().getStereoApplications().add(applyStereotype);
+				Sysml2CapellaUtils.trace(this, _source.eResource(), capellaPort, umlPort, "PORT_");
+				return umlPort;
+			}
+			// TODO ybt 27/07/2022: We need to manage the ComponenExchange mapping in case with Actor. To be fix !!
+			if (capellaObjectFromAllRules instanceof Actor) {
+				
+//
+//				Actor blockComp = (Actor) capellaObjectFromAllRules;
+//
+//				Port umlPort = blockComp.createOwnedPort(capellaPort.getName(), null);
+//				EObject applyStereotype = umlPort.applyStereotype(ownedStereotype);
+//				getAlgo().getStereoApplications().add(applyStereotype);
+//				Sysml2CapellaUtils.trace(this, _source.eResource(), capellaPort, umlPort, "PORT_");
+//				return umlPort;
+			
+			}
 		}
 		return null;
 	}
@@ -527,8 +507,7 @@ public class ComponentExchangesMapping extends AbstractMapping {
 	/**
 	 * Get the ancestors {@link Queue}.
 	 * 
-	 * @param component
-	 *            the child component.
+	 * @param component the child component.
 	 * @return the {@link Queue}.
 	 */
 	protected Queue<Component> getAncestorQueue(Component component) {
